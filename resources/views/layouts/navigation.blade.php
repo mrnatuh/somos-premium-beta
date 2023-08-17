@@ -1,5 +1,5 @@
 <nav x-data="{ open: false }" class="block bg-gray-100 border-r border-gray-100 dark:border-gray-700 w-full max-w-[250px] relative">
-    <div class="flex gap-4 p-3 items-center">
+    <div class="flex gap-4 p-3 items-center justify-between">
         <img
             src="/img/avatar.png"
             alt="{{ auth()->user()->name }}"

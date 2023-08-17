@@ -29,7 +29,7 @@
             @endif --}}
 
             <!-- Page Content -->
-            <main>
+            <main class="w-full">
                 {{ $slot }}
             </main>
         </div>
