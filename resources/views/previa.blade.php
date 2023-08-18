@@ -98,9 +98,9 @@
                             <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-right">0,79%</td>
                             <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-right">
                                 <div class="flex gap-3">
-                                    <button>
+                                    <a href="{{ route('categoria') }}">
                                         <img src="/img/edit.svg" alt="Edit" />
-                                    </button>
+                                    </a>
                                     <button>
                                         <img src="/img/delete.svg" alt="Delete" />
                                     </button>
@@ -120,9 +120,9 @@
                             <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-right">0,79%</td>
                             <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-right">
                                 <div class="flex gap-3">
-                                    <button>
+                                    <a href="{{ route('categoria') }}">
                                         <img src="/img/edit.svg" alt="Edit" />
-                                    </button>
+                                    </a>
                                     <button>
                                         <img src="/img/delete.svg" alt="Delete" />
                                     </button>
@@ -142,9 +142,9 @@
                             <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-right">-</td>
                             <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-right">
                                 <div class="flex gap-3">
-                                    <button>
+                                    <a href="{{ route('categoria') }}">
                                         <img src="/img/edit.svg" alt="Edit" />
-                                    </button>
+                                    </a>
                                     <button>
                                         <img src="/img/delete.svg" alt="Delete" />
                                     </button>

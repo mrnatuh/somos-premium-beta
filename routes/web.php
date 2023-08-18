@@ -36,6 +36,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/previa', function () {
         return view('previa');
     })->name('previa');
+
+    Route::get('/categoria', function () {
+        return view('categoria');
+    })->name('categoria');
 });
 
 require __DIR__.'/auth.php';
