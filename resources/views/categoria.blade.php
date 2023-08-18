@@ -63,7 +63,7 @@
                 ["slug" => "investimento", "label" => "Investimento"],
             ];
 
-            $active = $_GET['filter'] ?? "faturamento";
+            $active = $_GET['filter'] ?? "eventos";
             @endphp
 
             <ul class="mt-10 ml-6 flex flex-wrap text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400">
@@ -99,22 +99,85 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td class="p-2 ">Mercado Livre</td>
-                                <td class="p-2 text-center">100</td>
-                                <td class="p-2 text-center">120,00</td>
-                                <td class="p-2 text-center">1.200.000,00</td>
-                                <td class="p-2 text-center">01/08/2023</td>
-                                <td class="p-2 text-center">01/09/2023</td>
-                                <td class="p-2 text-center">Festa Junina</td>
+                                <td class="border">
+                                    <select class="w-full">
+                                        <option>Selecione</option>
+                                        <option selected>Mercado Livre</option>
+                                        <option>Graber</option>
+                                    </select>
+                                </td>
+                                <td class="border">
+                                    <input class="w-full text-center" type="number" value="100" placeholder="" />
+                                </td>
+                                <td class="border">
+                                    <input class="w-full text-center" type="text" value="120,00" placeholder="" />
+                                </td>
+                                <td class="border">
+                                    <input class="w-full text-center" type="text" value="1.200.000,00" placeholder="" />
+                                </td>
+                                <td class="border">
+                                    <input class="w-full text-center" type="text" value="01/08/2023" placeholder="" />
+                                </td>
+                                <td class="border">
+                                    <input class="w-full text-center" type="text" value="01/09/2023" placeholder="" />
+                                </td>
+                                <td class="border">
+                                    <input class="w-full text-center" type="text" value="Festa Junina" placeholder="" />
+                                </td>
                             </tr>
                             <tr>
-                                <td class="p-2">Graber</td>
-                                <td class="p-2 text-center">30</td>
-                                <td class="p-2 text-center">100,00</td>
-                                <td class="p-2 text-center">3.000,00</td>
-                                <td class="p-2 text-center">01/08/2023</td>
-                                <td class="p-2 text-center">01/09/2023</td>
-                                <td class="p-2 text-center">Dia Independência</td>
+                                <td class="border">
+                                    <select class="w-full">
+                                        <option>Selecione</option>
+                                        <option >Mercado Livre</option>
+                                        <option selected>Graber</option>
+                                    </select>
+                                </td>
+                                <td class="border">
+                                    <input class="w-full text-center" type="number" value="30" placeholder="" />
+                                </td>
+                                <td class="border">
+                                    <input class="w-full text-center" type="text" value="100,00" placeholder="" />
+                                </td>
+                                <td class="border">
+                                    <input class="w-full text-center" type="text" value="3.000,00" placeholder="" />
+                                </td>
+                                <td class="border">
+                                    <input class="w-full text-center" type="text" value="01/08/2023" placeholder="" />
+                                </td>
+                                <td class="border">
+                                    <input class="w-full text-center" type="text" value="01/09/2023" placeholder="" />
+                                </td>
+                                <td class="border">
+                                    <input class="w-full text-center" type="text" value="Dia da Independência" placeholder="" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="border">
+                                    <select class="w-full">
+                                        <option>Selecione</option>
+                                        <option>Mercado Livre</option>
+                                        <option>Graber</option>
+                                    </select>
+                                </td>
+                                <td class="border">
+                                    <input class="w-full text-center" type="number" value="" placeholder="" />
+                                </td>
+                                <td class="border">
+                                    <input class="w-full text-center" type="text" value="" placeholder="" />
+                                </td>
+                                <td class="border">
+                                    <input class="w-full text-center" type="text" value="" placeholder="" />
+                                </td>
+                                <td class="border">
+                                    <input class="w-full text-center" type="date" value="" placeholder="" />
+                                </td>
+                                <td class="border">
+                                    <input class="w-full text-center" type="date" value="" placeholder="" />
+                                </td>
+                                <td class="border">
+                                    <input class="w-full text-center" type="text" value="" placeholder="" />
+                                </td>
                             </tr>
                         </tbody>
                     </table>
