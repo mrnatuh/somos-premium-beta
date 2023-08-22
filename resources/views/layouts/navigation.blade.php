@@ -76,6 +76,43 @@
                 {{ __('Previa') }}
             </span>
         </x-nav-link>
+
+        <x-nav-link
+            href="#"
+            class="flex gap-3 items-center"
+        >
+
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9.66675 1.33325H4.00008C3.64646 1.33325 3.30732 1.47373 3.05727 1.72378C2.80722 1.97382 2.66675 2.31296 2.66675 2.66659V13.3333C2.66675 13.6869 2.80722 14.026 3.05727 14.2761C3.30732 14.5261 3.64646 14.6666 4.00008 14.6666H12.0001C12.3537 14.6666 12.6928 14.5261 12.9429 14.2761C13.1929 14.026 13.3334 13.6869 13.3334 13.3333V4.99992L9.66675 1.33325Z" stroke="#757D8A" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M9.33325 1.33325V5.33325H13.3333" stroke="#757D8A" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M10.6666 8.66675H5.33325" stroke="#757D8A" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M10.6666 11.3333H5.33325" stroke="#757D8A" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M6.66658 6H5.33325" stroke="#757D8A" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+
+
+
+            <span class="text-lg">
+                {{ __('Realizado') }}
+            </span>
+        </x-nav-link>
+
+        <x-nav-link
+            href="#"
+            class="flex gap-3 items-center"
+        >
+
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12.6667 2.66675H3.33333C2.59695 2.66675 2 3.2637 2 4.00008V13.3334C2 14.0698 2.59695 14.6667 3.33333 14.6667H12.6667C13.403 14.6667 14 14.0698 14 13.3334V4.00008C14 3.2637 13.403 2.66675 12.6667 2.66675Z" stroke="#757D8A" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M10.6667 1.33325V3.99992" stroke="#757D8A" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M5.33325 1.33325V3.99992" stroke="#757D8A" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M2 6.66675H14" stroke="#757D8A" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+
+            <span class="text-lg">
+                {{ __('Apontamentos') }}
+            </span>
+        </x-nav-link>
     </div>
 
     <!-- Primary Navigation Menu -->
