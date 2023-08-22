@@ -1,4 +1,4 @@
-@props(['active'])
+@props(['active' => ''])
 
 <div class="grid grid-cols-5 gap-4">
     <x-dashboard.card label="Faturamento" value="R$ 85.125,00" arrow="down-white" :selected="$active == 'faturamento'" />
