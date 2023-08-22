@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="py-4">
         <div class="w-full mx-auto p-8">
-            <x-dashboard.bar />
+
 
             @php
             $categories = [
@@ -15,6 +15,8 @@
 
             $active = $_GET['filter'] ?? "faturamento";
             @endphp
+
+             <x-dashboard.bar :active="$active" />
 
             <ul class="mt-10 flex flex-wrap text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400">
                 @foreach($categories as $category)
