@@ -112,8 +112,8 @@
                         <input
                             type="text"
                             value="{{ $price['value'] }}"
-                            wire:change.lazy="updatePrice({{ $companyIndex }}, {{ $loop->index }}, $event.target.value)"
                             class="flex text-[16px] font-normal text-[#b1b1b1]  text-center justify-center border-0 bg-transparent p-0 w-full"
+                            disabled
                         />
                     </th>
                     @endforeach
