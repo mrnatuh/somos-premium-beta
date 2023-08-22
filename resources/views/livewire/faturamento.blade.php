@@ -156,11 +156,12 @@
     </div>
 
     <div class="w-full flex items-center justify-end gap-4 p-6">
-        <a
+        <button
+            disabled="true"
             wire:click="save"
-            class="bg-green-600 cursor-pointer px-6 py-2 text-white rounded-xl text-xl font-bold">
+            class="bg-green-600 cursor-pointer px-6 py-2 text-white rounded-xl text-xl font-bold disabled:opacity-70 disabled:cursor-none">
             Salvar
-        </a>
+        </button>
 
         <a href="{{ route('previa') }}" class="bg-red-600 px-6 py-2 text-white rounded-xl text-xl font-bold">
             Cancelar
