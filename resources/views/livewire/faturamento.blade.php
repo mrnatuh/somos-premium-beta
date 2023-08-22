@@ -7,7 +7,7 @@
 
         @foreach($companies as $company)
         <div class="flex text-sm font-normal text-[#b1b1b1] p-3 w-[{{ ((int) $company['colspan'] * 125) . 'px' }}] justify-center">
-            <span class="text-[32px] text-[#404D61]">
+            <span class="flex w-full text-[32px] text-[#404D61] justify-center">
                 {{ $company['title'] }}
             </span>
         </div>
@@ -21,7 +21,7 @@
     </div>
 
     <div class="flex">
-        <table class="w-[100px]">
+        <table class="w-[100px] border-r">
             <thead>
                 <tr>
                     <th class="p-3">
@@ -94,7 +94,7 @@
         @php
             $companyIndex = $loop->index;
         @endphp
-        <table class="w-[{{ ((int) $company['colspan'] * 125) . 'px' }}]">
+        <table class="w-[{{ ((int) $company['colspan'] * 125) . 'px' }}] border-r">
             <thead>
                 <tr>
                     @foreach($company['labels'] as $label)
@@ -108,15 +108,13 @@
 
                 <tr class="bg-gray-100">
                     @foreach($company['prices'] as $price)
-                    <th class="p-3">
-                        <span class="flex text-[16px] font-normal text-[#b1b1b1] justify-center">
-                           <input
-                                type="text"
-                                value="{{ $price['value'] }}"
-                                wire:change.lazy="updatePrice({{ $companyIndex }}, {{ $loop->index }}, $event.target.value)"
-                                class="flex text-center justify-center border-0 bg-transparent p-0 w-[125px]"
-                            />
-                        </span>
+                    <th class="p-3 w-[125px]">
+                        <input
+                            type="text"
+                            value="{{ $price['value'] }}"
+                            wire:change.lazy="updatePrice({{ $companyIndex }}, {{ $loop->index }}, $event.target.value)"
+                            class="flex text-[16px] font-normal text-[#b1b1b1]  text-center justify-center border-0 bg-transparent p-0 w-full"
+                        />
                     </th>
                     @endforeach
                 </tr>
@@ -131,15 +129,13 @@
                     @php
                         $qtyIndex = $loop->index;
                     @endphp
-                    <td class="p-3">
-                        <span class="flex justify-center">
-                            <input
-                                type="text"
-                                value="{{ $row['value'] }}"
-                                wire:change.lazy="updateQty({{ $companyIndex }}, {{ $rowIndex }}, {{ $qtyIndex }}, $event.target.value)"
-                                class="flex text-center justify-center border-0 bg-transparent p-0 w-[125px]"
-                            />
-                        </span>
+                    <td class="p-3 w-[125px]">
+                        <input
+                            type="text"
+                            value="{{ $row['value'] }}"
+                            wire:change.lazy="updateQty({{ $companyIndex }}, {{ $rowIndex }}, {{ $qtyIndex }}, $event.target.value)"
+                            class="flex text-center justify-center border-0 bg-transparent p-0 w-full"
+                        />
                     </td>
                     @endforeach
                 </tr>

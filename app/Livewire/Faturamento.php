@@ -56,56 +56,56 @@ class Faturamento extends Component
             ],
         ],
 
-        // [
-        //     "title" => "Graber",
+        [
+            "title" => "Graber",
 
-        //     "colspan" => 2,
-        //     "rowspan" => 7,
+            "colspan" => 2,
+            "rowspan" => 8,
 
-        //     "labels" => ['Almoço', 'Jantar'],
+            "labels" => ['Almoço', 'Jantar'],
 
-        //     "prices" => [22.9, 29.20],
+            "prices" => [["value" => 22.9], ["value" => 29.20]],
 
-        //     "rows" => [
-        //         [30, 50],
-        //         [30, 50],
-        //         [30, 50],
-        //         [30, 50],
-        //         [30, 0],
-        //         [30, 0],
-        //         [30, 50],
-        //         [100, 50]
-        //     ],
-        // ],
+            "rows" => [
+                [["value" => 30], ["value" => 50]],
+                [["value" => 30], ["value" => 50]],
+                [["value" => 30], ["value" => 50]],
+                [["value" => 30], ["value" => 50]],
+                [["value" => 30], ["value" => 0]],
+                [["value" => 30], ["value" => 0]],
+                [["value" => 30], ["value" => 50]],
+                [["value" => 100], ["value" => 50]]
+            ],
+        ],
 
-        // [
-        //     "title" => "B2 Blue",
+        [
+            "title" => "B2 Blue",
 
-        //     "colspan" => 3,
-        //     "rowspan" => 7,
+            "colspan" => 3,
+            "rowspan" => 7,
 
-        //     "labels" => ['Ceia', 'Almoço', 'Jantar'],
+            "labels" => ['Ceia', 'Almoço', 'Jantar'],
 
-        //     "prices" => [7.9, 18.99, 22.30],
+            "prices" => [['value' => 7.9], ['value' => 18.99], ['value' => 22.30]],
 
-        //     "rows" => [
-        //         [200, 200, 200],
-        //         [200, 200, 200],
-        //         [200, 200, 200],
-        //         [200, 200, 200],
-        //         [200, 200, 200],
-        //         [200, 200, 200],
-        //         [200, 200, 200],
-        //         [200, 200, 200]
-        //     ],
-        // ],
+            "rows" => [
+                [['value' => 200], ['value' => 200], ['value' => 200]],
+                [['value' => 200], ['value' => 200], ['value' => 200]],
+                [['value' => 200], ['value' => 200], ['value' => 200]],
+                [['value' => 200], ['value' => 200], ['value' => 200]],
+                [['value' => 200], ['value' => 200], ['value' => 200]],
+                [['value' => 200], ['value' => 200], ['value' => 200]],
+                [['value' => 200], ['value' => 200], ['value' => 200]],
+                [['value' => 200], ['value' => 200], ['value' => 200]],
+            ],
+        ],
     ];
 
     public function updatePrice($companyIndex, $priceIndex, $value)
     {
         if (isset($this->companies[$companyIndex])) {
             if (isset($this->companies[$companyIndex]['prices'])) {
-                $this->companies[$companyIndex]['prices'][$priceIndex]['value'] = (float) $value;
+                $this->companies[$companyIndex]['prices'][$priceIndex]['value'] = (float) $value ?? 0;
             }
         }
     }
@@ -114,7 +114,7 @@ class Faturamento extends Component
     {
         if (isset($this->companies[$companyIndex])) {
             if (isset($this->companies[$companyIndex]['rows'])) {
-                $this->companies[$companyIndex]['rows'][$rowIndex][$qtyIndex]['value'] = (int) $value;
+                $this->companies[$companyIndex]['rows'][$rowIndex][$qtyIndex]['value'] = (int) $value ?? 0;
             }
         }
     }
