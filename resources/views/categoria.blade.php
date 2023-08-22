@@ -16,7 +16,7 @@
             $active = $_GET['filter'] ?? "faturamento";
             @endphp
 
-             <x-dashboard.bar :active="$active" />
+            <livewire:dashboard-bar :active="$active" />
 
             <ul class="mt-10 flex flex-wrap text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400">
                 @foreach($categories as $category)
@@ -37,17 +37,6 @@
 
             <div class="w-full">
                 <livewire:faturamento />
-            </div>
-
-            <div class="w-full flex items-center justify-end gap-4 p-6">
-                <a href="{{ route('previa') }}"
-                class="bg-green-600 px-6 py-2 text-white rounded-xl text-xl font-bold">
-                    Salvar
-                </a>
-
-                <a href="{{ route('previa') }}" class="bg-red-600 px-6 py-2 text-white rounded-xl text-xl font-bold">
-                    Cancelar
-                </a>
             </div>
         </div>
     </div>

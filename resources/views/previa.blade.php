@@ -7,7 +7,7 @@
                 <p class="text-gray-600">18 resultados encontradas</p>
             </div>
 
-            <x-dashboard.bar />
+            <livewire:dashboard-bar />
 
             <x-table.previa />
         </x-dashboard.container>

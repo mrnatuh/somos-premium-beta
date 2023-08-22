@@ -91,6 +91,9 @@
         </table>
 
         @foreach($companies as $company)
+        @php
+            $companyIndex = $loop->index;
+        @endphp
         <table class="w-[{{ ((int) $company['colspan'] * 125) . 'px' }}]">
             <thead>
                 <tr>
@@ -107,19 +110,35 @@
                     @foreach($company['prices'] as $price)
                     <th class="p-3">
                         <span class="flex text-[16px] font-normal text-[#b1b1b1] justify-center">
-                           {{ $price }}
+                           <input
+                                type="text"
+                                value="{{ $price['value'] }}"
+                                wire:change.lazy="updatePrice({{ $companyIndex }}, {{ $loop->index }}, $event.target.value)"
+                                class="flex text-center justify-center border-0 bg-transparent p-0 w-[125px]"
+                            />
                         </span>
                     </th>
                     @endforeach
                 </tr>
             </thead>
             <tbody>
-                @foreach($company['rows'] as $row)
+                @foreach($company['rows'] as $rows)
+                @php
+                    $rowIndex = $loop->index;
+                @endphp
                 <tr class="{{ (int) $loop->index % 2 == 0 ? '' : 'bg-gray-100' }}">
-                    @foreach($row as $value)
+                    @foreach($rows as $row)
+                    @php
+                        $qtyIndex = $loop->index;
+                    @endphp
                     <td class="p-3">
                         <span class="flex justify-center">
-                            {{ $value }}
+                            <input
+                                type="text"
+                                value="{{ $row['value'] }}"
+                                wire:change.lazy="updateQty({{ $companyIndex }}, {{ $rowIndex }}, {{ $qtyIndex }}, $event.target.value)"
+                                class="flex text-center justify-center border-0 bg-transparent p-0 w-[125px]"
+                            />
                         </span>
                     </td>
                     @endforeach
@@ -134,6 +153,18 @@
                 +
             </span>
         </button> --}}
+    </div>
+
+    <div class="w-full flex items-center justify-end gap-4 p-6">
+        <a
+            wire:click="save"
+            class="bg-green-600 cursor-pointer px-6 py-2 text-white rounded-xl text-xl font-bold">
+            Salvar
+        </a>
+
+        <a href="{{ route('previa') }}" class="bg-red-600 px-6 py-2 text-white rounded-xl text-xl font-bold">
+            Cancelar
+        </a>
     </div>
 
 </div>

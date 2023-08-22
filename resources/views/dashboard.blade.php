@@ -6,7 +6,7 @@
                 <p class="text-gray-600">18 resultados encontradas</p>
             </div>
 
-            <x-dashboard.bar />
+            <livewire:dashboard-bar />
 
             @if($previas)
             <x-table.silver
