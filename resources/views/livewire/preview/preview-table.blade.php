@@ -1,4 +1,4 @@
-<div class="w-full p-6">
+<div class="w-full mt-10">
     <table class="w-full caption-bottom text-sm">
         <thead class="[&amp;_tr]:border-b">
             <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
@@ -43,7 +43,7 @@
                 <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-right">0,79%</td>
                 <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-right">
                     <div class="flex gap-3">
-                        <a href="{{ route('categoria') }}">
+                        <a href="{{ route('categoria') }}" wire:navigate>
                             <img src="/img/edit.svg" alt="Edit" />
                         </a>
                         <button>
@@ -65,7 +65,7 @@
                 <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-right">0,79%</td>
                 <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-right">
                     <div class="flex gap-3">
-                        <a href="{{ route('categoria') }}">
+                        <a href="{{ route('categoria') }}" wire:navigate>
                             <img src="/img/edit.svg" alt="Edit" />
                         </a>
                         <button>
@@ -87,7 +87,7 @@
                 <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-right">-</td>
                 <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-right">
                     <div class="flex gap-3">
-                        <a href="{{ route('categoria') }}">
+                        <a href="{{ route('categoria') }}" wire:navigate>
                             <img src="/img/edit.svg" alt="Edit" />
                         </a>
                         <button>

@@ -20,18 +20,8 @@
     </head>
     <body class="font-sans flex items-center antialiased h-screen bg-slate-50">
         <div class="bg-white flex rounded-2xl overflow-hidden mx-auto w-full min-h-[80vh] max-w-[1580px] relative shadow">
-            @include('layouts.navigation')
+            <x-nav />
 
-            <!-- Page Heading -->
-            {{-- @if (isset($header))
-                <header class="bg-white dark:bg-gray-800 shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endif --}}
-
-            <!-- Page Content -->
             <main class="w-full">
                 {{ $slot }}
             </main>

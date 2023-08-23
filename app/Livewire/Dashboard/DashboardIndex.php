@@ -1,14 +1,16 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Livewire\Dashboard;
 
-use Illuminate\Http\Request;
+use Livewire\Component;
 
-class DashboardController extends Controller
+class DashboardIndex extends Component
 {
-    public function index()
+    public $preview = [];
+
+    public function render()
     {
-        $columns = [
+        $this->preview['labels'] = [
             [
                 'label' => 'Prévia',
                 'slug' => 'previa',
@@ -43,9 +45,9 @@ class DashboardController extends Controller
             ]
         ];
 
-        $rows = [
+        $this->preview['rows'] = [
             [
-                ['value' => 070423, 'align' => 'justify-center' ],
+                ['value' => 070423, 'align' => 'justify-center'],
                 ['value' => 'R$ ' . number_format(63500.30, 2, ',', '.'), 'arrow' => 'down-green'],
                 ['value' => 'R$ ' . number_format(3500.30, 2, ',', '.'), 'arrow' => 'down-green'],
                 ['value' => 'R$ ' . number_format(7500, 2, ',', '.'), 'arrow' => 'down-green'],
@@ -54,11 +56,6 @@ class DashboardController extends Controller
             ]
         ];
 
-        return view('dashboard', [
-            'previas' => [
-                'columns' => $columns,
-                'rows' => $rows
-            ],
-        ]);
+        return view('livewire.dashboard.index');
     }
 }

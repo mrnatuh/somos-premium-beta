@@ -155,7 +155,7 @@
         <button
             disabled="true"
             wire:click="save"
-            class="bg-green-600 cursor-pointer px-6 py-2 text-white rounded-xl text-xl font-bold disabled:opacity-70 disabled:cursor-none">
+            class="bg-green-600 cursor-pointer px-6 py-2 text-white rounded-xl text-xl font-bold disabled:opacity-50 disabled:cursor-not-allowed">
             Salvar
         </button>
 
@@ -163,5 +163,4 @@
             Cancelar
         </a>
     </div>
-
 </div>

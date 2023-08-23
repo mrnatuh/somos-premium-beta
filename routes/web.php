@@ -1,8 +1,14 @@
 <?php
 
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\ProfileController;
+
+use App\Livewire\Category\CategoryIndex;
+use App\Livewire\Dashboard\DashboardIndex;
+use App\Livewire\Preview\PreviewIndex;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -29,16 +35,35 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::get('/dashboard', DashboardIndex::class)->name('dashboard');
+    Route::get('/categoria', CategoryIndex::class)->name('categoria');
+    Route::get('/previa', PreviewIndex::class)->name('previa');
 
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::prefix('dump')->group(function(){
+        Route::get('/clientes', function () {
+            $clientes = DB::connection('mysql_dump')->table('CLIENTES')->get();
 
-    Route::get('/previa', function () {
-        return view('previa');
-    })->name('previa');
+            return [
+                "clientes" => $clientes
+            ];
+        });
 
-    Route::get('/categoria', function () {
-        return view('categoria');
-    })->name('categoria');
+        Route::get('/orcamento', function () {
+            $orcamento = DB::connection('mysql_dump')->table('ORCAMENTO')->get();
+
+            return [
+                "orcamento" => $orcamento
+            ];
+        });
+
+        Route::get('/funcionarios', function () {
+            $funcionarios = DB::connection('mysql_dump')->table('FUNCIONARIOS')->get();
+
+            return [
+                "funcionarios" => $funcionarios
+            ];
+        });
+    });
 });
 
 require __DIR__.'/auth.php';

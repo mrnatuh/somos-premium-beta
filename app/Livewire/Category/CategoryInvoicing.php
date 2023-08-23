@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Category;
 
 use Livewire\Component;
 
-class Faturamento extends Component
+class CategoryInvoicing extends Component
 {
+
     public $companies = [
         [
             "title" => "Mercado Livre",
@@ -128,7 +129,7 @@ class Faturamento extends Component
     {
         $total = 0;
 
-        foreach($this->companies as $company) {
+        foreach ($this->companies as $company) {
             $prices = $company['prices'];
             $rows = $company['rows'];
             $colspan = $company['colspan'];
@@ -136,18 +137,19 @@ class Faturamento extends Component
 
             for ($c = 0; $c < $colspan; $c++) {
                 $price = $prices[$c]['value'];
-                for($r = 0; $r < $rowspan; $r++) {
+                for ($r = 0; $r < $rowspan; $r++) {
                     $qty = $rows[$r][$c]['value'];
                     $total += $price * $qty;
                 }
             }
         }
 
-        $this->dispatch('update-bar-total',
+        $this->dispatch(
+            'update-bar-total',
             label: "faturamento",
             value: $total
         );
 
-        return view('livewire.faturamento');
+        return view('livewire.category.category-invoicing');
     }
 }
