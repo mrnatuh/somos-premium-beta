@@ -12,12 +12,6 @@
             </span>
         </div>
         @endforeach
-
-        {{-- <button class="flex justify-center items-center border-2 border-dashed w-[125px] rounded-xl ml-3">
-            <span class="text-xl text-gray-200">
-                +
-            </span>
-        </button> --}}
     </div>
 
     <div class="flex">
@@ -144,11 +138,11 @@
         </table>
         @endforeach
 
-        {{-- <button class="flex justify-center items-center border-2 border-dashed w-[125px] rounded-xl ml-3">
-            <span class="text-xl text-gray-200">
+        <button class="flex justify-center items-center border-2 border-dashed w-[125px] rounded-xl ml-3">
+            <span class="text-5xl text-gray-200">
                 +
             </span>
-        </button> --}}
+        </button>
     </div>
 
     <div class="w-full flex items-center justify-end gap-4 p-6">

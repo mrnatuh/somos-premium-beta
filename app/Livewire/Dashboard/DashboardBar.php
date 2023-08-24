@@ -12,6 +12,7 @@ class DashboardBar extends Component
 
     public $total = [
         'faturamento' => 'R$ 85.125,00',
+        'events' => 'R$ 23.158,00',
     ];
 
     #[On('update-bar-total')]

@@ -41,27 +41,18 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('dump')->group(function(){
         Route::get('/clientes', function () {
-            $clientes = DB::connection('mysql_dump')->table('CLIENTES')->get();
-
-            return [
-                "clientes" => $clientes
-            ];
+            $data = DB::connection('mysql_dump')->table('CLIENTES')->get();
+            return $data;
         });
 
         Route::get('/orcamento', function () {
-            $orcamento = DB::connection('mysql_dump')->table('ORCAMENTO')->get();
-
-            return [
-                "orcamento" => $orcamento
-            ];
+            $data = DB::connection('mysql_dump')->table('ORCAMENTO')->get();
+            return $data;
         });
 
         Route::get('/funcionarios', function () {
-            $funcionarios = DB::connection('mysql_dump')->table('FUNCIONARIOS')->get();
-
-            return [
-                "funcionarios" => $funcionarios
-            ];
+            $data = DB::connection('mysql_dump')->table('FUNCIONARIOS')->get();
+            return $data;
         });
     });
 });

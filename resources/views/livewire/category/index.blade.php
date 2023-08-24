@@ -30,7 +30,13 @@
         </ul>
 
         <div class="w-full">
+            @if($active === 'faturamento')
             <livewire:category.category-invoicing />
+            @endif
+
+            @if($active === 'eventos')
+            <livewire:category.category-event />
+            @endif
         </div>
     </div>
 </div>

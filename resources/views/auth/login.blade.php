@@ -7,7 +7,11 @@
             <!-- Session Status -->
             <x-auth-session-status class="mb-4" :status="session('status')" />
 
-            <form method="POST" action="{{ route('login') }}" class="animate__animated animate__fadeIn animate__delay-1s w-full max-w-[400px]">
+            <form
+                method="POST"
+                action="{{ route('login') }}"
+                class="animate__animated animate__fadeIn animate__delay-1s w-full max-w-[400px]"
+            >
                 @csrf
 
                 <!-- Email Address -->
