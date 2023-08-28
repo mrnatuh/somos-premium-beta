@@ -10,7 +10,7 @@
             <form
                 method="POST"
                 action="{{ route('login') }}"
-                class="animate__animated animate__fadeIn animate__delay-1s w-full max-w-[400px]"
+                class="w-full max-w-[400px]"
             >
                 @csrf
 

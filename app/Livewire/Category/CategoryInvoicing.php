@@ -122,7 +122,7 @@ class CategoryInvoicing extends Component
 
     public function save()
     {
-        dd($this->companies);
+
     }
 
     public function render()

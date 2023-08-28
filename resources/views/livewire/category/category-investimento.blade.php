@@ -1,8 +1,8 @@
-<div class="flex flex-col h-full justify-between mt-10 overflow-x-auto">
+<div class="flex flex-col  h-full justify-between mt-10 overflow-x-auto">
     <table class="w-full">
         <thead>
             <tr>
-                @foreach($events['labels'] as $label)
+                @foreach($mp['labels'] as $label)
                 <th class="p-3 w-[125px]">
                     <span class="flex text-sm font-normal text-[#b1b1b1] justify-center">
                         {{ $label }}
@@ -12,7 +12,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($events['rows'] as $rows)
+            @foreach($mp['rows'] as $rows)
             @php
                 $rowIndex = $loop->index;
             @endphp
@@ -27,7 +27,7 @@
                         value="{{ $row['value'] }}"
                         class="flex text-center justify-center border-0 bg-transparent py-2 w-full"
                         {{ isset($row['disabled']) ? 'disabled' : '' }}
-                        @if(isset($row['name']) && ($row['name'] == 'qty' || $row['name'] == 'value'))
+                        @if(isset($row['name']) && $row['name'] == 'value')
                         wire:change.lazy="updateRow({{ $rowIndex }}, {{ $columnIndex }}, $event.target.value)"
                         @endif
                     />

@@ -1,6 +1,5 @@
-<div class="py-4">
-    <div class="w-full mx-auto p-8">
-
+<div class="flex py-4 h-full">
+    <div class="flex flex-col h-full w-full mx-auto p-8">
 
         @php
         $categories = [
@@ -29,13 +28,30 @@
             @endforeach
         </ul>
 
-        <div class="w-full">
+        <div class="flex flex-col w-full h-full">
             @if($active === 'faturamento')
             <livewire:category.category-invoicing />
             @endif
 
             @if($active === 'eventos')
             <livewire:category.category-event />
+            @endif
+
+
+            @if($active === 'mp')
+            <livewire:category.category-m-p />
+            @endif
+
+            @if($active === 'mo')
+            <livewire:category.category-m-o />
+            @endif
+
+            @if($active === 'gd')
+            <livewire:category.category-g-d />
+            @endif
+
+            @if($active === 'investimento')
+            <livewire:category.category-investimento />
             @endif
         </div>
     </div>
