@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 
 use App\Http\Controllers\Api\AuthControllerStore;
+use App\Models\User;
 
 /*
 |--------------------------------------------------------------------------
