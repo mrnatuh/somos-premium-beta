@@ -1,10 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ProfileController;
-
+use App\Http\Controllers\DashboardControllerIndex;
 use App\Livewire\Category\CategoryIndex;
 use App\Livewire\Dashboard\DashboardIndex;
 use App\Livewire\Preview\PreviewIndex;
@@ -21,13 +20,7 @@ use App\Livewire\Preview\PreviewIndex;
 |
 */
 
-Route::get('/', function () {
-    if (auth()->user() ) {
-        return to_route('dashboard');
-    }
-
-    return to_route('login');
-})->name('home');
+Route::get('/', DashboardControllerIndex::class)->name('home');
 
 
 Route::middleware('auth')->group(function () {
@@ -38,23 +31,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', DashboardIndex::class)->name('dashboard');
     Route::get('/categoria', CategoryIndex::class)->name('categoria');
     Route::get('/previa', PreviewIndex::class)->name('previa');
-
-    Route::prefix('dump')->group(function(){
-        Route::get('/clientes', function () {
-            $data = DB::connection('mysql_dump')->table('CLIENTES')->get();
-            return $data;
-        });
-
-        Route::get('/orcamento', function () {
-            $data = DB::connection('mysql_dump')->table('ORCAMENTO')->get();
-            return $data;
-        });
-
-        Route::get('/funcionarios', function () {
-            $data = DB::connection('mysql_dump')->table('FUNCIONARIOS')->get();
-            return $data;
-        });
-    });
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

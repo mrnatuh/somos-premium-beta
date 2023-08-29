@@ -1,4 +1,4 @@
-<div class="w-full mt-10">
+<div class="w-full">
     <table class="w-full caption-bottom text-sm">
         <thead class="[&amp;_tr]:border-b">
             <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">

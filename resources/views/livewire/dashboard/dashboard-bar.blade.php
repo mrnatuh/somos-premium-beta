@@ -1,4 +1,4 @@
-<div class="grid grid-cols-6 gap-4">
+<div class="flex w-full gap-4">
     <x-dashboard.card label="Faturamento" :value="$total['faturamento']" arrow="down-white" :selected="$active == 'faturamento'" />
     <x-dashboard.card label="Eventos" :value="$total['events']" :selected="$active == 'eventos'" />
     <x-dashboard.card label="MP" :value="$total['mp']" arrow="down" :selected="$active == 'mp'" />

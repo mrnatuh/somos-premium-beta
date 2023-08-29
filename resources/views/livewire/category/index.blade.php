@@ -1,6 +1,5 @@
-<div class="flex py-4 h-full">
+<div class="flex py-4 w-full h-full relative">
     <div class="flex flex-col h-full w-full mx-auto p-8">
-
         @php
         $categories = [
             ["slug" => "faturamento", "label" => "Faturamento"],
@@ -12,7 +11,13 @@
         ];
 
         $active = $_GET['filter'] ?? "faturamento";
+
+        $category = array_values(array_filter($categories, function($v, $k) use($active) {
+            return $v['slug'] === $active;
+        }, ARRAY_FILTER_USE_BOTH))[0];
         @endphp
+
+        <livewire:category.category-header :title="'Inclusão de '. $category['label']" />
 
         <livewire:dashboard.dashboard-bar :active="$active" />
 

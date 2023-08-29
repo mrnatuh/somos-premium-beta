@@ -38,7 +38,7 @@
         </tbody>
     </table>
 
-    <div class="w-full flex items-center justify-end gap-4 p-6">
+    <div class="w-full flex items-center justify-end gap-4">
         <button
             disabled="true"
             wire:click="save"

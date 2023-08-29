@@ -2,10 +2,17 @@
 
 namespace App\Livewire\Category;
 
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class CategoryInvoicing extends Component
 {
+
+    public $drawers = [
+        'clientes' => [
+            'show' => false,
+        ]
+    ];
 
     public $companies = [
         [
@@ -120,13 +127,26 @@ class CategoryInvoicing extends Component
         }
     }
 
+    public function toggleDrawer(string $drawer): void
+    {
+        $this->drawers[$drawer]['show'] = $this->drawers[$drawer]['show'] ? false : true;
+    }
+
+    public function showDrawer(string $drawer): bool
+    {
+        return $this->drawers[$drawer]['show'];
+    }
+
     public function save()
     {
-
     }
 
     public function render()
     {
+        if (isset($_GET['drawer']) && $_GET['drawer']) {
+            $this->drawers[$_GET['drawer']]['show'] = true;
+        }
+
         $total = 0;
 
         foreach ($this->companies as $company) {

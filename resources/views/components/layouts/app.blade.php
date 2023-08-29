@@ -19,10 +19,10 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans flex items-center antialiased h-screen bg-slate-50">
-        <div class="bg-white flex rounded-2xl overflow-hidden mx-auto w-full min-h-[80vh] max-w-[1580px] relative shadow">
+        <div class="bg-white flex rounded-2xl mx-auto w-full min-h-[80vh] max-w-[1580px] relative shadow overflow-hidden h-full max-h-[900px]">
             <x-nav />
 
-            <main class="w-full">
+            <main class="flex-1 w-full h-full relative">
                 {{ $slot }}
             </main>
         </div>

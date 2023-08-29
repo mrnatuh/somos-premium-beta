@@ -1,8 +1,12 @@
-<div class="py-4">
+<div class="w-full py-4">
     <x-dashboard.container>
-        <div class="mb-10">
-            <strong class="text-2xl">Dashboard</strong>
-            <p class="text-gray-600">18 resultados encontradas</p>
+        <div class="flex border-b items-center justify-between pb-10 mb-10">
+            <div>
+                <strong class="text-2xl">Dashboard</strong>
+                <p class="text-gray-600">1 resultado encontrado</p>
+            </div>
+
+            <x-notification.icon />
         </div>
 
         <livewire:dashboard.dashboard-bar />

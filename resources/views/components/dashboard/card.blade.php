@@ -6,7 +6,7 @@
     'selected' => false,
 ])
 
-<div class="grid-col-1 rounded-xl border bg-card text-card-foreground shadow {{ $selected ? 'bg-blue-500': '' }}">
+<div class="rounded-xl border bg-card text-card-foreground shadow {{ $selected ? 'bg-blue-500': '' }}">
     <div class="p-6 flex items-center gap-2 pb-2">
         <h3 class="tracking-tight text-lg {{ $selected ? 'text-white' : 'text-[#757D8A]' }} font-medium">{{ $label }}</h3>
         <x-arrow :arrow="$arrow" />

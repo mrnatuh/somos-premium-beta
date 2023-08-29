@@ -3,7 +3,7 @@
     "rows" => []
 ])
 
-<table class="mt-10">
+<table class="w-full mt-10">
     <thead>
         <tr>
             @foreach($columns as $title)
