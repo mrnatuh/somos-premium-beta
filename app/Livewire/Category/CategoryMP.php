@@ -37,8 +37,17 @@ class CategoryMP extends Component
                 ['value' => '1400.59', 'name' => 'value'],
                 ['value' => 'Mercadoria Danificada ']
             ],
-        ]
+        ],
 
+        'new' => [
+            ['value' => '', 'disabled' => true],
+            ['value' => '', 'type' => 'text'],
+            ['value' => '', 'type' => 'text'],
+            ['value' => '', 'type' => 'text'],
+            ['value' => '', 'type' => 'date'],
+            ['value' => '', 'name' => 'value', 'type' => 'text'],
+            ['value' => '', 'type' => 'text']
+        ]
     ];
 
     public function updateRow($rowIndex, $columnIndex, $value)
@@ -46,12 +55,20 @@ class CategoryMP extends Component
         $this->mp['rows'][$rowIndex][$columnIndex]['value'] = $value;
     }
 
+    public function increment()
+    {
+        $newItem = $this->mp['new'];
+        $newItem[0]['value'] = sizeof($this->mp['rows']) + 1;
+
+        array_push($this->mp['rows'], $newItem);
+    }
+
     public function render()
     {
         $total = 0;
 
         foreach ($this->mp['rows'] as $row) {
-            foreach($row as $key => $arr) {
+            foreach ($row as $key => $arr) {
                 if (isset($arr['name']) && $arr['name'] == 'value') {
                     $total += (float) $arr['value'];
                 }

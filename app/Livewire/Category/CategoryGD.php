@@ -6,7 +6,7 @@ use Livewire\Component;
 
 class CategoryGD extends Component
 {
-    public $mp = [
+    public $gd = [
         'labels' => [
             'Item',
             'Conta',
@@ -31,21 +31,39 @@ class CategoryGD extends Component
                 ['value' => '189.90', 'name' => 'value'],
                 ['value' => 'Locação impressora']
             ],
+        ],
+
+        'new' => [
+            ['value' => '', 'disabled' => true],
+            ['value' => '', 'type' => 'text'],
+            ['value' => '', 'type' => 'date'],
+            ['value' => '', 'type' => 'text', 'name' => 'value'],
+            ['value' => '']
         ]
 
     ];
 
     public function updateRow($rowIndex, $columnIndex, $value)
     {
-        $this->mp['rows'][$rowIndex][$columnIndex]['value'] = $value;
+        $this->gd['rows'][$rowIndex][$columnIndex]['value'] = $value;
     }
+
+    public function increment()
+    {
+        $newItem = $this->gd['new'];
+        $newItem[0]['value'] = sizeof($this->gd['rows']) + 1;
+        $newItem[2]['value'] = date('Y-m-d');
+
+        array_push($this->gd['rows'], $newItem);
+    }
+
 
     public function render()
     {
         $total = 0;
 
-        foreach ($this->mp['rows'] as $row) {
-            foreach($row as $key => $arr) {
+        foreach ($this->gd['rows'] as $row) {
+            foreach ($row as $key => $arr) {
                 if (isset($arr['name']) && $arr['name'] == 'value') {
                     $total += (float) $arr['value'];
                 }

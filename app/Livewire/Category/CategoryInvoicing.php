@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Category;
 
-use Livewire\Attributes\On;
 use Livewire\Component;
 
 class CategoryInvoicing extends Component
