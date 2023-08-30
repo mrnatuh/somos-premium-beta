@@ -29,7 +29,7 @@ class CategoryEvent extends Component
                 ['value' => 'R$ 12.000,00', 'disabled' => true, 'name' => 'total'],
                 ['value' => '2023-08-01', 'type' => 'date'],
                 ['value' => '2023-09-01', 'type' => 'date'],
-                ['value' => 'Festa Junina']
+                ['value' => 'Festa Junina', 'type' => 'text']
             ],
             [
                 ['value' => 'Graber'],
@@ -38,8 +38,18 @@ class CategoryEvent extends Component
                 ['value' => 'R$ 3.000,00', 'disabled' => true, 'name' => 'total'],
                 ['value' => '2023-08-01', 'type' => 'date'],
                 ['value' => '2023-09-01', 'type' => 'date'],
-                ['value' => 'Dia da Independência']
+                ['value' => 'Dia da Independência', 'type' => 'text']
             ]
+        ],
+
+        "new" => [
+            ['value' => '', 'type' => 'select'],
+            ['value' => 0, 'type' => 'number', 'name' => 'qty'],
+            ['value' => 0, 'type' => 'number', 'name' => 'value'],
+            ['value' => 'R$ 0,00', 'disabled' => true, 'name' => 'total'],
+            ['value' => '', 'type' => 'date'],
+            ['value' => '', 'type' => 'date'],
+            ['value' => '', 'type' => 'text']
         ]
     ];
 
@@ -47,6 +57,11 @@ class CategoryEvent extends Component
     {
         $this->events['rows'][$rowIndex][$columnIndex]['value'] = $value;
         $this->updateRowTotal($rowIndex);
+    }
+
+    public function increment()
+    {
+        array_push($this->events['rows'], $this->events['new']);
     }
 
     public function updateRowTotal($rowIndex)
@@ -82,7 +97,7 @@ class CategoryEvent extends Component
             $qty = 0;
             $value = 0;
 
-            foreach($row as $key => $arr) {
+            foreach ($row as $key => $arr) {
                 if (isset($arr['name']) && $arr['name'] == 'qty') {
                     $qty = $arr['value'];
                 }
