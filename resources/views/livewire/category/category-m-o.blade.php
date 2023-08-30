@@ -28,7 +28,15 @@
                             $columnIndex = $loop->index;
                         @endphp
                         <td class="text-center p-2 text-sm text-[#404D61]">
-                            {{ $row['label'] }}
+                            @if (isset($row['type']) && $row['type'] == 'number')
+                            <input
+                                type="{{ $row['type'] ?? 'text' }}"
+                                value="{{ $row['value'] }}"
+                                class="flex text-center text-sm justify-center border-0 bg-transparent py-2 w-full"
+                            />
+                            @else
+                                {{ $row['label'] }}
+                            @endif
                         </td>
                         @endforeach
                     </tr>
@@ -61,7 +69,14 @@
                     <tr class="{{ (int) $rowIndex % 2 == 0 ? '' : 'bg-gray-100' }}">
                         @foreach($row as $item)
                         <td class="text-center p-2">
-                            {{ $item['label'] ?? '-' }}
+                            @if (isset($item['type']) && $item['type'] == 'select')
+                                <select class="flex text-center text-sm justify-center border-0 bg-transparent w-full">
+                                    <option value="1" {{ $item['value'] === 1 ? 'selected="selected"' : '' }}>Sim</option>
+                                    <option value="0" {{ $item['value'] === 0 ? 'selected="selected"' : '' }}>Não</option>
+                                </select>
+                            @else
+                                {{ $item['label'] ?? '-' }}
+                            @endif
                         </td>
                         @endforeach
                     </tr>

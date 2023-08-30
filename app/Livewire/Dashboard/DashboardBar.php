@@ -14,7 +14,7 @@ class DashboardBar extends Component
         'faturamento' => 'R$ 85.125,00',
         'events' => 'R$ 23.158,00',
         'mp' => 'R$ 8.855,00',
-        'mo' => 'R$ 2.123,00',
+        'mo' => 'R$ 3.600,00',
         'gd' => 'R$ 124,00',
         'investimento' => '49 %'
     ];

@@ -68,67 +68,56 @@ class CategoryMO extends Component
                     'label' => '190,00',
                     'value' => 190,
                     'name' => 'cesta_basica',
-                    'type' => 'number'
                 ],
                 [
                     'label' => '430,00',
                     'value' => 430,
                     'name' => 'assistencia_medica_titular',
-                    'type' => 'number'
                 ],
                 [
                     'label' => '150,00',
                     'value' => 150,
                     'name' => 'assistencia_medica_dependentes',
-                    'type' => 'number'
                 ],
                 [
                     'label' => '22,50',
                     'value' => 22.5,
                     'name' => 'exames',
-                    'type' => 'number'
                 ],
                 [
                     'label' => '12,45',
                     'value' => 12.45,
                     'name' => 'assistencia_odontologica',
-                    'type' => 'number'
                 ],
                 [
                     'label' => '50',
                     'value' => 50,
                     'name' => 'contribuicao_sindical',
-                    'type' => 'number'
                 ],
                 [
                     'label' => '28,80%',
                     'value' => 28.8,
                     'name' => 'inss',
-                    'type' => 'percent'
                 ],
                 [
                     'label' => '8%',
                     'value' => 8,
                     'name' => 'fgts',
-                    'type' => 'percent'
                 ],
                 [
                     'label' => '15,10%',
                     'value' => 15.1,
                     'name' => 'provisao_ferias',
-                    'type' => 'percent'
                 ],
                 [
                     'label' => '11,40%',
                     'value' => 11.4,
                     'name' => 'provisao_decimo_terceiro',
-                    'type' => 'percent'
                 ],
                 [
                     'label' => '0',
                     'value' => 0,
                     'name' => 'taxa_vale_transporte',
-                    'type' => 'number'
                 ]
             ]
         ]
