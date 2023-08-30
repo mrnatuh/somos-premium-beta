@@ -1,4 +1,4 @@
-<div class="flex flex-col h-full justify-between mt-10 overflow-x-auto">
+<div class="flex flex-col h-full justify-between mt-10">
     <div class="flex flex-col">
         <table class="w-full mb-10">
             <thead>
@@ -26,8 +26,8 @@
                         @if(isset($row['type']) && $row['type'] == 'select')
                             <select class="flex text-center justify-center border-0 bg-transparent w-full">
                                 <option selected value=''></option>
-                                <option value="Mercado Livre">Mercado Livre</option>
-                                <option value="Graber">Graber</option>
+                                <option value="Mercado Livre" {{ $row['value'] == 'Mercado Livre' ? 'selected="selected"' : '' }}>Mercado Livre</option>
+                                <option value="Graber" {{ $row['value'] == 'Graber' ? 'selected="selected"' : '' }}>Graber</option>
                             </select>
                         @elseif (isset($row['type']) && ($row['type'] == 'number' || $row['type'] == 'date' || $row['type'] == 'text'))
                         <input

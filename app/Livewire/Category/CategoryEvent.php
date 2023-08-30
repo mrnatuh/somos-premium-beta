@@ -23,7 +23,7 @@ class CategoryEvent extends Component
 
         'rows' => [
             [
-                ['value' => 'Mercado Livre'],
+                ['value' => 'Mercado Livre', 'type' => 'select'],
                 ['value' => 100, 'type' => 'number', 'name' => 'qty'],
                 ['value' => 120, 'type' => 'number', 'name' => 'value'],
                 ['value' => 'R$ 12.000,00', 'disabled' => true, 'name' => 'total'],
@@ -32,7 +32,7 @@ class CategoryEvent extends Component
                 ['value' => 'Festa Junina', 'type' => 'text']
             ],
             [
-                ['value' => 'Graber'],
+                ['value' => 'Graber', 'type' => 'select'],
                 ['value' => 30, 'type' => 'number', 'name' => 'qty'],
                 ['value' => 100, 'type' => 'number', 'name' => 'value'],
                 ['value' => 'R$ 3.000,00', 'disabled' => true, 'name' => 'total'],
