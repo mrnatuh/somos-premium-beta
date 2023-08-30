@@ -45,7 +45,7 @@ class CategoryMP extends Component
             ['value' => '', 'type' => 'text'],
             ['value' => '', 'type' => 'text'],
             ['value' => '', 'type' => 'date'],
-            ['value' => '', 'name' => 'value', 'type' => 'text'],
+            ['value' => '0.00', 'name' => 'value', 'type' => 'text'],
             ['value' => '', 'type' => 'text']
         ]
     ];
@@ -59,6 +59,7 @@ class CategoryMP extends Component
     {
         $newItem = $this->mp['new'];
         $newItem[0]['value'] = sizeof($this->mp['rows']) + 1;
+        $newItem[4]['value'] = date('Y-m-d');
 
         array_push($this->mp['rows'], $newItem);
     }

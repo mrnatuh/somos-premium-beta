@@ -61,7 +61,9 @@ class CategoryEvent extends Component
 
     public function increment()
     {
-        array_push($this->events['rows'], $this->events['new']);
+        $newItem = $this->events['new'];
+        $newItem[4]['value'] = date('Y-m-d');
+        array_push($this->events['rows'], $newItem);
     }
 
     public function updateRowTotal($rowIndex)
