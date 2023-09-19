@@ -11,12 +11,12 @@ class DashboardBar extends Component
     public $active = '';
 
     public $total = [
-        'faturamento' => 'R$ 85.125,00',
-        'events' => 'R$ 23.158,00',
-        'mp' => 'R$ 8.855,00',
-        'mo' => 'R$ 3.600,00',
-        'gd' => 'R$ 124,00',
-        'investimento' => '49 %'
+        'faturamento' => 'R$ 0,00',
+        'events' => 'R$ 0,00',
+        'mp' => 'R$ 0,00',
+        'mo' => 'R$ 0,00',
+        'gd' => 'R$ 0,00',
+        'investimento' => '0 %'
     ];
 
     #[On('update-bar-total')]

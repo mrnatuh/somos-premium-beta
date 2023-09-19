@@ -5,3 +5,19 @@
 * {
     font-family: 'Roboto', sans-serif;
 }
+
+.em-analise {
+    @apply text-orange-500;
+}
+
+.recusado {
+    @apply text-red-500;
+}
+
+.validado {
+    @apply text-blue-500;
+}
+
+table {
+    white-space: nowrap;
+}

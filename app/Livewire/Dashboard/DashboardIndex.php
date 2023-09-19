@@ -45,16 +45,18 @@ class DashboardIndex extends Component
             ]
         ];
 
-        $this->preview['rows'] = [
-            [
-                ['value' => 070423, 'align' => 'justify-center'],
-                ['value' => 'R$ ' . number_format(63500.30, 2, ',', '.'), 'arrow' => 'down-green'],
-                ['value' => 'R$ ' . number_format(3500.30, 2, ',', '.'), 'arrow' => 'down-green'],
-                ['value' => 'R$ ' . number_format(7500, 2, ',', '.'), 'arrow' => 'down-green'],
-                ['value' => 'R$ ' . number_format(1500, 2, ',', '.'), 'arrow' => 'down-green'],
-                ['value' => '40%', 'arrow' => 'down-green']
-            ]
-        ];
+        // $this->preview['rows'] = [
+        //     [
+        //         ['value' => 070423, 'align' => 'justify-center'],
+        //         ['value' => 'R$ ' . number_format(63500.30, 2, ',', '.'), 'arrow' => 'down-green'],
+        //         ['value' => 'R$ ' . number_format(3500.30, 2, ',', '.'), 'arrow' => 'down-green'],
+        //         ['value' => 'R$ ' . number_format(7500, 2, ',', '.'), 'arrow' => 'down-green'],
+        //         ['value' => 'R$ ' . number_format(1500, 2, ',', '.'), 'arrow' => 'down-green'],
+        //         ['value' => '40%', 'arrow' => 'down-green']
+        //     ]
+        // ];
+
+        $this->preview['rows'] = [];
 
         return view('livewire.dashboard.index');
     }

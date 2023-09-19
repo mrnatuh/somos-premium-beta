@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardControllerIndex;
+use App\Http\Controllers\Preview\PreviewCreate;
+use App\Http\Controllers\Preview\PreviewDelete;
 use App\Livewire\Category\CategoryIndex;
 use App\Livewire\Dashboard\DashboardIndex;
 use App\Livewire\Preview\PreviewIndex;
@@ -29,8 +31,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/dashboard', DashboardIndex::class)->name('dashboard');
-    Route::get('/categoria', CategoryIndex::class)->name('categoria');
-    Route::get('/previa', PreviewIndex::class)->name('previa');
+    Route::get('/categoria', CategoryIndex::class)->name('category');
+    Route::get('/previa', PreviewIndex::class)->name('preview');
+    Route::post('/previa/create', PreviewCreate::class)->name('preview.create');
+
+    Route::delete('/previa/delete', PreviewDelete::class)->name('preview.delete');
 });
 
 require __DIR__ . '/auth.php';

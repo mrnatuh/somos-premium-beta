@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use Carbon\Carbon;
 use Livewire\Component;
 
 class MonthsScroll extends Component
@@ -51,26 +52,27 @@ class MonthsScroll extends Component
     public $month = [];
     public $year = 2023;
 
-    public $selectedMonth = 1;
+    public $selectedMonth = -1;
 
     public function increment()
     {
         $this->selectedMonth = $this->selectedMonth < 11 ? $this->selectedMonth + 1 : 11;
         $this->month = $this->months[$this->selectedMonth];
-        $this->dispatch('update-month');
+        $this->dispatch('update-month', month: $this->selectedMonth);
     }
 
     public function decrement()
     {
         $this->selectedMonth = $this->selectedMonth > 0 ? $this->selectedMonth - 1 : 0;
         $this->month = $this->months[$this->selectedMonth];
-        $this->dispatch('update-month');
+        $this->dispatch('update-month', month: $this->selectedMonth);
     }
 
     public function mount()
     {
-        $this->selectedMonth = 6; //(int) date('m') - 1;
+        $this->selectedMonth = (int) date('m') - 1;
         $this->month = $this->months[$this->selectedMonth];
+        $this->dispatch('update-month', month: $this->selectedMonth);
     }
 
     public function render()

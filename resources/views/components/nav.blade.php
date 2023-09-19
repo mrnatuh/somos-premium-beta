@@ -1,5 +1,5 @@
-<nav x-data="{ open: false }" class="flex flex-col justify-between bg-gray-100 border-r border-gray-100 dark:border-gray-700 w-full min-w-[250px] max-w-[250px] relative">
-    <div>
+<nav x-data="{ open: false }" class="flex flex-col justify-between bg-gray-100 border-r border-gray-100 dark:border-gray-700 w-full min-w-[250px] max-w-[250px] relative h-full z-40">
+    <div class="py-8">
         <div class="flex gap-4 p-3 items-center justify-between">
             <img
                 src="/img/avatar.png"
@@ -13,6 +13,7 @@
 
             <a
                 class="flex items-center justify-center w-[50px] h-10 rounded-md hover:bg-slate-100 hover:opacity-95"
+                wire:navigate
                 href="{{ route('profile.edit') }}"
             >
                 <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -41,8 +42,8 @@
                 </span>
             </x-nav-link>
             <x-nav-link
-                :href="route('previa')"
-                :active="request()->routeIs('previa')"
+                :href="route('preview')"
+                :active="request()->routeIs('preview')"
                 class="flex gap-3 items-center"
                 wire:navigate
             >

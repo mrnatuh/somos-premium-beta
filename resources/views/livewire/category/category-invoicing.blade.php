@@ -1,14 +1,19 @@
-<div class="flex flex-col justify-between h-full">
-    <div class="flex flex-col h-full justify-between mt-10 overflow-x-auto">
+<div class="flex flex-col justify-between w-full">
+
+    <div class="mt-10">
+        <livewire:search-client />
+    </div>
+
+    <div class="flex mt-10 overflow-x-scroll">
         <div class="flex flex-col">
             <div class="flex mb-3">
-                <div class="flex text-sm font-normal text-[#b1b1b1] p-3 w-[100px]">
+                <div class="flex text-sm font-normal text-[#b1b1b1] py-3 w-[100px]">
                     Cliente
                 </div>
 
                 @foreach($companies as $company)
-                <div class="flex text-sm font-normal text-[#b1b1b1] p-3 w-[{{ ((int) $company['colspan'] * 125) . 'px' }}] justify-center">
-                    <span class="flex w-full text-[32px] text-[#404D61] justify-center">
+                <div class="flex text-sm font-normal text-[#b1b1b1] w-[{{ ((int) $company['colspan'] * 125) . 'px' }}] overflow-hidden">
+                    <span class="flex w-full text-[22px] text-[#404D61]  leading-normal">
                         {{ $company['title'] }}
                     </span>
                 </div>
@@ -35,56 +40,17 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
+                        @for($day = 1; $day <= $lastOfMonth; $day++)
+                        <tr class="{{ $day % 2 == 0 ? 'bg-gray-100' : '' }}">
                             <td class="p-3">
-                                01
+                                {{ $day < 10  ? (int) '0' . $day : $day }}
                             </td>
                         </tr>
-
-                        <tr class="bg-gray-100">
-                            <td class="p-3">
-                                02
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="p-3">
-                                03
-                            </td>
-                        </tr>
-
-                        <tr class="bg-gray-100">
-                            <td class="p-3">
-                                04
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="p-3">
-                                05
-                            </td>
-                        </tr>
-
-                        <tr class="bg-gray-100">
-                            <td class="p-3">
-                                06
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="p-3">
-                                07
-                            </td>
-                        </tr>
-
-                        <tr class="bg-gray-100">
-                            <td class="p-3">
-                                08
-                            </td>
-                        </tr>
+                        @endfor
                     </tbody>
                 </table>
 
+                <div class="flex w-full overflow-x-auto">
                 @foreach($companies as $company)
                 @php
                     $companyIndex = $loop->index;
@@ -93,8 +59,8 @@
                     <thead>
                         <tr>
                             @foreach($company['labels'] as $label)
-                            <th class="p-3 w-[125px]">
-                                <span class="flex text-sm font-normal text-[#b1b1b1] justify-center">
+                            <th class="w-[125px] h-11">
+                                <span class="w-full text-sm font-normal text-[#b1b1b1] justify-center">
                                     {{ $label }}
                                 </span>
                             </th>
@@ -138,37 +104,25 @@
                     </tbody>
                 </table>
                 @endforeach
-
-                <button class="flex justify-center items-center border-2 border-dashed w-[125px] rounded-xl ml-3" wire:click="toggleDrawer('clientes')">
-                    <span class="text-5xl text-gray-200">
-                        +
-                    </span>
-                </button>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="w-full flex items-center justify-end gap-4">
-        <button
-            disabled="true"
-            wire:click="save"
-            class="bg-green-600 cursor-pointer px-6 py-2 text-white rounded-xl text-xl font-bold disabled:opacity-50 disabled:cursor-not-allowed">
-            Salvar
-        </button>
+    <div class="bg-white/50 w-full flex items-center justify-end gap-4 position fixed px-10 py-5 bottom-0 right-0">
+        <div>
+            <button
+                disabled="true"
+                wire:click="save"
+                class="bg-green-600 cursor-pointer px-6 py-2 text-white rounded-xl text-lg font-bold disabled:opacity-50 disabled:cursor-not-allowed">
+                Salvar
+            </button>
 
-        <a href="{{ route('previa') }}" class="bg-red-600 px-6 py-2 text-white rounded-xl text-xl font-bold">
-            Cancelar
-        </a>
+            <a href="{{ route('preview') }}" class="bg-red-600 px-6 py-2 text-white rounded-lg text-xl font-bold">
+                Cancelar
+            </a>
+        </div>
     </div>
 
-    <x-drawer
-        :show="$drawers['clientes']['show']"
-        drawer="clientes"
-    >
-        <h3 class="text-2xl">Adicionar Cliente</h3>
-
-        <div class="mt-4">
-            <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Buscar..." required>
-        </div>
-    </x-drawer>
+    <div class="h-20"></div>
 </div>

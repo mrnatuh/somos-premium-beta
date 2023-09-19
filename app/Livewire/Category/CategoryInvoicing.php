@@ -2,111 +2,111 @@
 
 namespace App\Livewire\Category;
 
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class CategoryInvoicing extends Component
 {
+    // public $companies = [
+    //     [
+    //         "title" => "Mercado Livre",
 
-    public $drawers = [
-        'clientes' => [
-            'show' => false,
-        ]
-    ];
+    //         "colspan" => 2,
+    //         "rowspan" => 8,
 
-    public $companies = [
-        [
-            "title" => "Mercado Livre",
+    //         "labels" => ['Almoço', 'Jantar'],
 
-            "colspan" => 2,
-            "rowspan" => 8,
+    //         "prices" => [
+    //             ["value" => 17.25],
+    //             ["value" => 14.25],
+    //         ],
 
-            "labels" => ['Almoço', 'Jantar'],
+    //         "rows" => [
+    //             [
+    //                 ["value" => 100],
+    //                 ["value" => 80]
+    //             ],
+    //             [
+    //                 ["value" => 100],
+    //                 ["value" => 80]
+    //             ],
+    //             [
+    //                 ["value" => 100],
+    //                 ["value" => 80]
+    //             ],
+    //             [
+    //                 ["value" => 100],
+    //                 ["value" => 80]
+    //             ],
+    //             [
+    //                 ["value" => 30],
+    //                 ["value" => 15]
+    //             ],
+    //             [
+    //                 ["value" => 0],
+    //                 ["value" => 0]
+    //             ],
+    //             [
+    //                 ["value" => 100],
+    //                 ["value" => 80]
+    //             ],
+    //             [
+    //                 ["value" => 100],
+    //                 ["value" => 80]
+    //             ],
+    //         ],
+    //     ],
 
-            "prices" => [
-                ["value" => 17.25],
-                ["value" => 14.25],
-            ],
+    //     [
+    //         "title" => "Graber",
 
-            "rows" => [
-                [
-                    ["value" => 100],
-                    ["value" => 80]
-                ],
-                [
-                    ["value" => 100],
-                    ["value" => 80]
-                ],
-                [
-                    ["value" => 100],
-                    ["value" => 80]
-                ],
-                [
-                    ["value" => 100],
-                    ["value" => 80]
-                ],
-                [
-                    ["value" => 30],
-                    ["value" => 15]
-                ],
-                [
-                    ["value" => 0],
-                    ["value" => 0]
-                ],
-                [
-                    ["value" => 100],
-                    ["value" => 80]
-                ],
-                [
-                    ["value" => 100],
-                    ["value" => 80]
-                ],
-            ],
-        ],
+    //         "colspan" => 2,
+    //         "rowspan" => 8,
 
-        [
-            "title" => "Graber",
+    //         "labels" => ['Almoço', 'Jantar'],
 
-            "colspan" => 2,
-            "rowspan" => 8,
+    //         "prices" => [["value" => 22.9], ["value" => 29.20]],
 
-            "labels" => ['Almoço', 'Jantar'],
+    //         "rows" => [
+    //             [["value" => 30], ["value" => 50]],
+    //             [["value" => 30], ["value" => 50]],
+    //             [["value" => 30], ["value" => 50]],
+    //             [["value" => 30], ["value" => 50]],
+    //             [["value" => 30], ["value" => 0]],
+    //             [["value" => 30], ["value" => 0]],
+    //             [["value" => 30], ["value" => 50]],
+    //             [["value" => 100], ["value" => 50]]
+    //         ],
+    //     ],
 
-            "prices" => [["value" => 22.9], ["value" => 29.20]],
+    //     [
+    //         "title" => "B2 Blue",
 
-            "rows" => [
-                [["value" => 30], ["value" => 50]],
-                [["value" => 30], ["value" => 50]],
-                [["value" => 30], ["value" => 50]],
-                [["value" => 30], ["value" => 50]],
-                [["value" => 30], ["value" => 0]],
-                [["value" => 30], ["value" => 0]],
-                [["value" => 30], ["value" => 50]],
-                [["value" => 100], ["value" => 50]]
-            ],
-        ],
+    //         "colspan" => 3,
+    //         "rowspan" => 7,
 
-        [
-            "title" => "B2 Blue",
+    //         "labels" => ['Ceia', 'Almoço', 'Jantar'],
 
-            "colspan" => 3,
-            "rowspan" => 7,
+    //         "prices" => [['value' => 7.9], ['value' => 18.99], ['value' => 22.30]],
 
-            "labels" => ['Ceia', 'Almoço', 'Jantar'],
+    //         "rows" => [
+    //             [['value' => 200], ['value' => 200], ['value' => 200]],
+    //             [['value' => 200], ['value' => 200], ['value' => 200]],
+    //             [['value' => 200], ['value' => 200], ['value' => 200]],
+    //             [['value' => 200], ['value' => 200], ['value' => 200]],
+    //             [['value' => 200], ['value' => 200], ['value' => 200]],
+    //             [['value' => 200], ['value' => 200], ['value' => 200]],
+    //             [['value' => 200], ['value' => 200], ['value' => 200]],
+    //             [['value' => 200], ['value' => 200], ['value' => 200]],
+    //         ],
+    //     ],
+    // ];
 
-            "prices" => [['value' => 7.9], ['value' => 18.99], ['value' => 22.30]],
+    public $lastOfMonth = 0;
 
-            "rows" => [
-                [['value' => 200], ['value' => 200], ['value' => 200]],
-                [['value' => 200], ['value' => 200], ['value' => 200]],
-                [['value' => 200], ['value' => 200], ['value' => 200]],
-                [['value' => 200], ['value' => 200], ['value' => 200]],
-                [['value' => 200], ['value' => 200], ['value' => 200]],
-                [['value' => 200], ['value' => 200], ['value' => 200]],
-                [['value' => 200], ['value' => 200], ['value' => 200]],
-                [['value' => 200], ['value' => 200], ['value' => 200]],
-            ],
-        ],
-    ];
+    public $companies = [];
 
     public function updatePrice($companyIndex, $priceIndex, $value)
     {
@@ -126,14 +126,40 @@ class CategoryInvoicing extends Component
         }
     }
 
-    public function toggleDrawer(string $drawer): void
+    #[On('invoicing-add-client')]
+    public function addClient($client_id)
     {
-        $this->drawers[$drawer]['show'] = $this->drawers[$drawer]['show'] ? false : true;
-    }
+        $this->dispatch('clear-client-search');
 
-    public function showDrawer(string $drawer): bool
-    {
-        return $this->drawers[$drawer]['show'];
+        $client = DB::connection('mysql_dump')
+            ->table('CLIENTES')
+            ->where('A1_COD', $client_id)
+            ->first();
+
+        if (!$client) {
+            return;
+        }
+
+        $add_client = [
+            "title" => $client->A1_NOME,
+
+            "colspan" => 3,
+            "rowspan" => $this->lastOfMonth,
+
+            "labels" => ['Ceia', 'Almoço', 'Jantar'],
+
+            "prices" => [['value' => 1], ['value' => 0], ['value' => 0]],
+
+            "rows" => []
+        ];
+
+        for ($i = 0; $i < $add_client['rowspan']; $i++) {
+            array_push($add_client['rows'], [
+                ['value' => 0], ['value' => 0], ['value' => 0]
+            ]);
+        }
+
+        array_push($this->companies, $add_client);
     }
 
     public function save()
@@ -142,23 +168,23 @@ class CategoryInvoicing extends Component
 
     public function render()
     {
-        if (isset($_GET['drawer']) && $_GET['drawer']) {
-            $this->drawers[$_GET['drawer']]['show'] = true;
-        }
+        $this->lastOfMonth = (int) Carbon::now()->lastOfMonth()->format('d');
 
         $total = 0;
 
         foreach ($this->companies as $company) {
-            $prices = $company['prices'];
-            $rows = $company['rows'];
+            $prices = $company['prices'] ?? [];
+            $rows = $company['rows'] ?? [];
             $colspan = $company['colspan'];
             $rowspan = $company['rowspan'];
 
-            for ($c = 0; $c < $colspan; $c++) {
-                $price = $prices[$c]['value'];
-                for ($r = 0; $r < $rowspan; $r++) {
-                    $qty = $rows[$r][$c]['value'];
-                    $total += $price * $qty;
+            if (sizeof($prices)) {
+                for ($c = 0; $c < $colspan; $c++) {
+                    $price = $prices[$c]['value'];
+                    for ($r = 0; $r < $rowspan; $r++) {
+                        $qty = $rows[$r][$c]['value'];
+                        $total += $price * $qty;
+                    }
                 }
             }
         }

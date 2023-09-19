@@ -1,9 +1,9 @@
-<div class="w-full py-4">
+<div class="w-full">
     <x-dashboard.container>
         <div class="flex border-b items-center justify-between pb-10 mb-10">
             <div>
                 <strong class="text-2xl">Prévias</strong>
-                <p class="text-gray-600">3 resultados encontradas</p>
+                <p class="text-gray-600">{{ sizeof($previews) }} {{ sizeof($previews) > 1 ? 'resultados encontrados' : 'resultado encontrado' }}</p>
             </div>
 
             <div class="flex gap-4">
@@ -21,27 +21,33 @@
                 <button type="submit" class="text-white bg-[#5B6AD0] hover:opacity-90 focus:ring-4 focus:outline-none focus:ring-blue-100 font-medium rounded-[10px] text-[16px] px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition-all">Buscar</button>
             </div>
 
-            <x-notification.icon />
+            <div class="flex">
+                <x-notification.icon />
+            </div>
         </div>
 
 
         <livewire:dashboard.dashboard-bar />
 
         <div class="flex justify-between gap-4 mt-10">
-            <div>
-                <button class="py-2.5 px-5 mr-2 mb-2 text-[16px] font-medium text-gray-900 focus:outline-none bg-white rounded-[10px] border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
-                    Adicionar
-                </button>
+            <div class="flex">
+                <form action="{{ route('preview.create') }}" method="post"
+                >
+                    @csrf
+                    <button type="submit"  class="py-2.5 px-5 mr-2 mb-2 text-[16px] font-medium text-gray-900 focus:outline-none bg-white rounded-[10px] border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 cursor-pointer">
+                        Adicionar
+                    </button>
+                </form>
 
-                <button class="py-2.5 px-5 mr-2 mb-2 text-[16px] font-medium text-gray-900 focus:outline-none bg-white rounded-[10px] border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                {{-- <button class="py-2.5 px-5 mr-2 mb-2 text-[16px] font-medium text-gray-900 focus:outline-none bg-white rounded-[10px] border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
                     Visualizar
-                </button>
+                </button> --}}
             </div>
 
 
             <livewire:months-scroll />
         </div>
 
-        <livewire:preview.preview-table />
+        <x-table.preview-table :previews="$previews" />
     </x-dashboard.container>
 </div>

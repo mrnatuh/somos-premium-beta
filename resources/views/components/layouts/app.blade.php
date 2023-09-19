@@ -18,11 +18,11 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans flex items-center antialiased h-screen bg-slate-50">
-        <div class="flex bg-white rounded-2xl mx-auto w-full min-h-[80vh] max-w-[1580px] relative shadow overflow-hidden h-full max-h-[900px]">
+    <body class="font-sans antialiased h-screen bg-white">
+        <div class="flex w-full h-full">
             <x-nav />
 
-            <main class="flex w-full h-full relative">
+            <main class="w-full h-full relative overflow-y-scroll overflow-x-hidden">
                 {{ $slot }}
             </main>
         </div>

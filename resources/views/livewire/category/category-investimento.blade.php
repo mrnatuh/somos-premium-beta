@@ -46,7 +46,7 @@
             Salvar
         </button>
 
-        <a href="{{ route('previa') }}" class="bg-red-600 px-6 py-2 text-white rounded-xl text-xl font-bold">
+        <a href="{{ route('preview') }}" class="bg-red-600 px-6 py-2 text-white rounded-xl text-xl font-bold">
             Cancelar
         </a>
     </div>

@@ -1,22 +1,20 @@
 @props([
-    'id' => 'drawer-example',
-    'show' => false,
-    'drawer' => null,
+    'id' => '',
 ])
 
 <div
     id="{{ $id }}"
-    class="absolute top-0 right-0 z-40 h-full p-4 overflow-y-auto bg-white w-1/3 dark:bg-gray-800 shadow-xl transition-transform {{ $show ? '' : 'translate-x-full' }}"
+    class="absolute top-0 right-0 z-40 h-screen p-4 overflow-y-auto transition-transform translate-x-full bg-white w-2/3 max-w-lg dark:bg-gray-800 shadow-xl"
+    tabindex="-1"
+    aria-labelledby="{{ $id }}-label"
 >
-    <div class="flex justify-end">
-        <button class="text-blue-600" wire:click="toggleDrawer('{{ $drawer }}')">
-            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 30 30">
-                <path d="M 7 4 C 6.744125 4 6.4879687 4.0974687 6.2929688 4.2929688 L 4.2929688 6.2929688 C 3.9019687 6.6839688 3.9019687 7.3170313 4.2929688 7.7070312 L 11.585938 15 L 4.2929688 22.292969 C 3.9019687 22.683969 3.9019687 23.317031 4.2929688 23.707031 L 6.2929688 25.707031 C 6.6839688 26.098031 7.3170313 26.098031 7.7070312 25.707031 L 15 18.414062 L 22.292969 25.707031 C 22.682969 26.098031 23.317031 26.098031 23.707031 25.707031 L 25.707031 23.707031 C 26.098031 23.316031 26.098031 22.682969 25.707031 22.292969 L 18.414062 15 L 25.707031 7.7070312 C 26.098031 7.3170312 26.098031 6.6829688 25.707031 6.2929688 L 23.707031 4.2929688 C 23.316031 3.9019687 22.682969 3.9019687 22.292969 4.2929688 L 15 11.585938 L 7.7070312 4.2929688 C 7.5115312 4.0974687 7.255875 4 7 4 z"></path>
+    <div class="flex justify-end w-full">
+        <button type="button" data-drawer-hide="{{ $id }}" aria-controls="select-client" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 absolute top-2.5 right-2.5 inline-flex items-center justify-center dark:hover:bg-gray-600 dark:hover:text-white" >
+            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
             </svg>
         </button>
-    </div>
+   </div>
 
-    <div>
-        {{ $slot }}
-    </div>
+   {{ $slot }}
 </div>

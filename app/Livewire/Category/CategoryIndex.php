@@ -8,6 +8,6 @@ class CategoryIndex extends Component
 {
     public function render()
     {
-        return view('livewire.category.index');
+        return view('livewire.category.category');
     }
 }

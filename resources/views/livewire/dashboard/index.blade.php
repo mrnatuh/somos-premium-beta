@@ -1,4 +1,4 @@
-<div class="w-full py-4">
+<div class="w-full">
     <x-dashboard.container>
         <div class="flex border-b items-center justify-between pb-10 mb-10">
             <div>

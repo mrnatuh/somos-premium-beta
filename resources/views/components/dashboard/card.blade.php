@@ -12,6 +12,6 @@
         <x-arrow :arrow="$arrow" />
     </div>
     <div class="p-6 pt-0 {{ $valueAlign }}">
-        <div class="text-[22px] font-bold {{ $selected ? 'text-white' : 'text-[#404D61]' }}">{{ $value }}</div>
+        <p class="text-[22px] font-bold whitespace-nowrap {{ $selected ? 'text-white' : 'text-[#404D61]' }}">{{ $value }}</p>
     </div>
 </div>
