@@ -8,6 +8,8 @@ use Livewire\Component;
 
 class CategoryMP extends Component
 {
+    public $deleteItem = [];
+
     public $mp = [
         'labels' => [
             'Item',
@@ -50,6 +52,24 @@ class CategoryMP extends Component
             ['value' => '', 'type' => 'text']
         ]
     ];
+
+    public function deleteRowItem($rowIndex)
+    {
+        $this->deleteItem[$rowIndex] = true;
+    }
+
+    public function cancelDeleteItem($rowIndex)
+    {
+        $this->deleteItem[$rowIndex] = false;
+    }
+
+    public function confirmDeleteItem($rowIndex)
+    {
+        unset($this->mp['rows'][$rowIndex]);
+        unset($this->deleteItem[$rowIndex]);
+
+        return true;
+    }
 
     public function updateRow($rowIndex, $columnIndex, $value)
     {
@@ -113,14 +133,12 @@ class CategoryMP extends Component
             ]
         );
 
-        // session()->forget('message');
-
         session()->flash('message', [
             'type' => 'success',
             'message' => 'Salvo com sucesso.',
         ]);
 
-        return true;
+        return $this->redirect('/categoria?filter=mp', navigate: true);
     }
 
     public function mount()

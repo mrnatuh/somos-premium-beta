@@ -12,6 +12,8 @@ class CategoryEvent extends Component
 {
     protected $listeners = ['refreshComponent' => '$refresh'];
 
+    public $deleteItem = [];
+
     public $events = [
         'add' => true,
 
@@ -27,6 +29,24 @@ class CategoryEvent extends Component
 
         'rows' => []
     ];
+
+    public function deleteRowItem($rowIndex)
+    {
+        $this->deleteItem[$rowIndex] = true;
+    }
+
+    public function cancelDeleteItem($rowIndex)
+    {
+        $this->deleteItem[$rowIndex] = false;
+    }
+
+    public function confirmDeleteItem($rowIndex)
+    {
+        unset($this->events['rows'][$rowIndex]);
+        unset($this->deleteItem[$rowIndex]);
+
+        return true;
+    }
 
     public function updateRow($rowIndex, $columnIndex, $value)
     {
@@ -128,8 +148,6 @@ class CategoryEvent extends Component
                 'total' => $total,
             ]
         );
-
-        // session()->forget('message');
 
         session()->flash('message', [
             'type' => 'success',

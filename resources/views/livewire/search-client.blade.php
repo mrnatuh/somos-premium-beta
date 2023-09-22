@@ -23,7 +23,7 @@
     </p>
     @enderror
 
-    <ul class="absolute w-full top-14">
+    <ul class="absolute w-full top-14 z-50">
         @foreach($clients as $client)
         <li class="flex items-center justify-between gap-4 bg-white border rounded p-4 mt-2 shadow">
             <h3>{{ trim($client->A1_NOME) }}</h3>

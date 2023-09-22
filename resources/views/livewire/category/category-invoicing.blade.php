@@ -6,25 +6,56 @@
 
     <div class="flex mt-10 overflow-x-scroll">
         <div class="flex flex-col">
-            <div class="flex mb-3">
-                <div class="flex text-sm font-normal text-[#b1b1b1] py-3 w-[100px]">
+            <div class="flex">
+                <div class="border-r block text-sm font-normal text-[#b1b1b1] py-3 w-[100px]">
                     Cliente
                 </div>
 
                 @foreach($companies as $company)
-                <div class="flex text-sm font-normal text-[#b1b1b1] w-[{{ ((int) $company['colspan'] * 125) . 'px' }}] overflow-hidden">
-                    <span class="flex w-full text-[22px] text-[#404D61]  leading-normal">
+                @php
+                    $id = $company['id'];
+                @endphp
+                <div class="border-r flex text-sm font-normal text-[#b1b1b1] w-[{{ ((int) $company['colspan'] * 125) . 'px' }}] overflow-hidden relative p-4 m-0">
+                    <span class="flex w-full text-[16px] text-[#404D61]  leading-normal text-center">
                         {{ $company['title'] }}
                     </span>
+
+                    <div class="absolute bottom-2 right-2">
+                        @if(isset($deleteItem[$id]) && $deleteItem[$id])
+                            <button
+                                type="button"
+                                wire:click.lazy="confirmDeleteItem('{{ $id }}')"
+                                class="text-green-500 p-1 bg-white opacity-75 hover:opacity-100 hover:z-40 transition-all py-1 px-2.5"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current"><path d="m10 15.586-3.293-3.293-1.414 1.414L10 18.414l9.707-9.707-1.414-1.414z"></path></svg>
+                            </button>
+
+                            <button
+                                type="button"
+                                wire:click.lazy="cancelDeleteItem('{{ $id }}')"
+                                class="text-red-500 p-1 bg-white opacity-75 hover:opacity-100 hover:z-40 transition-all py-1 px-2.5"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current"><path d="M9.172 16.242 12 13.414l2.828 2.828 1.414-1.414L13.414 12l2.828-2.828-1.414-1.414L12 10.586 9.172 7.758 7.758 9.172 10.586 12l-2.828 2.828z"></path><path d="M12 22c5.514 0 10-4.486 10-10S17.514 2 12 2 2 6.486 2 12s4.486 10 10 10zm0-18c4.411 0 8 3.589 8 8s-3.589 8-8 8-8-3.589-8-8 3.589-8 8-8z"></path></svg>
+                        @else
+                        <button
+                            type="button"
+                            wire:click.lazy="deleteRowItem('{{ $company['id'] }}')"
+                            class="bg-white opacity-75 hover:opacity-100 hover:z-40 transition-all py-1 px-2.5"
+                        >
+                            <img src="/img/delete.svg" />
+                        </button>
+                        @endif
+                    </div>
                 </div>
                 @endforeach
             </div>
 
-            <div class="flex">
-                <table class="w-[100px] border-r">
+            <div class="flex flex-nowrap">
+                <div class="flex flex-shrink flex-grow">
+                    <table class="table w-[100px] border-r">
                     <thead>
                         <tr>
-                            <th class="p-3">
+                            <th class="p-3 w-[100px]">
                                 <span class="flex text-sm font-normal text-[#b1b1b1]">
                                     Dia
                                 </span>
@@ -32,7 +63,7 @@
                         </tr>
 
                         <tr class="bg-gray-100">
-                            <th class="p-3">
+                            <th class="p-3 w-[100px]">
                                 <span class="flex text-[16px] text-[#b1b1b1]">
                                     Preço
                                 </span>
@@ -42,15 +73,16 @@
                     <tbody>
                         @for($day = 1; $day <= $lastOfMonth; $day++)
                         <tr class="{{ $day % 2 == 0 ? 'bg-gray-100' : '' }}">
-                            <td class="p-3">
+                            <td class="p-3 w-[100px]">
                                 {{ $day < 10  ? (int) '0' . $day : $day }}
                             </td>
                         </tr>
                         @endfor
                     </tbody>
-                </table>
+                    </table>
+                </div>
 
-                <div class="flex w-full overflow-x-auto">
+                <div class="flex flex-grow flex-shrink w-full overflow-x-auto">
                 @foreach($companies as $company)
                 @php
                     $companyIndex = $loop->index;

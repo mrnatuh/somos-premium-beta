@@ -8,6 +8,8 @@ use Livewire\Component;
 
 class CategoryGD extends Component
 {
+    public $deleteItem = [];
+
     public $gd = [
         'labels' => [
             'Item',
@@ -43,6 +45,24 @@ class CategoryGD extends Component
         ]
 
     ];
+
+    public function deleteRowItem($rowIndex)
+    {
+        $this->deleteItem[$rowIndex] = true;
+    }
+
+    public function cancelDeleteItem($rowIndex)
+    {
+        $this->deleteItem[$rowIndex] = false;
+    }
+
+    public function confirmDeleteItem($rowIndex)
+    {
+        unset($this->gd['rows'][$rowIndex]);
+        unset($this->deleteItem[$rowIndex]);
+
+        return true;
+    }
 
     public function updateRow($rowIndex, $columnIndex, $value)
     {
@@ -107,14 +127,13 @@ class CategoryGD extends Component
             ]
         );
 
-        // session()->forget('message');
-
         session()->flash('message', [
             'type' => 'success',
             'message' => 'Salvo com sucesso.',
         ]);
 
-        return true;
+
+        return $this->redirect('/categoria?filter=gd', navigate: true);
     }
 
     public function mount()

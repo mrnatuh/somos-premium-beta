@@ -12,6 +12,8 @@ use Livewire\Component;
 
 class CategoryInvoicing extends Component
 {
+    public $deleteItem = [];
+
     // public $companies = [
     //     [
     //         "title" => "Mercado Livre",
@@ -214,6 +216,33 @@ class CategoryInvoicing extends Component
         return $total;
     }
 
+    public function deleteRowItem($id)
+    {
+        $this->deleteItem[$id] = true;
+    }
+
+    public function cancelDeleteItem($id)
+    {
+        $this->deleteItem[$id] = false;
+    }
+
+    public function confirmDeleteItem($id)
+    {
+        $rowIndex = -1;
+
+        foreach ($this->companies as $key => $company) {
+            if ($company['id'] === $id) {
+                $rowIndex = $key;
+            }
+        }
+
+        if ($rowIndex > -1) {
+            unset($this->companies[$rowIndex]);
+        }
+
+        return true;
+    }
+
     public function save()
     {
         $weekref = session('preview')['week_ref'];
@@ -243,14 +272,12 @@ class CategoryInvoicing extends Component
             ]
         );
 
-        session()->forget('message');
-
         session()->flash('message', [
             'type' => 'success',
-            'message' => 'Prévia salva com sucesso.',
+            'message' => 'Salvo com sucesso.',
         ]);
 
-        return true;
+        return $this->redirect('/categoria?filter=faturamento', navigate: true);
     }
 
     public function mount()
@@ -269,14 +296,6 @@ class CategoryInvoicing extends Component
     public function render()
     {
         $this->lastOfMonth = (int) Carbon::now()->lastOfMonth()->format('d');
-
-        $total = $this->getTotal();
-
-        $this->dispatch(
-            'update-bar-total',
-            label: "faturamento",
-            value: $total,
-        );
 
         return view('livewire.category.category-invoicing');
     }

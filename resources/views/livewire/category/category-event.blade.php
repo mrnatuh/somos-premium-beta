@@ -1,7 +1,7 @@
 <div class="flex flex-col mt-10">
     <livewire:search-client />
 
-    <div class="flex flex-col mt-10">
+    <div class="flex flex-col flex-shrink flex-grow mt-10">
         @if (sizeof($events['rows']))
         <table class="w-full">
             <thead>
@@ -13,6 +13,7 @@
                         </span>
                     </th>
                     @endforeach
+                    <th class="p-3 w-[125px]">&nbsp;</th>
                 </tr>
             </thead>
             <tbody>
@@ -25,14 +26,8 @@
                     @php
                         $columnIndex = $loop->index;
                     @endphp
-                    <td>
-                        @if(isset($row['type']) && $row['type'] == 'select')
-                            <select class="flex text-center justify-center border-0 bg-transparent w-full">
-                                <option selected value=''></option>
-                                <option value="Mercado Livre" {{ $row['value'] == 'Mercado Livre' ? 'selected="selected"' : '' }}>Mercado Livre</option>
-                                <option value="Graber" {{ $row['value'] == 'Graber' ? 'selected="selected"' : '' }}>Graber</option>
-                            </select>
-                        @elseif (isset($row['type']) && ($row['type'] == 'number' || $row['type'] == 'date' || $row['type'] == 'text'))
+                    <td class="p-3 w-[125px]">
+                        @if (isset($row['type']) && ($row['type'] == 'number' || $row['type'] == 'date' || $row['type'] == 'text'))
                         <input
                             type="{{ $row['type'] ?? 'text' }}"
                             value="{{ $row['value'] }}"
@@ -43,12 +38,37 @@
                             @endif
                         />
                         @else
-                        <div class="cursor-default flex justify-center w-full p-2">
+                        <div class="cursor-default flex w-full p-2">
                             {{ $row['value'] }}
                         </div>
                         @endif
                     </td>
                     @endforeach
+                    <td class="text-center p-3 w-[125px]">
+                        @if(isset($this->deleteItem[$rowIndex]) && $this->deleteItem[$rowIndex])
+                            <button
+                                type="button"
+                                wire:click.lazy="confirmDeleteItem({{ $rowIndex }})"
+                                class="text-green-500 p-1"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current"><path d="m10 15.586-3.293-3.293-1.414 1.414L10 18.414l9.707-9.707-1.414-1.414z"></path></svg>
+                            </button>
+
+                            <button
+                                type="button"
+                                wire:click.lazy="cancelDeleteItem({{ $rowIndex }})"
+                                class="text-red-500 p-1"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current"><path d="M9.172 16.242 12 13.414l2.828 2.828 1.414-1.414L13.414 12l2.828-2.828-1.414-1.414L12 10.586 9.172 7.758 7.758 9.172 10.586 12l-2.828 2.828z"></path><path d="M12 22c5.514 0 10-4.486 10-10S17.514 2 12 2 2 6.486 2 12s4.486 10 10 10zm0-18c4.411 0 8 3.589 8 8s-3.589 8-8 8-8-3.589-8-8 3.589-8 8-8z"></path></svg>
+                        @else
+                        <button
+                            type="button"
+                            wire:click.lazy="deleteRowItem({{ $rowIndex }})"
+                        >
+                            <img src="/img/delete.svg" />
+                        </button>
+                        @endif
+                    </td>
                 </tr>
                 @endforeach
             </tbody>
