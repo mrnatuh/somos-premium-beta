@@ -58,11 +58,16 @@
                 <td class="p-4 text-center align-middle [&amp;:has([role=checkbox])]:pr-0">{{ $preview->variation ?? '0%' }}</td>
                 <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
                     <div class="flex gap-3">
-                        <a href="{{ route('category', [
-                            'filter' => 'faturamento',
-                        ]) }}" wire:navigate>
-                            <img src="/img/edit.svg" alt="Edit" />
-                        </a>
+                        <form action="{{ route('preview.edit') }}" method="post">
+                            @csrf
+                            @method('post')
+                            <input type="hidden" name="weekref" value="{{ $preview->week_ref }}" />
+
+                            <button type="submit">
+                                <img src="/img/edit.svg" alt="Edit" />
+                            </button>
+                        </form>
+
 
                         {{-- <button data-modal-target="delete-preview-modal" data-modal-toggle="delete-preview-modal">
                             <img src="/img/delete.svg" alt="Delete" />

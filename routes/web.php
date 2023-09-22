@@ -6,6 +6,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardControllerIndex;
 // use App\Http\Controllers\Preview\PreviewCreate;
 use App\Http\Controllers\Preview\PreviewDelete;
+use App\Http\Controllers\Preview\PreviewEdit;
 use App\Livewire\Category\CategoryIndex;
 use App\Livewire\Dashboard\DashboardIndex;
 use App\Livewire\Preview\PreviewCreate;
@@ -33,8 +34,10 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard', DashboardIndex::class)->name('dashboard');
     Route::get('/categoria', CategoryIndex::class)->name('category');
+
     Route::get('/previa', PreviewIndex::class)->name('preview');
     Route::get('/previa/create', PreviewCreate::class)->name('preview.create');
+    Route::post('/previa/edit', PreviewEdit::class)->name('preview.edit');
 
     Route::delete('/previa/delete', PreviewDelete::class)->name('preview.delete');
 });

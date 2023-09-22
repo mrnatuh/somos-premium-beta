@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Category;
 
+use App\Models\Option;
+use App\Models\Preview;
 use Livewire\Component;
 
 class CategoryMP extends Component
@@ -15,28 +17,27 @@ class CategoryMP extends Component
             'Data',
             'Valor',
             'Observação',
-
         ],
 
         'rows' => [
-            [
-                ['value' => 1, 'disabled' => true],
-                ['value' => 4903],
-                ['value' => 'Normal'],
-                ['value' => 'Limpeza'],
-                ['value' => '2023-08-01', 'type' => 'date'],
-                ['value' => '644.77', 'name' => 'value'],
-                ['value' => '']
-            ],
-            [
-                ['value' => 2, 'disabled' => true],
-                ['value' => 5007],
-                ['value' => 'Extra'],
-                ['value' => 'Estocáveis CD'],
-                ['value' => '2023-08-01', 'type' => 'date'],
-                ['value' => '1400.59', 'name' => 'value'],
-                ['value' => 'Mercadoria Danificada ']
-            ],
+            // [
+            //     ['value' => 1, 'disabled' => true],
+            //     ['value' => 4903],
+            //     ['value' => 'Normal'],
+            //     ['value' => 'Limpeza'],
+            //     ['value' => '2023-08-01', 'type' => 'date'],
+            //     ['value' => '644.77', 'name' => 'value'],
+            //     ['value' => '']
+            // ],
+            // [
+            //     ['value' => 2, 'disabled' => true],
+            //     ['value' => 5007],
+            //     ['value' => 'Extra'],
+            //     ['value' => 'Estocáveis CD'],
+            //     ['value' => '2023-08-01', 'type' => 'date'],
+            //     ['value' => '1400.59', 'name' => 'value'],
+            //     ['value' => 'Mercadoria Danificada ']
+            // ],
         ],
 
         'new' => [
@@ -45,7 +46,7 @@ class CategoryMP extends Component
             ['value' => '', 'type' => 'text'],
             ['value' => '', 'type' => 'text'],
             ['value' => '', 'type' => 'date'],
-            ['value' => '0.00', 'name' => 'value', 'type' => 'text'],
+            ['value' => '0,00', 'name' => 'value', 'type' => 'number'],
             ['value' => '', 'type' => 'text']
         ]
     ];
@@ -64,7 +65,7 @@ class CategoryMP extends Component
         array_push($this->mp['rows'], $newItem);
     }
 
-    public function render()
+    public function getTotal()
     {
         $total = 0;
 
@@ -76,12 +77,67 @@ class CategoryMP extends Component
             }
         }
 
-        $this->dispatch(
-            'update-bar-total',
-            label: "mp",
-            value: $total
+        return $total;
+    }
+
+    public function save()
+    {
+        if (sizeof($this->mp['rows']) == 0) {
+            return;
+        }
+
+        $weekref = session('preview')['week_ref'];
+
+        // acha o preview
+        $preview = Preview::where('week_ref', $weekref)->first();
+
+        // calcula o total
+        $total = number_format($this->getTotal(), 2);
+        $preview->events = $total;
+        $preview->save();
+
+        // serializa o conteúdo
+        $content = serialize($this->mp);
+
+        // cria ou faz update da invoicing para aquela prévia
+        Option::updateOrCreate(
+            [
+                'week_ref' => $weekref,
+                'option_name' => 'mp',
+            ],
+            [
+                'week_ref' => $weekref,
+                'option_name' => 'mp',
+                'option_value' => $content,
+                'total' => $total,
+            ]
         );
 
+        // session()->forget('message');
+
+        session()->flash('message', [
+            'type' => 'success',
+            'message' => 'Salvo com sucesso.',
+        ]);
+
+        return true;
+    }
+
+    public function mount()
+    {
+        $weekref = session('preview')['week_ref'];
+
+        $mp = Option::where('week_ref', $weekref)
+            ->where('option_name', 'mp')
+            ->first();
+
+        if ($mp) {
+            $this->mp = unserialize($mp->option_value);
+        }
+    }
+
+    public function render()
+    {
         return view('livewire.category.category-m-p');
     }
 }

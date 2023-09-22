@@ -28,9 +28,7 @@
                             value="{{ $row['value'] }}"
                             class="flex text-center justify-center border-0 bg-transparent py-2 w-full"
                             {{ isset($row['disabled']) ? 'disabled' : '' }}
-                            @if(isset($row['name']) && $row['name'] == 'value')
                             wire:change.lazy="updateRow({{ $rowIndex }}, {{ $columnIndex }}, $event.target.value)"
-                            @endif
                         />
                     </td>
                     @endforeach
@@ -40,8 +38,10 @@
         </table>
 
         <div>
-            <button class="py-2.5 px-5 mr-2 mb-2 text-[16px] font-medium text-gray-900 focus:outline-none bg-white rounded-[10px] border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" wire:click="increment">
-                Adicionar
+            <button class="py-2.5 px-5 mr-2 mb-2 text-[16px] font-medium text-gray-900 focus:outline-none bg-white rounded-[10px] border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 relative" wire:click="increment">
+                Adicionar item
+
+                <x-status.loading />
             </button>
         </div>
     </div>
@@ -49,10 +49,11 @@
 
     <div class="w-full flex items-center justify-end gap-4 p-6">
         <button
-            disabled="true"
             wire:click="save"
-            class="bg-green-600 cursor-pointer px-6 py-2 text-white rounded-xl text-xl font-bold disabled:opacity-50 disabled:cursor-not-allowed">
+            class="bg-green-600 cursor-pointer px-6 py-2 text-white rounded-xl text-xl font-bold disabled:opacity-50 disabled:cursor-not-allowed relative">
             Salvar
+
+            <x-status.loading />
         </button>
 
         <a href="{{ route('preview') }}" class="bg-red-600 px-6 py-2 text-white rounded-xl text-xl font-bold">
