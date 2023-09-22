@@ -11,22 +11,18 @@ class DashboardBar extends Component
     public $active = '';
 
     public $total = [
-        'faturamento' => 'R$ 0,00',
-        'events' => 'R$ 0,00',
-        'mp' => 'R$ 0,00',
-        'mo' => 'R$ 0,00',
-        'gd' => 'R$ 0,00',
-        'investimento' => '0 %'
+        'faturamento' => 0,
+        'events' => 0,
+        'mp' => 0,
+        'mo' => 0,
+        'gd' => 0,
+        'investimento' => 0
     ];
 
     #[On('update-bar-total')]
     public function updateBarTotal($label, $value)
     {
-        if ($label != 'investimento') {
-            $this->total[$label] = 'R$ ' . number_format($value, 2, ',', '.');
-        } else {
-            $this->total[$label] = $value;
-        }
+        $this->total[$label] = $value;
     }
 
     public function render()

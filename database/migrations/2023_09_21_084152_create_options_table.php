@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('invoicings', function (Blueprint $table) {
+        Schema::create('options', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('preview_id')->references('id')->on('previews')->onDelete('cascade');
-            $table->decimal('total', 10, 2)->nullable();
+            $table->string('week_ref');
+            $table->longText('option_name');
             $table->longText('option_value')->nullable();
+            $table->decimal('total', 10, 2)->nullable();
             $table->timestamps();
         });
     }
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('invoicings');
+        Schema::dropIfExists('options');
     }
 };

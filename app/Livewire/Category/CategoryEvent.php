@@ -2,6 +2,10 @@
 
 namespace App\Livewire\Category;
 
+use App\Models\Option;
+use App\Models\Preview;
+use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class CategoryEvent extends Component
@@ -21,49 +25,13 @@ class CategoryEvent extends Component
             'Descrição'
         ],
 
-        'rows' => [
-            [
-                ['value' => 'Mercado Livre', 'type' => 'select'],
-                ['value' => 100, 'type' => 'number', 'name' => 'qty'],
-                ['value' => 120, 'type' => 'number', 'name' => 'value'],
-                ['value' => 'R$ 12.000,00', 'disabled' => true, 'name' => 'total'],
-                ['value' => '2023-08-01', 'type' => 'date'],
-                ['value' => '2023-09-01', 'type' => 'date'],
-                ['value' => 'Festa Junina', 'type' => 'text']
-            ],
-            [
-                ['value' => 'Graber', 'type' => 'select'],
-                ['value' => 30, 'type' => 'number', 'name' => 'qty'],
-                ['value' => 100, 'type' => 'number', 'name' => 'value'],
-                ['value' => 'R$ 3.000,00', 'disabled' => true, 'name' => 'total'],
-                ['value' => '2023-08-01', 'type' => 'date'],
-                ['value' => '2023-09-01', 'type' => 'date'],
-                ['value' => 'Dia da Independência', 'type' => 'text']
-            ]
-        ],
-
-        "new" => [
-            ['value' => '', 'type' => 'select'],
-            ['value' => 0, 'type' => 'number', 'name' => 'qty'],
-            ['value' => 0, 'type' => 'number', 'name' => 'value'],
-            ['value' => 'R$ 0,00', 'disabled' => true, 'name' => 'total'],
-            ['value' => '', 'type' => 'date'],
-            ['value' => '', 'type' => 'date'],
-            ['value' => '', 'type' => 'text']
-        ]
+        'rows' => []
     ];
 
     public function updateRow($rowIndex, $columnIndex, $value)
     {
         $this->events['rows'][$rowIndex][$columnIndex]['value'] = $value;
         $this->updateRowTotal($rowIndex);
-    }
-
-    public function increment()
-    {
-        $newItem = $this->events['new'];
-        $newItem[4]['value'] = date('Y-m-d');
-        array_push($this->events['rows'], $newItem);
     }
 
     public function updateRowTotal($rowIndex)
@@ -88,36 +56,105 @@ class CategoryEvent extends Component
 
         $totalRow = $qty * $value;
 
+        $this->events['rows'][$rowIndex][$totalIndex]['set'] = $totalRow;
         $this->events['rows'][$rowIndex][$totalIndex]['value'] = 'R$ ' . number_format($totalRow, 2, ',', '.');
     }
 
-    public function render()
+    #[On('search-add-client')]
+    public function addClient($client_id)
+    {
+        $client = DB::connection('mysql_dump')
+            ->table('CLIENTES')
+            ->where('A1_COD', $client_id)
+            ->first();
+
+        if (!$client) {
+            return;
+        }
+
+        $add_row = [
+            ['name' => 'client', 'value' => trim($client->A1_NOME), 'id' => trim($client->A1_CGC)],
+            ['value' => 0, 'type' => 'number', 'name' => 'qty'],
+            ['value' => 0, 'type' => 'number', 'name' => 'value'],
+            ['value' => 'R$ 0,00', 'disabled' => true, 'name' => 'total', 'set' => 0],
+            ['value' => '', 'type' => 'date'],
+            ['value' => '', 'type' => 'date'],
+            ['value' => '', 'type' => 'text']
+        ];
+
+        array_push($this->events['rows'], $add_row);
+    }
+
+    public function getTotal()
     {
         $total = 0;
 
         foreach ($this->events['rows'] as $row) {
-            $qty = 0;
-            $value = 0;
-
             foreach ($row as $key => $arr) {
-                if (isset($arr['name']) && $arr['name'] == 'qty') {
-                    $qty = $arr['value'];
-                }
-
-                if (isset($arr['name']) && $arr['name'] == 'value') {
-                    $value = $arr['value'];
+                if (isset($arr['name']) && $arr['name'] == 'total') {
+                    $total += $arr['set'] ?? 0;
                 }
             }
-
-            $total += $qty * $value;
         }
 
-        $this->dispatch(
-            'update-bar-total',
-            label: "events",
-            value: $total
+        return $total;
+    }
+
+    public function save()
+    {
+        $weekref = session('preview')['week_ref'];
+
+        // acha o preview
+        $preview = Preview::where('week_ref', $weekref)->first();
+
+        // calcula o total
+        $total = number_format($this->getTotal(), 2);
+        $preview->events = $total;
+        $preview->save();
+
+        // serializa o conteúdo
+        $content = serialize($this->events);
+
+        // cria ou faz update da invoicing para aquela prévia
+        Option::updateOrCreate(
+            [
+                'week_ref' => $weekref,
+                'option_name' => 'eventos',
+            ],
+            [
+                'week_ref' => $weekref,
+                'option_name' => 'eventos',
+                'option_value' => $content,
+                'total' => $total,
+            ]
         );
 
+        // session()->forget('message');
+
+        session()->flash('message', [
+            'type' => 'success',
+            'message' => 'Salvo com sucesso.',
+        ]);
+
+        return true;
+    }
+
+
+    public function mount()
+    {
+        $weekref = session('preview')['week_ref'];
+
+        $eventos = Option::where('week_ref', $weekref)
+            ->where('option_name', 'eventos')
+            ->first();
+
+        if ($eventos) {
+            $this->events = unserialize($eventos->option_value);
+        }
+    }
+
+    public function render()
+    {
         return view('livewire.category.category-event');
     }
 }

@@ -15,7 +15,9 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('client_id')->nullable();
             $table->string('week_ref')->nullable();
+            $table->string('month_ref')->nullable();
             $table->decimal('invoicing', 10, 2)->nullable();
+            $table->decimal('events', 10, 2)->nullable();
             $table->decimal('mp', 10, 2)->nullable();
             $table->decimal('mo', 10, 2)->nullable();
             $table->decimal('gd', 10, 2)->nullable();

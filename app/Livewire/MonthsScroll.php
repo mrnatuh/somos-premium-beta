@@ -56,23 +56,37 @@ class MonthsScroll extends Component
 
     public function increment()
     {
-        $this->selectedMonth = $this->selectedMonth < 11 ? $this->selectedMonth + 1 : 11;
+        $this->selectedMonth = $this->selectedMonth < 11 ? $this->selectedMonth + 1 : 0;
+
+        if ($this->selectedMonth === 0) {
+            $this->year += 1;
+        }
+
         $this->month = $this->months[$this->selectedMonth];
-        $this->dispatch('update-month', month: $this->selectedMonth);
+        $this->dispatch('update-month', month: $this->selectedMonth, year: $this->year);
     }
 
     public function decrement()
     {
-        $this->selectedMonth = $this->selectedMonth > 0 ? $this->selectedMonth - 1 : 0;
+        $this->selectedMonth = $this->selectedMonth > 0 ? $this->selectedMonth - 1 : 11;
+
+        if ($this->selectedMonth === 11) {
+            $this->year -= 1;
+        }
+
         $this->month = $this->months[$this->selectedMonth];
-        $this->dispatch('update-month', month: $this->selectedMonth);
+
+        $this->dispatch('update-month', month: $this->selectedMonth, year: $this->year);
     }
 
     public function mount()
     {
+        $this->year = (int) date('Y');
         $this->selectedMonth = (int) date('m') - 1;
+
         $this->month = $this->months[$this->selectedMonth];
-        $this->dispatch('update-month', month: $this->selectedMonth);
+
+        // $this->dispatch('update-month', month: $this->selectedMonth, year: $this->year);
     }
 
     public function render()

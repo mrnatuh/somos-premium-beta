@@ -17,6 +17,7 @@ class Preview extends Model
     protected $fillable = [
         'client_id',
         'week_ref',
+        'month_ref',
         'invoicing',
         'mp',
         'mo',

@@ -2,6 +2,9 @@
 
 namespace App\Livewire\Category;
 
+use App\Models\Invoicing;
+use App\Models\Option;
+use App\Models\Preview;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
@@ -126,10 +129,9 @@ class CategoryInvoicing extends Component
         }
     }
 
-    #[On('invoicing-add-client')]
+    #[On('search-add-client')]
     public function addClient($client_id)
     {
-        $this->dispatch('clear-client-search');
 
         $client = DB::connection('mysql_dump')
             ->table('CLIENTES')
@@ -140,42 +142,62 @@ class CategoryInvoicing extends Component
             return;
         }
 
-        $add_client = [
-            "title" => $client->A1_NOME,
+        $exists = false;
 
-            "colspan" => 3,
+
+        foreach ($this->companies as $company) {
+            if ($company['id'] === $client->A1_CGC) {
+                $exists = true;
+            }
+        }
+
+        if ($exists) {
+            session()->flash('message', [
+                'type' => 'warning',
+                'message' => 'Cliente já adicionado.'
+            ]);
+
+            return;
+        }
+
+        $add_client = [
+            "id" => trim($client->A1_CGC),
+
+            "title" => trim($client->A1_NOME),
+
+            "colspan" => 2,
             "rowspan" => $this->lastOfMonth,
 
-            "labels" => ['Ceia', 'Almoço', 'Jantar'],
+            "labels" => ['Almoço', 'Jantar'],
 
-            "prices" => [['value' => 1], ['value' => 0], ['value' => 0]],
+            "prices" => [['value' => 1, 'edit' => true], ['value' => 1, 'edit' => true]],
 
             "rows" => []
         ];
 
         for ($i = 0; $i < $add_client['rowspan']; $i++) {
-            array_push($add_client['rows'], [
-                ['value' => 0], ['value' => 0], ['value' => 0]
-            ]);
+            $cols = [];
+
+            for ($c = 0; $c < $add_client['colspan']; $c++) {
+                array_push($cols, [
+                    'value' => 0,
+                ]);
+            }
+
+            array_push($add_client['rows'], $cols);
         }
 
         array_push($this->companies, $add_client);
     }
 
-    public function save()
+    public function getTotal()
     {
-    }
-
-    public function render()
-    {
-        $this->lastOfMonth = (int) Carbon::now()->lastOfMonth()->format('d');
-
         $total = 0;
 
         foreach ($this->companies as $company) {
             $prices = $company['prices'] ?? [];
             $rows = $company['rows'] ?? [];
-            $colspan = $company['colspan'];
+            $colspan = sizeof($prices);
             $rowspan = $company['rowspan'];
 
             if (sizeof($prices)) {
@@ -189,10 +211,71 @@ class CategoryInvoicing extends Component
             }
         }
 
+        return $total;
+    }
+
+    public function save()
+    {
+        $weekref = session('preview')['week_ref'];
+
+        // acha o preview
+        $preview = Preview::where('week_ref', $weekref)->first();
+
+        // calcula o total
+        $total = number_format($this->getTotal(), 2);
+        $preview->invoicing = $total;
+        $preview->save();
+
+        // serializa o conteúdo
+        $content = serialize($this->companies);
+
+        // cria ou faz update da invoicing para aquela prévia
+        Option::updateOrCreate(
+            [
+                'week_ref' => $weekref,
+                'option_name' => 'faturamento',
+            ],
+            [
+                'week_ref' => $weekref,
+                'option_name' => 'faturamento',
+                'option_value' => $content,
+                'total' => $total,
+            ]
+        );
+
+        session()->forget('message');
+
+        session()->flash('message', [
+            'type' => 'success',
+            'message' => 'Prévia salva com sucesso.',
+        ]);
+
+        return true;
+    }
+
+    public function mount()
+    {
+        $weekref = session('preview')['week_ref'];
+
+        $faturamento = Option::where('week_ref', $weekref)
+            ->where('option_name', 'faturamento')
+            ->first();
+
+        if ($faturamento) {
+            $this->companies = unserialize($faturamento->option_value);
+        }
+    }
+
+    public function render()
+    {
+        $this->lastOfMonth = (int) Carbon::now()->lastOfMonth()->format('d');
+
+        $total = $this->getTotal();
+
         $this->dispatch(
             'update-bar-total',
             label: "faturamento",
-            value: $total
+            value: $total,
         );
 
         return view('livewire.category.category-invoicing');

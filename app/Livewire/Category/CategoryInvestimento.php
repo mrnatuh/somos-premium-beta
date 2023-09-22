@@ -42,7 +42,7 @@ class CategoryInvestimento extends Component
 
     public function render()
     {
-        $total = '50 %';
+        $total = 50;
 
         $this->dispatch(
             'update-bar-total',

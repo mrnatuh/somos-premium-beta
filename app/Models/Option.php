@@ -5,10 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Invoicing extends Model
+class Option extends Model
 {
     use HasFactory;
-
 
     /**
      * The attributes that are mass assignable.
@@ -16,8 +15,9 @@ class Invoicing extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'preview_id',
+        'week_ref',
+        'option_name',
+        'option_value',
         'total',
-        'option_value'
     ];
 }

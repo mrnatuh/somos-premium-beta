@@ -11,6 +11,8 @@
 
             <button type="submit" class="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" wire:loading.attr="disabled">
                 Buscar
+
+                <x-status.loading />
             </button>
         </div>
     </form>
@@ -26,7 +28,7 @@
         <li class="flex items-center justify-between gap-4 bg-white border rounded p-4 mt-2 shadow">
             <h3>{{ trim($client->A1_NOME) }}</h3>
 
-            <button type="button" class="text-white bg-black hover:bg-black/80 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" wire:click="$dispatch('invoicing-add-client', { client_id: '{{ $client->A1_COD }}' })">
+            <button type="button" class="text-white bg-black hover:bg-black/80 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" wire:click="sendData('{{ $client->A1_COD }}')">
                 Adicionar
             </button>
         </li>

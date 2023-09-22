@@ -1,9 +1,10 @@
 @props([
     'label' =>  '',
-    'value' => '',
+    'value' => 0.00,
     'valueAlign' => '',
     'arrow' => '',
     'selected' => false,
+    'type' => 'money'
 ])
 
 <div class="rounded-xl border bg-card text-card-foreground shadow {{ $selected ? 'bg-blue-500': '' }}">
@@ -12,6 +13,6 @@
         <x-arrow :arrow="$arrow" />
     </div>
     <div class="p-6 pt-0 {{ $valueAlign }}">
-        <p class="text-[22px] font-bold whitespace-nowrap {{ $selected ? 'text-white' : 'text-[#404D61]' }}">{{ $value }}</p>
+        <p class="text-[22px] font-bold whitespace-nowrap {{ $selected ? 'text-white' : 'text-[#404D61]' }}">{{ $type == 'money' ? 'R$ ' . number_format((float) $value, 2, ',', '.') : $value . '%' }}</p>
     </div>
 </div>

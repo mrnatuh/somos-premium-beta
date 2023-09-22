@@ -19,11 +19,12 @@ class SearchClient extends Component
         return view('livewire.search-client');
     }
 
-    #[On('clear-client-search')]
-    public function clearClientSearch()
+    public function sendData(string $client_id)
     {
         $this->q = '';
         $this->clients = [];
+
+        return $this->dispatch('search-add-client', client_id: $client_id);
     }
 
     public function getClients()
@@ -35,6 +36,8 @@ class SearchClient extends Component
             ->where('A1_NOME', 'LIKE', "%{$this->q}%")
             ->orWhere('A1_COD', 'LIKE', "%{$this->q}%")
             ->orWhere('A1_CC', 'LIKE', "%{$this->q}%")
+            ->orWhere('A1_CGC', 'LIKE', "%{$this->q}%")
+            ->take(6)
             ->get();
     }
 }

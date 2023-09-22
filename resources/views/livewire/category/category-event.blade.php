@@ -1,6 +1,9 @@
-<div class="flex flex-col h-full justify-between mt-10">
-    <div class="flex flex-col">
-        <table class="w-full mb-10">
+<div class="flex flex-col mt-10">
+    <livewire:search-client />
+
+    <div class="flex flex-col mt-10">
+        @if (sizeof($events['rows']))
+        <table class="w-full">
             <thead>
                 <tr>
                     @foreach($events['labels'] as $label)
@@ -50,24 +53,22 @@
                 @endforeach
             </tbody>
         </table>
-
-        <div>
-            <button class="py-2.5 px-5 mr-2 mb-2 text-[16px] font-medium text-gray-900 focus:outline-none bg-white rounded-[10px] border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" wire:click="increment">
-                Adicionar
-            </button>
-        </div>
+        @endif
     </div>
 
-    <div class="w-full flex items-center justify-end gap-4">
-        <button
-            disabled="true"
-            wire:click="save"
-            class="bg-green-600 cursor-pointer px-6 py-2 text-white rounded-xl text-xl font-bold disabled:opacity-50 disabled:cursor-not-allowed">
-            Salvar
-        </button>
+    <div class="bg-white/50 w-full flex items-center justify-end gap-4 position fixed px-10 py-5 bottom-0 right-0">
+        <div>
+            <button
+                wire:click="save"
+                class="bg-green-600 cursor-pointer px-6 py-2 text-white rounded-xl text-lg font-bold disabled:opacity-50 disabled:cursor-not-allowed relative">
+                Salvar
 
-        <a href="{{ route('preview') }}" class="bg-red-600 px-6 py-2 text-white rounded-xl text-xl font-bold">
-            Cancelar
-        </a>
+                <x-status.loading />
+            </button>
+
+            <a href="{{ route('preview') }}" class="bg-red-600 px-6 py-2 text-white rounded-lg text-xl font-bold">
+                Cancelar
+            </a>
+        </div>
     </div>
 </div>
