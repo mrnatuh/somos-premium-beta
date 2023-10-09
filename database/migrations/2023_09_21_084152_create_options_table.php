@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('options', function (Blueprint $table) {
             $table->id();
+            $table->string('cc')->nullable();
             $table->string('week_ref');
             $table->longText('option_name');
             $table->longText('option_value')->nullable();

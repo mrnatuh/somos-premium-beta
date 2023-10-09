@@ -107,6 +107,7 @@ class CategoryInvestimento extends Component
         }
 
         $weekref = session('preview')['week_ref'];
+        $cc = session('preview')['cc'];
 
         // acha o preview
         $preview = Preview::where('week_ref', $weekref)->first();
@@ -122,10 +123,12 @@ class CategoryInvestimento extends Component
         // cria ou faz update da invoicing para aquela prévia
         Option::updateOrCreate(
             [
+                'cc' => $cc,
                 'week_ref' => $weekref,
                 'option_name' => 'investimento',
             ],
             [
+                'cc' => $cc,
                 'week_ref' => $weekref,
                 'option_name' => 'investimento',
                 'option_value' => $content,

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('previews', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('client_id')->nullable();
+            $table->string('cc')->nullable();
             $table->string('week_ref')->nullable();
             $table->string('month_ref')->nullable();
             $table->decimal('invoicing', 10, 2)->nullable();

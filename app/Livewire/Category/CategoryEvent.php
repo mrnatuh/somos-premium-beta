@@ -123,6 +123,7 @@ class CategoryEvent extends Component
     public function save()
     {
         $weekref = session('preview')['week_ref'];
+        $cc = session('preview')['cc'];
 
         // acha o preview
         $preview = Preview::where('week_ref', $weekref)->first();
@@ -138,10 +139,12 @@ class CategoryEvent extends Component
         // cria ou faz update da invoicing para aquela prévia
         Option::updateOrCreate(
             [
+                'cc' => $cc,
                 'week_ref' => $weekref,
                 'option_name' => 'eventos',
             ],
             [
+                'cc' => $cc,
                 'week_ref' => $weekref,
                 'option_name' => 'eventos',
                 'option_value' => $content,

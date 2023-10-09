@@ -35,7 +35,7 @@ $category = array_values(array_filter($categories, function($v, $k) use($active)
 
     <div class="flex flex-col w-full h-full">
         @if($active === 'faturamento')
-        <livewire:category.category-invoicing />
+            <livewire:category.category-invoicing />
         @endif
 
         @if($active === 'eventos')

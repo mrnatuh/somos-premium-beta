@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Category;
 
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class CategoryMO extends Component
@@ -169,73 +170,115 @@ class CategoryMO extends Component
             ],
         ],
 
-        "rows" => [
-            [
-                ['label' => 'Oliveira Silva', 'value' => 'Oliveira Silva', 'name' => 'name'],
-                ['label' => '1.200,00', 'value' => 1200, 'name' => 'salario'],
-                ['label' => '30', 'value' => 30, 'name' => 'dias_trabalhados'],
-                ['label' => 'Ativo', 'value' => 1, 'name' => 'situacao'],
-                ['label' => 'Sim', 'value' => 1, 'name' => 'cesta_basica', "type" => "select"],
-                ['label' => 'Sim', 'value' => 1, 'name' => 'assistencia_medica', "type" => "select"],
-                ['label' => '1', 'value' => 1, 'name' => 'numero_dependentes'],
-                ['label' => 'Sim', 'value' => 1, 'name' => 'assistencia_odontologica', "type" => "select"],
-                ['label' => 'Sim', 'value' => 1, 'name' => 'contribuicao_sindical', "type" => "select"],
-                ['label' => 'Sim', 'value' => 1, 'name' => 'vale_transporte', "type" => "select"],
-                ['label' => '6,90', 'value' => 6.9, 'name' => 'valor_transporte_valor_diario'],
-                ['label' => '1.200,00', 'value' => 1200, 'name' => 'salario_bruto'],
-                ['label' => '1.400,00', 'value' => 1400, 'name' => 'total_funcionario'],
-                ['label' => '0', 'value' => 0, 'name' => 'dsr'],
-            ],
-            [
-                ['label' => 'Kratos', 'value' => 'Kratos', 'name' => 'name'],
-                ['label' => '1.000,00', 'value' => 1200, 'name' => 'salario'],
-                ['label' => '30', 'value' => 30, 'name' => 'dias_trabalhados'],
-                ['label' => 'Ativo', 'value' => 1, 'name' => 'situacao'],
-                ['label' => 'Sim', 'value' => 1, 'name' => 'cesta_basica', "type" => "select"],
-                ['label' => 'Sim', 'value' => 1, 'name' => 'assistencia_medica', "type" => "select"],
-                ['label' => '0', 'value' => 0, 'name' => 'numero_dependentes'],
-                ['label' => 'Sim', 'value' => 1, 'name' => 'assistencia_odontologica', "type" => "select"],
-                ['label' => 'Sim', 'value' => 1, 'name' => 'contribuicao_sindical', "type" => "select"],
-                ['label' => 'Sim', 'value' => 1, 'name' => 'vale_transporte', "type" => "select"],
-                ['label' => '6,90', 'value' => 6.9, 'name' => 'valor_transporte_valor_diario'],
-                ['label' => '1.000,00', 'value' => 1200, 'name' => 'salario_bruto'],
-                ['label' => '1.200,00', 'value' => 1400, 'name' => 'total_funcionario'],
-                ['label' => '0',  'value' => 0, 'name' => 'dsr'],
-            ],
-            [
-                ['label' => 'Batman', 'value' => 'Kratos', 'name' => 'name'],
-                ['label' => '1.400,00', 'value' => 1200, 'name' => 'salario'],
-                ['label' => '10', 'value' => 30, 'name' => 'dias_trabalhados'],
-                ['label' => 'Afastado', 'value' => 2, 'name' => 'situacao'],
-                ['label' => 'Não', 'value' => 0, 'name' => 'cesta_basica', "type" => "select"],
-                ['label' => 'Sim', 'value' => 1, 'name' => 'assistencia_medica', "type" => "select"],
-                ['label' => '3', 'value' => 3, 'name' => 'numero_dependentes'],
-                ['label' => 'Sim', 'value' => 1, 'name' => 'assistencia_odontologica', "type" => "select"],
-                ['label' => 'Sim', 'value' => 1, 'name' => 'contribuicao_sindical', "type" => "select"],
-                ['label' => 'Não', 'value' => 0, 'name' => 'vale_transporte', "type" => "select"],
-                ['label' => '0', 'value' => 0, 'name' => 'valor_transporte_valor_diario'],
-                ['label' => '466,67', 'value' => 466.67, 'name' => 'salario_bruto'],
-                ['label' => '1.800,00', 'value' => 1400, 'name' => 'total_funcionario'],
-                ['label' => '0',  'value' => 0, 'name' => 'dsr'],
-            ],
-            [
-                ['label' => 'Total', 'value' => 'Total', 'name' => 'total_name'],
-                ['label' => '3.600,00', 'value' => 3600, 'name' => 'total_salario'],
-                ['label' => '', 'value' => 0, 'name' => 'total_dias_trabalhados'],
-                ['label' => '', 'value' => 0, 'name' => 'total_situacao'],
-                ['label' => '', 'value' => 0, 'name' => 'total_cesta_basica'],
-                ['label' => '', 'value' => 0, 'name' => 'total_assistencia_medica'],
-                ['label' => '', 'value' => 0, 'name' => 'total_numero_dependentes'],
-                ['label' => '', 'value' => 0, 'name' => 'total_assistencia_odontologica', "type" => "select"],
-                ['label' => '', 'value' => 0, 'name' => 'total_contribuicao_sindical', "type" => "select"],
-                ['label' => '', 'value' => 0, 'name' => 'total_vale_transporte', "type" => "select"],
-                ['label' => '', 'value' => 0, 'name' => 'total_valor_transporte_valor_diario'],
-                ['label' => '2.666,67', 'value' => 2666.67, 'name' => 'total_salario_bruto'],
-                ['label' => '5.400,00', 'value' => 5400, 'name' => 'total_total_funcionario'],
-                ['label' => '',  'value' => 0, 'name' => 'total_dsr'],
-            ]
-        ]
+        // "rows" => [
+        //     [
+        //         ['label' => 'Oliveira Silva', 'value' => 'Oliveira Silva', 'name' => 'name'],
+        //         ['label' => '1.200,00', 'value' => 1200, 'name' => 'salario'],
+        //         ['label' => '30', 'value' => 30, 'name' => 'dias_trabalhados'],
+        //         ['label' => 'Ativo', 'value' => 1, 'name' => 'situacao'],
+        //         ['label' => 'Sim', 'value' => 1, 'name' => 'cesta_basica', "type" => "select"],
+        //         ['label' => 'Sim', 'value' => 1, 'name' => 'assistencia_medica', "type" => "select"],
+        //         ['label' => '1', 'value' => 1, 'name' => 'numero_dependentes'],
+        //         ['label' => 'Sim', 'value' => 1, 'name' => 'assistencia_odontologica', "type" => "select"],
+        //         ['label' => 'Sim', 'value' => 1, 'name' => 'contribuicao_sindical', "type" => "select"],
+        //         ['label' => 'Sim', 'value' => 1, 'name' => 'vale_transporte', "type" => "select"],
+        //         ['label' => '6,90', 'value' => 6.9, 'name' => 'valor_transporte_valor_diario'],
+        //         ['label' => '1.200,00', 'value' => 1200, 'name' => 'salario_bruto'],
+        //         ['label' => '1.400,00', 'value' => 1400, 'name' => 'total_funcionario'],
+        //         ['label' => '0', 'value' => 0, 'name' => 'dsr'],
+        //     ],
+        //     [
+        //         ['label' => 'Kratos', 'value' => 'Kratos', 'name' => 'name'],
+        //         ['label' => '1.000,00', 'value' => 1200, 'name' => 'salario'],
+        //         ['label' => '30', 'value' => 30, 'name' => 'dias_trabalhados'],
+        //         ['label' => 'Ativo', 'value' => 1, 'name' => 'situacao'],
+        //         ['label' => 'Sim', 'value' => 1, 'name' => 'cesta_basica', "type" => "select"],
+        //         ['label' => 'Sim', 'value' => 1, 'name' => 'assistencia_medica', "type" => "select"],
+        //         ['label' => '0', 'value' => 0, 'name' => 'numero_dependentes'],
+        //         ['label' => 'Sim', 'value' => 1, 'name' => 'assistencia_odontologica', "type" => "select"],
+        //         ['label' => 'Sim', 'value' => 1, 'name' => 'contribuicao_sindical', "type" => "select"],
+        //         ['label' => 'Sim', 'value' => 1, 'name' => 'vale_transporte', "type" => "select"],
+        //         ['label' => '6,90', 'value' => 6.9, 'name' => 'valor_transporte_valor_diario'],
+        //         ['label' => '1.000,00', 'value' => 1200, 'name' => 'salario_bruto'],
+        //         ['label' => '1.200,00', 'value' => 1400, 'name' => 'total_funcionario'],
+        //         ['label' => '0',  'value' => 0, 'name' => 'dsr'],
+        //     ],
+        //     [
+        //         ['label' => 'Batman', 'value' => 'Kratos', 'name' => 'name'],
+        //         ['label' => '1.400,00', 'value' => 1200, 'name' => 'salario'],
+        //         ['label' => '10', 'value' => 30, 'name' => 'dias_trabalhados'],
+        //         ['label' => 'Afastado', 'value' => 2, 'name' => 'situacao'],
+        //         ['label' => 'Não', 'value' => 0, 'name' => 'cesta_basica', "type" => "select"],
+        //         ['label' => 'Sim', 'value' => 1, 'name' => 'assistencia_medica', "type" => "select"],
+        //         ['label' => '3', 'value' => 3, 'name' => 'numero_dependentes'],
+        //         ['label' => 'Sim', 'value' => 1, 'name' => 'assistencia_odontologica', "type" => "select"],
+        //         ['label' => 'Sim', 'value' => 1, 'name' => 'contribuicao_sindical', "type" => "select"],
+        //         ['label' => 'Não', 'value' => 0, 'name' => 'vale_transporte', "type" => "select"],
+        //         ['label' => '0', 'value' => 0, 'name' => 'valor_transporte_valor_diario'],
+        //         ['label' => '466,67', 'value' => 466.67, 'name' => 'salario_bruto'],
+        //         ['label' => '1.800,00', 'value' => 1400, 'name' => 'total_funcionario'],
+        //         ['label' => '0',  'value' => 0, 'name' => 'dsr'],
+        //     ],
+        //     [
+        //         ['label' => 'Total', 'value' => 'Total', 'name' => 'total_name'],
+        //         ['label' => '3.600,00', 'value' => 3600, 'name' => 'total_salario'],
+        //         ['label' => '', 'value' => 0, 'name' => 'total_dias_trabalhados'],
+        //         ['label' => '', 'value' => 0, 'name' => 'total_situacao'],
+        //         ['label' => '', 'value' => 0, 'name' => 'total_cesta_basica'],
+        //         ['label' => '', 'value' => 0, 'name' => 'total_assistencia_medica'],
+        //         ['label' => '', 'value' => 0, 'name' => 'total_numero_dependentes'],
+        //         ['label' => '', 'value' => 0, 'name' => 'total_assistencia_odontologica', "type" => "select"],
+        //         ['label' => '', 'value' => 0, 'name' => 'total_contribuicao_sindical', "type" => "select"],
+        //         ['label' => '', 'value' => 0, 'name' => 'total_vale_transporte', "type" => "select"],
+        //         ['label' => '', 'value' => 0, 'name' => 'total_valor_transporte_valor_diario'],
+        //         ['label' => '2.666,67', 'value' => 2666.67, 'name' => 'total_salario_bruto'],
+        //         ['label' => '5.400,00', 'value' => 5400, 'name' => 'total_total_funcionario'],
+        //         ['label' => '',  'value' => 0, 'name' => 'total_dsr'],
+        //     ]
+        // ]
+
+        "rows" => [],
     ];
+
+    public function mount()
+    {
+        $cc = Auth()->user()->cc;
+
+        if ($cc) {
+            $employees = DB::connection('mysql_dump')
+                ->table('FUNCIONARIOS')
+                ->where('RA_CC', $cc)
+                ->get();
+
+            foreach ($employees as $row) {
+                array_push($this->mo['rows'], [
+                    [
+                        'label' => $row->RA_NOME,
+                        'value' => $row->RA_NOME,
+                        'name' => 'name',
+                        'align' => 'text-left'
+                    ],
+                    [
+                        'label' => 'R$' . number_format($row->RA_SALARIO, 2, ',', '.'),
+                        'value' => $row->RA_SALARIO,
+                        'name' => 'salario'
+                    ],
+                    ['label' => '30', 'value' => 30, 'name' => 'dias_trabalhados'],
+                    ['label' => 'Ativo', 'value' => 1, 'name' => 'situacao'],
+                    ['label' => 'Sim', 'value' => 1, 'name' => 'cesta_basica', "type" => "select"],
+                    ['label' => 'Sim', 'value' => 1, 'name' => 'assistencia_medica', "type" => "select"],
+                    ['label' => $row->RB_QTDEPEN, 'value' => $row->RB_QTDEPEN, 'name' => 'numero_dependentes'],
+                    ['label' => 'Sim', 'value' => 1, 'name' => 'assistencia_odontologica', "type" => "select"],
+                    ['label' => 'Sim', 'value' => 1, 'name' => 'contribuicao_sindical', "type" => "select"],
+                    ['label' => 'Sim', 'value' => 1, 'name' => 'vale_transporte', "type" => "select"],
+                    ['label' => '0,00', 'value' => 0, 'name' => 'valor_transporte_valor_diario'],
+                    ['label' => '0,00', 'value' => 0, 'name' => 'salario_bruto'],
+                    ['label' => '0,00', 'value' => 0, 'name' => 'total_funcionario'],
+                    ['label' => '0', 'value' => 0, 'name' => 'dsr'],
+                ]);
+            }
+        }
+    }
 
     public function render()
     {

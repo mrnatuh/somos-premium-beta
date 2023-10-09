@@ -4,6 +4,7 @@ namespace App\Livewire\Preview;
 
 use App\Models\Preview;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class PreviewCreate extends Component
@@ -65,18 +66,21 @@ class PreviewCreate extends Component
         $weekref = "{$month}{$week}{$year}";
         $monthref = "{$month}_{$year}";
 
+        $cc = Auth::user()->cc ?? 1;
+
         $preview = Preview::firstOrCreate(
             [
+                'cc' => $cc,
                 'week_ref' => $weekref
             ],
             [
-                'client_id' => 1,
+                'cc' => $cc,
                 'month_ref' => $monthref
             ],
         )->save();
 
         session()->put('preview', [
-            'client_id' => 1,
+            'cc' => $cc,
             'week_ref' => $weekref
         ]);
 

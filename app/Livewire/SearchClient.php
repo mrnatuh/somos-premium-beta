@@ -29,15 +29,16 @@ class SearchClient extends Component
 
     public function getClients()
     {
+        $cc = session('preview')['cc'];
+
         $this->validate();
 
         $this->clients = DB::connection('mysql_dump')
             ->table('CLIENTES')
+            ->where('A1_CC', $cc)
             ->where('A1_NOME', 'LIKE', "%{$this->q}%")
             ->orWhere('A1_COD', 'LIKE', "%{$this->q}%")
-            ->orWhere('A1_CC', 'LIKE', "%{$this->q}%")
             ->orWhere('A1_CGC', 'LIKE', "%{$this->q}%")
-            ->take(6)
             ->get();
     }
 }

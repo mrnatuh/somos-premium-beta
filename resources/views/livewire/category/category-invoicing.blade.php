@@ -1,13 +1,12 @@
 <div class="flex flex-col justify-between w-full">
-
     <div class="mt-10">
         <livewire:search-client />
     </div>
 
     <div class="flex mt-10 overflow-x-scroll">
         <div class="flex flex-col">
-            <div class="flex">
-                <div class="border-r block text-sm font-normal text-[#b1b1b1] py-3 w-[100px]">
+            <div class="flex flex-shrink flex-grow">
+                <div class="border-r block text-sm font-normal text-[#b1b1b1] p-3 w-[100px]">
                     Cliente
                 </div>
 
@@ -15,36 +14,38 @@
                 @php
                     $id = $company['id'];
                 @endphp
-                <div class="border-r flex text-sm font-normal text-[#b1b1b1] w-[{{ ((int) $company['colspan'] * 125) . 'px' }}] overflow-hidden relative p-4 m-0">
-                    <span class="flex w-full text-[16px] text-[#404D61]  leading-normal text-center">
+                <div class="border-r flex flex-shrink flex-grow text-sm font-normal text-[#b1b1b1] w-[{{ ((int) $company['colspan'] * 125) . 'px' }}] overflow-hidden relative p-4 m-0">
+                    <span class="flex w-full  justify-center text-[16px] text-[#404D61]  leading-normal text-center overflow-hidden">
                         {{ $company['title'] }}
                     </span>
 
-                    <div class="absolute bottom-2 right-2">
-                        @if(isset($deleteItem[$id]) && $deleteItem[$id])
-                            <button
-                                type="button"
-                                wire:click.lazy="confirmDeleteItem('{{ $id }}')"
-                                class="text-green-500 p-1 bg-white opacity-75 hover:opacity-100 hover:z-40 transition-all py-1 px-2.5"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current"><path d="m10 15.586-3.293-3.293-1.414 1.414L10 18.414l9.707-9.707-1.414-1.414z"></path></svg>
-                            </button>
+                    <div class="absolute top-0 left-0">
+                        <div class="flex gap-1">
+                            @if(isset($deleteItem[$id]) && $deleteItem[$id])
+                                <button
+                                    type="button"
+                                    wire:click.lazy="confirmDeleteItem('{{ $id }}')"
+                                    class="text-green-500 p-1 bg-white opacity-75 hover:opacity-100 hover:z-40 transition-all py-1 px-2.5"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current"><path d="m10 15.586-3.293-3.293-1.414 1.414L10 18.414l9.707-9.707-1.414-1.414z"></path></svg>
+                                </button>
 
+                                <button
+                                    type="button"
+                                    wire:click.lazy="cancelDeleteItem('{{ $id }}')"
+                                    class="text-red-500 p-1 bg-white opacity-75 hover:opacity-100 hover:z-40 transition-all py-1 px-2.5"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current"><path d="M9.172 16.242 12 13.414l2.828 2.828 1.414-1.414L13.414 12l2.828-2.828-1.414-1.414L12 10.586 9.172 7.758 7.758 9.172 10.586 12l-2.828 2.828z"></path><path d="M12 22c5.514 0 10-4.486 10-10S17.514 2 12 2 2 6.486 2 12s4.486 10 10 10zm0-18c4.411 0 8 3.589 8 8s-3.589 8-8 8-8-3.589-8-8 3.589-8 8-8z"></path></svg>
+                            @else
                             <button
                                 type="button"
-                                wire:click.lazy="cancelDeleteItem('{{ $id }}')"
-                                class="text-red-500 p-1 bg-white opacity-75 hover:opacity-100 hover:z-40 transition-all py-1 px-2.5"
+                                wire:click.lazy="deleteRowItem('{{ $company['id'] }}')"
+                                class="bg-white opacity-75 hover:opacity-100 hover:z-40 transition-all p-1"
                             >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current"><path d="M9.172 16.242 12 13.414l2.828 2.828 1.414-1.414L13.414 12l2.828-2.828-1.414-1.414L12 10.586 9.172 7.758 7.758 9.172 10.586 12l-2.828 2.828z"></path><path d="M12 22c5.514 0 10-4.486 10-10S17.514 2 12 2 2 6.486 2 12s4.486 10 10 10zm0-18c4.411 0 8 3.589 8 8s-3.589 8-8 8-8-3.589-8-8 3.589-8 8-8z"></path></svg>
-                        @else
-                        <button
-                            type="button"
-                            wire:click.lazy="deleteRowItem('{{ $company['id'] }}')"
-                            class="bg-white opacity-75 hover:opacity-100 hover:z-40 transition-all py-1 px-2.5"
-                        >
-                            <img src="/img/delete.svg" />
-                        </button>
-                        @endif
+                                <img src="/img/delete.svg" />
+                            </button>
+                            @endif
+                        </div>
                     </div>
                 </div>
                 @endforeach
@@ -90,26 +91,82 @@
                 <table class="w-[{{ ((int) $company['colspan'] * 125) . 'px' }}] border-r">
                     <thead>
                         <tr>
-                            @foreach($company['labels'] as $label)
-                            <th class="w-[125px] h-11">
-                                <span class="w-full text-sm font-normal text-[#b1b1b1] justify-center">
-                                    {{ $label }}
-                                </span>
-                            </th>
-                            @endforeach
+                            @if(sizeof($company['labels']))
+                                @foreach($company['labels'] as $label)
+                                @php
+                                    $labelIndex = $loop->index;
+                                @endphp
+                                <th class="w-[125px] h-11 relative">
+                                    <span class="w-full text-sm font-normal text-[#b1b1b1] justify-center uppercase">
+                                        {{ $label }}
+                                    </span>
+
+                                    <div class="absolute top-1/2 left-0 -translate-y-1/2">
+                                        <div class="flex gap-1">
+                                            @if(isset($deleteCompanyColumn[$companyIndex][$labelIndex]) && $deleteCompanyColumn[$companyIndex][$labelIndex])
+                                                <button
+                                                    type="button"
+                                                    wire:click.lazy="confirmDeleteColumnItem('{{ $companyIndex }}', '{{ $labelIndex }}')"
+                                                    class="text-green-500 p-1 bg-white opacity-75 hover:opacity-100 hover:z-40 transition-all py-1 px-2.5"
+                                                >
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current"><path d="m10 15.586-3.293-3.293-1.414 1.414L10 18.414l9.707-9.707-1.414-1.414z"></path></svg>
+                                                </button>
+
+                                                <button
+                                                    type="button"
+                                                    wire:click.lazy="cancelDeleteColumnItem('{{ $companyIndex }}', '{{ $labelIndex }}')"
+                                                    class="text-red-500 p-1 bg-white opacity-75 hover:opacity-100 hover:z-40 transition-all py-1 px-2.5"
+                                                >
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current"><path d="M9.172 16.242 12 13.414l2.828 2.828 1.414-1.414L13.414 12l2.828-2.828-1.414-1.414L12 10.586 9.172 7.758 7.758 9.172 10.586 12l-2.828 2.828z"></path><path d="M12 22c5.514 0 10-4.486 10-10S17.514 2 12 2 2 6.486 2 12s4.486 10 10 10zm0-18c4.411 0 8 3.589 8 8s-3.589 8-8 8-8-3.589-8-8 3.589-8 8-8z"></path></svg>
+                                            @else
+                                                <button
+                                                    type="button"
+                                                    wire:click.lazy="deleteColumnItem('{{ $companyIndex }}', '{{ $labelIndex }}')"
+                                                    class="bg-white opacity-75 hover:opacity-100 hover:z-40 transition-all p-1"
+                                                >
+                                                    <img src="/img/delete.svg" />
+                                                </button>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </th>
+                                @endforeach
+                            @endif
+
+                            <td class="w-[125px] h-11">
+                                <select
+                                    class="flex flex-shrink flex-grow w-full text-sm font-normal text-[#b1b1b1] justify-center"
+                                    wire:change.lazy="addColumnPrice({{ $companyIndex }}, $event.target.value)"
+                                >
+                                    <option value="" selected="true">Selecione</option>
+                                    @foreach($company['prices_options'] as $option)
+                                        @if(!in_array($option['value'], $company['prices_selected']))
+                                        <option value="{{ $option['value'] }}">{{ $option['label'] }}</option>
+                                        @endif
+                                    @endforeach
+                                </select>
+                            </td>
                         </tr>
 
                         <tr class="bg-gray-100">
-                            @foreach($company['prices'] as $price)
+                            @if(sizeof($company['prices']))
+                                @foreach($company['prices'] as $price)
+                                <th class="p-3 w-[125px]">
+                                    <input
+                                        type="text"
+                                        value="{{ number_format($price['value'], 2, ',', '.') }}"
+                                        class="flex text-[16px] font-normal text-[#b1b1b1]  text-center justify-center border-0 bg-transparent p-0 w-full"
+                                        disabled
+                                    />
+                                </th>
+                                @endforeach
+                            @endif
+
                             <th class="p-3 w-[125px]">
-                                <input
-                                    type="text"
-                                    value="{{ $price['value'] }}"
-                                    class="flex text-[16px] font-normal text-[#b1b1b1]  text-center justify-center border-0 bg-transparent p-0 w-full"
-                                    disabled
-                                />
+                                <span class="flex text-[16px] font-normal text-[#b1b1b1]  text-center justify-center border-0 bg-transparent p-0 w-full">
+                                0,00
+                                </span>
                             </th>
-                            @endforeach
                         </tr>
                     </thead>
                     <tbody>

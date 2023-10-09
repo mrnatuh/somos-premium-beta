@@ -15,6 +15,7 @@ class Option extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'cc',
         'week_ref',
         'option_name',
         'option_value',

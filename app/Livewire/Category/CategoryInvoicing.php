@@ -6,121 +6,21 @@ use App\Models\Invoicing;
 use App\Models\Option;
 use App\Models\Preview;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Illuminate\Support\Str;
 
 class CategoryInvoicing extends Component
 {
     public $deleteItem = [];
 
-    // public $companies = [
-    //     [
-    //         "title" => "Mercado Livre",
-
-    //         "colspan" => 2,
-    //         "rowspan" => 8,
-
-    //         "labels" => ['Almoço', 'Jantar'],
-
-    //         "prices" => [
-    //             ["value" => 17.25],
-    //             ["value" => 14.25],
-    //         ],
-
-    //         "rows" => [
-    //             [
-    //                 ["value" => 100],
-    //                 ["value" => 80]
-    //             ],
-    //             [
-    //                 ["value" => 100],
-    //                 ["value" => 80]
-    //             ],
-    //             [
-    //                 ["value" => 100],
-    //                 ["value" => 80]
-    //             ],
-    //             [
-    //                 ["value" => 100],
-    //                 ["value" => 80]
-    //             ],
-    //             [
-    //                 ["value" => 30],
-    //                 ["value" => 15]
-    //             ],
-    //             [
-    //                 ["value" => 0],
-    //                 ["value" => 0]
-    //             ],
-    //             [
-    //                 ["value" => 100],
-    //                 ["value" => 80]
-    //             ],
-    //             [
-    //                 ["value" => 100],
-    //                 ["value" => 80]
-    //             ],
-    //         ],
-    //     ],
-
-    //     [
-    //         "title" => "Graber",
-
-    //         "colspan" => 2,
-    //         "rowspan" => 8,
-
-    //         "labels" => ['Almoço', 'Jantar'],
-
-    //         "prices" => [["value" => 22.9], ["value" => 29.20]],
-
-    //         "rows" => [
-    //             [["value" => 30], ["value" => 50]],
-    //             [["value" => 30], ["value" => 50]],
-    //             [["value" => 30], ["value" => 50]],
-    //             [["value" => 30], ["value" => 50]],
-    //             [["value" => 30], ["value" => 0]],
-    //             [["value" => 30], ["value" => 0]],
-    //             [["value" => 30], ["value" => 50]],
-    //             [["value" => 100], ["value" => 50]]
-    //         ],
-    //     ],
-
-    //     [
-    //         "title" => "B2 Blue",
-
-    //         "colspan" => 3,
-    //         "rowspan" => 7,
-
-    //         "labels" => ['Ceia', 'Almoço', 'Jantar'],
-
-    //         "prices" => [['value' => 7.9], ['value' => 18.99], ['value' => 22.30]],
-
-    //         "rows" => [
-    //             [['value' => 200], ['value' => 200], ['value' => 200]],
-    //             [['value' => 200], ['value' => 200], ['value' => 200]],
-    //             [['value' => 200], ['value' => 200], ['value' => 200]],
-    //             [['value' => 200], ['value' => 200], ['value' => 200]],
-    //             [['value' => 200], ['value' => 200], ['value' => 200]],
-    //             [['value' => 200], ['value' => 200], ['value' => 200]],
-    //             [['value' => 200], ['value' => 200], ['value' => 200]],
-    //             [['value' => 200], ['value' => 200], ['value' => 200]],
-    //         ],
-    //     ],
-    // ];
+    public $deleteCompanyColumn = [];
 
     public $lastOfMonth = 0;
 
     public $companies = [];
-
-    public function updatePrice($companyIndex, $priceIndex, $value)
-    {
-        if (isset($this->companies[$companyIndex])) {
-            if (isset($this->companies[$companyIndex]['prices'])) {
-                $this->companies[$companyIndex]['prices'][$priceIndex]['value'] = (float) $value ?? 0;
-            }
-        }
-    }
 
     public function updateQty($companyIndex, $rowIndex, $qtyIndex, $value)
     {
@@ -131,10 +31,35 @@ class CategoryInvoicing extends Component
         }
     }
 
+    public function addColumnPrice($companyIndex, $value)
+    {
+        if (isset($this->companies[$companyIndex])) {
+            // cadastra novo label de preco
+            array_push($this->companies[$companyIndex]['labels'], $value);
+
+            // atualiza o valor
+            array_push($this->companies[$companyIndex]['prices'], $this->companies[$companyIndex]['prices_vlr'][Str::slug($value)]);
+
+            // adiciona o preco selecionado
+            array_push($this->companies[$companyIndex]['prices_selected'], $value);
+
+            // adiciona mais 1 coluna
+            $this->companies[$companyIndex]['colspan'] += 1;
+
+            // atualiza a lista de quantidade
+            for ($r = 0; $r < sizeof($this->companies[$companyIndex]['rows']); $r++) {
+                array_push($this->companies[$companyIndex]['rows'][$r], [
+                    'value' => 0,
+                ]);
+            }
+
+            $this->save();
+        }
+    }
+
     #[On('search-add-client')]
     public function addClient($client_id)
     {
-
         $client = DB::connection('mysql_dump')
             ->table('CLIENTES')
             ->where('A1_COD', $client_id)
@@ -146,10 +71,30 @@ class CategoryInvoicing extends Component
 
         $exists = false;
 
-
         foreach ($this->companies as $company) {
             if ($company['id'] === $client->A1_CGC) {
                 $exists = true;
+            }
+        }
+
+        $precos_vlr = [];
+        $precos_options = [];
+
+        if (isset($client->A1_TABELA)) {
+            $prices = DB::connection('mysql_dump')
+                ->table('TABELAPRECO')
+                ->where('DA0_CODTAB', $client->A1_TABELA)
+                ->get();
+
+            foreach ($prices as $row) {
+                $preco_option = Str::slug(trim($row->B1_DESC));
+
+                array_push($precos_options, [
+                    "value" => $preco_option,
+                    "label" => trim($row->B1_DESC),
+                ]);
+
+                $precos_vlr[$preco_option] = ['value' => $row->DA1_PRCVEN,  'edit' => true];
             }
         }
 
@@ -167,12 +112,16 @@ class CategoryInvoicing extends Component
 
             "title" => trim($client->A1_NOME),
 
-            "colspan" => 2,
+            "colspan" => 1,
             "rowspan" => $this->lastOfMonth,
+            "last_of_month" => $this->lastOfMonth,
 
-            "labels" => ['Almoço', 'Jantar'],
+            "prices_selected" => [],
+            "prices_vlr" => $precos_vlr,
+            "prices_options" => $precos_options,
 
-            "prices" => [['value' => 1, 'edit' => true], ['value' => 1, 'edit' => true]],
+            "labels" => [],
+            "prices" => [],
 
             "rows" => []
         ];
@@ -190,6 +139,8 @@ class CategoryInvoicing extends Component
         }
 
         array_push($this->companies, $add_client);
+
+        $this->save();
     }
 
     public function getTotal()
@@ -204,10 +155,12 @@ class CategoryInvoicing extends Component
 
             if (sizeof($prices)) {
                 for ($c = 0; $c < $colspan; $c++) {
-                    $price = $prices[$c]['value'];
-                    for ($r = 0; $r < $rowspan; $r++) {
-                        $qty = $rows[$r][$c]['value'];
-                        $total += $price * $qty;
+                    $price = $prices[$c]['value'] ?? false;
+                    if ($price) {
+                        for ($r = 0; $r < $rowspan; $r++) {
+                            $qty = $rows[$r][$c]['value'];
+                            $total += $price * $qty;
+                        }
                     }
                 }
             }
@@ -243,9 +196,51 @@ class CategoryInvoicing extends Component
         return true;
     }
 
+    public function deleteColumnItem($companyIndex, $columnIndex)
+    {
+        if (!isset($this->deleteCompanyColumn[$companyIndex])) {
+            $this->deleteCompanyColumn[$companyIndex] = [];
+        }
+
+        $this->deleteCompanyColumn[$companyIndex][$columnIndex] = true;
+    }
+
+    public function cancelDeleteColumnItem($companyIndex, $columnIndex)
+    {
+        if (!isset($this->deleteCompanyColumn[$companyIndex])) {
+            $this->deleteCompanyColumn[$companyIndex] = [];
+        }
+
+        $this->deleteCompanyColumn[$companyIndex][$columnIndex] = false;
+    }
+
+    public function confirmDeleteColumnItem($companyIndex, $labelIndex)
+    {
+        if (isset($this->companies[$companyIndex])) {
+            unset($this->companies[$companyIndex]['labels'][$labelIndex]);
+
+            unset($this->companies[$companyIndex]['prices'][$labelIndex]);
+
+            unset($this->companies[$companyIndex]['prices_selected'][$labelIndex]);
+
+            $this->companies[$companyIndex]['colspan'] -= 1;
+
+            // update rows
+            for ($r = 0; $r < sizeof($this->companies[$companyIndex]['rows']); $r++) {
+                unset($this->companies[$companyIndex]['rows'][$r][$labelIndex]);
+                $this->companies[$companyIndex]['rows'][$r] = array_values($this->companies[$companyIndex]['rows'][$r]);
+            }
+
+            $this->deleteCompanyColumn[$companyIndex][$labelIndex] = false;
+
+            $this->save();
+        }
+    }
+
     public function save()
     {
         $weekref = session('preview')['week_ref'];
+        $cc = session('preview')['cc'];
 
         // acha o preview
         $preview = Preview::where('week_ref', $weekref)->first();
@@ -261,10 +256,12 @@ class CategoryInvoicing extends Component
         // cria ou faz update da invoicing para aquela prévia
         Option::updateOrCreate(
             [
+                'cc' => $cc,
                 'week_ref' => $weekref,
                 'option_name' => 'faturamento',
             ],
             [
+                'cc' => $cc,
                 'week_ref' => $weekref,
                 'option_name' => 'faturamento',
                 'option_value' => $content,
@@ -282,6 +279,8 @@ class CategoryInvoicing extends Component
 
     public function mount()
     {
+        $this->lastOfMonth = (int) Carbon::now()->lastOfMonth()->format('d');
+
         $weekref = session('preview')['week_ref'];
 
         $faturamento = Option::where('week_ref', $weekref)
@@ -295,8 +294,6 @@ class CategoryInvoicing extends Component
 
     public function render()
     {
-        $this->lastOfMonth = (int) Carbon::now()->lastOfMonth()->format('d');
-
         return view('livewire.category.category-invoicing');
     }
 }

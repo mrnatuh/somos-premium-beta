@@ -1,92 +1,92 @@
-<div class="flex flex-col justify-between w-full h-full">
-    <div class="flex flex-col max-w-[1200px] overflow-hidden">
-        <div class="block w-full overflow-x-auto mt-10">
-            @php
-                $tdWidth = 100;
-                $width = sizeof($parameters['labels']) * $tdWidth;
-            @endphp
-            <table class="no-wrap cursor-default" style="width: {{ $width }}px">
-                <thead>
-                    <tr>
-                        @foreach($parameters['labels'] as $row)
-                            <th class="p-2 w-[{{ $tdWidth }}px]">
-                                <div class="flex flex-col text-sm font-normal text-[#b1b1b1] justify-end items-center h-full">
-                                    {!! $row['label'] !!}
-                                </div>
-                            </th>
-                        @endforeach
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($parameters['rows'] as $rows)
-                    @php
-                        $rowIndex = $loop->index;
-                    @endphp
-                    <tr class="{{ (int) $rowIndex % 2 == 0 ? '' : 'bg-gray-100' }}">
-                        @foreach($rows as $row)
-                        @php
-                            $columnIndex = $loop->index;
-                        @endphp
-                        <td class="text-center p-2 text-sm text-[#404D61]">
-                            @if (isset($row['type']) && $row['type'] == 'number')
-                            <input
-                                type="{{ $row['type'] ?? 'text' }}"
-                                value="{{ $row['value'] }}"
-                                class="flex text-center text-sm justify-center border-0 bg-transparent py-2 w-full"
-                            />
-                            @else
-                                {{ $row['label'] }}
-                            @endif
-                        </td>
-                        @endforeach
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
+<div class="flex flex-col justify-between w-full">
 
-        <div class="block w-full mt-4 overflow-x-auto">
-            @php
-                $width = sizeof($mo['labels']) * 125;
-            @endphp
-            <table class="cursor-default mt-10" style="width: {{ $width }}px">
-                <thead>
-                    <tr>
-                        @foreach($mo['labels'] as $row)
-                            <th class="p-2 w-[125px]">
-                                <div class="flex flex-col text-sm font-normal text-[#b1b1b1] justify-end items-center h-full">
-                                    {!! $row['label'] !!}
-                                </div>
-                            </th>
-                        @endforeach
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($mo['rows'] as $row)
-                    @php
-                        $rowIndex = $loop->index;
-                    @endphp
-                    <tr class="{{ (int) $rowIndex % 2 == 0 ? '' : 'bg-gray-100' }}">
-                        @foreach($row as $item)
-                        <td class="text-center p-2">
-                            @if (isset($item['type']) && $item['type'] == 'select')
-                                <select class="flex text-center text-sm justify-center border-0 bg-transparent w-full">
-                                    <option value="1" {{ $item['value'] === 1 ? 'selected="selected"' : '' }}>Sim</option>
-                                    <option value="0" {{ $item['value'] === 0 ? 'selected="selected"' : '' }}>Não</option>
-                                </select>
-                            @else
-                                {{ $item['label'] ?? '-' }}
-                            @endif
-                        </td>
-                        @endforeach
-                    </tr>
+    <div class="flex w-full flex-shrink flex-grow mt-10">
+        @php
+            $tdWidth = 100;
+            $width = sizeof($parameters['labels']) * $tdWidth;
+        @endphp
+        <table class="no-wrap cursor-default" style="width: {{ $width }}px">
+            <thead>
+                <tr>
+                    @foreach($parameters['labels'] as $row)
+                        <th class="p-2 w-[{{ $tdWidth }}px]">
+                            <div class="flex flex-col text-sm font-normal text-[#b1b1b1] justify-end items-center h-full">
+                                {!! $row['label'] !!}
+                            </div>
+                        </th>
                     @endforeach
-                </tbody>
-            </table>
-        </div>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($parameters['rows'] as $rows)
+                @php
+                    $rowIndex = $loop->index;
+                @endphp
+                <tr class="{{ (int) $rowIndex % 2 == 0 ? '' : 'bg-gray-100' }}">
+                    @foreach($rows as $row)
+                    @php
+                        $columnIndex = $loop->index;
+                    @endphp
+                    <td class="text-center p-2 text-sm text-[#404D61]">
+                        @if (isset($row['type']) && $row['type'] == 'number')
+                        <input
+                            type="{{ $row['type'] ?? 'text' }}"
+                            value="{{ $row['value'] }}"
+                            class="flex text-center text-sm justify-center border-0 bg-transparent py-2 w-full"
+                        />
+                        @else
+                            {{ $row['label'] }}
+                        @endif
+                    </td>
+                    @endforeach
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
     </div>
 
-    <div class="w-full flex items-center justify-end gap-4">
+    <div class="flex flex-shrink flex-gro w-full mt-4 overflow-auto">
+        @php
+            $width = sizeof($mo['labels']) * 125;
+        @endphp
+        <table class="cursor-default mt-10" style="width: {{ $width }}px">
+            <thead>
+                <tr>
+                    @foreach($mo['labels'] as $row)
+                        <th class="p-2 w-[125px]">
+                            <div class="flex flex-col text-sm font-normal text-[#b1b1b1] items-center h-full">
+                                {!! $row['label'] !!}
+                            </div>
+                        </th>
+                    @endforeach
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($mo['rows'] as $row)
+                @php
+                    $rowIndex = $loop->index;
+                @endphp
+                <tr class="{{ (int) $rowIndex % 2 == 0 ? '' : 'bg-gray-100' }}">
+                    @foreach($row as $item)
+                    <td class="{{ isset($item['align']) ? $item['align'] : 'text-center' }} p-2">
+                        @if (isset($item['type']) && $item['type'] == 'select')
+                            <select class="flex text-center text-sm justify-center border-0 bg-transparent w-[100px]">
+                                <option value="1" {{ $item['value'] === 1 ? 'selected="selected"' : '' }}>Sim</option>
+                                <option value="0" {{ $item['value'] === 0 ? 'selected="selected"' : '' }}>Não</option>
+                            </select>
+                        @else
+                            {{ $item['label'] ?? '-' }}
+                        @endif
+                    </td>
+                    @endforeach
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+
+
+    <div class="bg-white/50 w-full flex items-center justify-end gap-4 position fixed px-10 py-5 bottom-0 right-0">
         <button
             disabled="true"
             wire:click="save"
@@ -98,4 +98,6 @@
             Cancelar
         </a>
     </div>
+
+    <div class="h-20"></div>
 </div>

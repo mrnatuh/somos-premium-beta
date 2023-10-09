@@ -15,7 +15,7 @@ class Preview extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'client_id',
+        'cc',
         'week_ref',
         'month_ref',
         'invoicing',

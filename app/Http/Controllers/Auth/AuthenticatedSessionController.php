@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\LoginRequest;
+use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -23,13 +23,27 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
-        $request->authenticate();
+        $credentials = $request->validate([
+            'username' => 'required',
+            'password' => 'required'
+        ]);
 
-        $request->session()->regenerate();
+        $user = User::where('email', $credentials['username'])
+            ->orWhere('cc', $credentials['username'])
+            ->first();
 
-        return redirect()->intended(RouteServiceProvider::HOME);
+        if (!$user) {
+            return redirect()->back()->withErrors(['username' => 'Email, Centro de custo ou senha inválida.']);
+        }
+
+        if (Auth::attempt(['email' => $user['email'], 'password' => $credentials['password']])) {
+            $request->session()->regenerate(); // regenerate session for prevent session hijacking attack
+            return redirect()->route('dashboard'); // redirect to admin index
+        }
+
+        return redirect()->back()->withErrors(['username' => __('Email, Centro de custo ou senha inválida.')]);
     }
 
     /**
@@ -38,6 +52,7 @@ class AuthenticatedSessionController extends Controller
     public function destroy(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();
+        Auth::guard('cc')->logout();
 
         $request->session()->invalidate();
 

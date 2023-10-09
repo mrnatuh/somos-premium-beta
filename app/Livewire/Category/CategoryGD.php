@@ -101,13 +101,14 @@ class CategoryGD extends Component
         }
 
         $weekref = session('preview')['week_ref'];
+        $cc = session('preview')['cc'];
 
         // acha o preview
         $preview = Preview::where('week_ref', $weekref)->first();
 
         // calcula o total
         $total = number_format($this->getTotal(), 2);
-        $preview->events = $total;
+        $preview->gd = $total;
         $preview->save();
 
         // serializa o conteúdo
@@ -116,10 +117,12 @@ class CategoryGD extends Component
         // cria ou faz update da invoicing para aquela prévia
         Option::updateOrCreate(
             [
+                'cc' => $cc,
                 'week_ref' => $weekref,
                 'option_name' => 'gd',
             ],
             [
+                'cc' => $cc,
                 'week_ref' => $weekref,
                 'option_name' => 'gd',
                 'option_value' => $content,

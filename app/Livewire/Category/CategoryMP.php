@@ -107,13 +107,14 @@ class CategoryMP extends Component
         }
 
         $weekref = session('preview')['week_ref'];
+        $cc = session('preview')['cc'];
 
         // acha o preview
         $preview = Preview::where('week_ref', $weekref)->first();
 
         // calcula o total
         $total = number_format($this->getTotal(), 2);
-        $preview->events = $total;
+        $preview->mp = $total;
         $preview->save();
 
         // serializa o conteúdo
@@ -122,10 +123,12 @@ class CategoryMP extends Component
         // cria ou faz update da invoicing para aquela prévia
         Option::updateOrCreate(
             [
+                'cc' => $cc,
                 'week_ref' => $weekref,
                 'option_name' => 'mp',
             ],
             [
+                'cc' => $cc,
                 'week_ref' => $weekref,
                 'option_name' => 'mp',
                 'option_value' => $content,

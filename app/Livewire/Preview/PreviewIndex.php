@@ -3,6 +3,7 @@
 namespace App\Livewire\Preview;
 
 use App\Models\Preview;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\Attributes\On;
 
@@ -29,7 +30,9 @@ class PreviewIndex extends Component
 
     public function render()
     {
-        $this->previews = Preview::where('client_id', 1)
+        $cc = Auth::user()->cc ?? 1;
+
+        $this->previews = Preview::where('cc', $cc)
             ->where('month_ref', $this->month_ref)
             ->get();
 
