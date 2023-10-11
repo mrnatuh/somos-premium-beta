@@ -126,7 +126,7 @@ class CategoryEvent extends Component
         $cc = session('preview')['cc'];
 
         // acha o preview
-        $preview = Preview::where('week_ref', $weekref)->first();
+        $preview = Preview::where([['cc', '=', $cc], ['week_ref', '=', $weekref]])->first();
 
         // calcula o total
         $total = number_format($this->getTotal(), 2);
@@ -164,13 +164,14 @@ class CategoryEvent extends Component
     public function mount()
     {
         $weekref = session('preview')['week_ref'];
+        $cc = session('preview')['cc'] ?? false;
 
-        $eventos = Option::where('week_ref', $weekref)
-            ->where('option_name', 'eventos')
-            ->first();
+        if ($cc) {
+            $eventos = Option::where([['cc', '=', $cc], ['week_ref', '=', $weekref], ['option_name', '=', 'eventos']])->first();
 
-        if ($eventos) {
-            $this->events = unserialize($eventos->option_value);
+            if ($eventos) {
+                $this->events = unserialize($eventos->option_value);
+            }
         }
     }
 

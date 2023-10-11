@@ -11,7 +11,9 @@ use App\Livewire\Category\CategoryIndex;
 use App\Livewire\Dashboard\DashboardIndex;
 use App\Livewire\Preview\PreviewCreate;
 use App\Livewire\Preview\PreviewIndex;
-
+use App\Livewire\User\UserCreate;
+use App\Livewire\User\UserEdit;
+use App\Livewire\User\UserIndex;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,6 +42,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/previa/edit', PreviewEdit::class)->name('preview.edit');
 
     Route::delete('/previa/delete', PreviewDelete::class)->name('preview.delete');
+});
+
+Route::middleware(['auth', 'is-admin'])->group(function () {
+    Route::get('/profiles', UserIndex::class)->name('profiles.index');
+    Route::get('/profiles/create', UserCreate::class)->name('profiles.create');
+    Route::get('/profiles/edit/{user}', UserEdit::class)->name('profiles.edit');
 });
 
 require __DIR__ . '/auth.php';

@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Preview;
 
+use App\Models\LinkUser;
 use App\Models\Preview;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -30,11 +31,47 @@ class PreviewIndex extends Component
 
     public function render()
     {
-        $cc = Auth::user()->cc ?? 1;
 
-        $this->previews = Preview::where('cc', $cc)
-            ->where('month_ref', $this->month_ref)
-            ->get();
+        $access = Auth::user()->access;
+        $cc = Auth::user()->cc ?? false;
+
+        $user_links = LinkUser::all();
+
+        $ccs = [];
+        $supervisors = [];
+
+        // regra para diretores
+        if ($access === 'director') {
+            foreach ($user_links as $link) {
+                if ($link->user_id == Auth::user()->id) {
+                    array_push($supervisors, $link->parent_id);
+                }
+            }
+
+            foreach ($user_links as $link) {
+                if (in_array($link->user_id, $supervisors)) {
+                    array_push($ccs, $link->parent_id);
+                }
+            }
+
+            $this->previews = Preview::where('month_ref', '=', $this->month_ref)->whereIn('cc', $ccs)->get();
+            // regra para coordenadores
+        } else if ($access === 'coordinator') {
+            foreach ($user_links as $link) {
+                if ($link->user_id == Auth::user()->id) {
+                    array_push($ccs, $link->parent_id);
+                }
+            }
+
+            $this->previews = Preview::where('month_ref', '=', $this->month_ref)->whereIn('cc', $ccs)->get();
+
+            // regra para supervisores
+        } else if ($cc) {
+            $this->previews = Preview::where([['cc', '=', $cc], ['month_ref', '=', $this->month_ref]])
+                ->get();
+        } else {
+            $this->previews = Preview::where('month_ref', $this->month_ref)->get();
+        }
 
         $total = [
             'faturamento' => 0,

@@ -11,17 +11,17 @@ function alerts()
     if (alerts.length) {
         anime({
             targets: '.alert',
-            translateY: 75,
+            translateY: -10,
             duration: 500,
             complete: function (anim) {
                 anime({
                     targets: '.alert',
-                    translateY: -100,
+                    translateY: 0,
                     duration: 500,
                     complete: function (anim) {
                         document.querySelector('.alert').remove();
                     },
-                    delay: 5000
+                    delay: 3000
                 });
             }
         });

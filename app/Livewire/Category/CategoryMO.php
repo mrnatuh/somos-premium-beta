@@ -242,7 +242,7 @@ class CategoryMO extends Component
 
     public function mount()
     {
-        $cc = Auth()->user()->cc;
+        $cc = session('preview')['cc'];
 
         if ($cc) {
             $employees = DB::connection('mysql_dump')
@@ -265,18 +265,26 @@ class CategoryMO extends Component
                     ],
                     ['label' => '30', 'value' => 30, 'name' => 'dias_trabalhados'],
                     ['label' => 'Ativo', 'value' => 1, 'name' => 'situacao'],
-                    ['label' => 'Sim', 'value' => 1, 'name' => 'cesta_basica', "type" => "select"],
-                    ['label' => 'Sim', 'value' => 1, 'name' => 'assistencia_medica', "type" => "select"],
+                    ['label' => $row->R0_VLRCESTA > 0 ? 'Sim' : 'Não', 'value' => $row->R0_VLRCESTA > 0 ? 1 : 0, 'name' => 'cesta_basica', "type" => "select"],
+                    ['label' => $row->RA_PLSAUDE > 0 ? 'Sim' : 'Não', 'value' => $row->RA_PLSAUDE > 0 ? $row->RA_PLSAUDE : 0, 'name' => 'assistencia_medica', "type" => "select"],
                     ['label' => $row->RB_QTDEPEN, 'value' => $row->RB_QTDEPEN, 'name' => 'numero_dependentes'],
                     ['label' => 'Sim', 'value' => 1, 'name' => 'assistencia_odontologica', "type" => "select"],
                     ['label' => 'Sim', 'value' => 1, 'name' => 'contribuicao_sindical', "type" => "select"],
-                    ['label' => 'Sim', 'value' => 1, 'name' => 'vale_transporte', "type" => "select"],
-                    ['label' => '0,00', 'value' => 0, 'name' => 'valor_transporte_valor_diario'],
+                    ['label' => $row->R0_VLRVT > 0 ? 'Sim' : 'Não', 'value' => $row->R0_VLRVT > 0 ? 1 : 0, 'name' => 'vale_transporte', "type" => "select"],
+                    ['label' => number_format($row->R0_VLRVT, 2, ',', '.'), 'value' => $row->R0_VLRVT, 'name' => 'valor_transporte_valor_diario'],
                     ['label' => '0,00', 'value' => 0, 'name' => 'salario_bruto'],
                     ['label' => '0,00', 'value' => 0, 'name' => 'total_funcionario'],
                     ['label' => '0', 'value' => 0, 'name' => 'dsr'],
                 ]);
             }
+        }
+
+        $this->calculateRows();
+    }
+
+    public function calculateRows()
+    {
+        foreach ($this->mo['rows'] as $row) {
         }
     }
 

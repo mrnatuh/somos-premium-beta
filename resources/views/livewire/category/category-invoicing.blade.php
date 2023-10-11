@@ -184,7 +184,8 @@
                                     type="text"
                                     value="{{ $row['value'] }}"
                                     wire:change.lazy="updateQty({{ $companyIndex }}, {{ $rowIndex }}, {{ $qtyIndex }}, $event.target.value)"
-                                    class="flex text-center justify-center border-0 bg-transparent p-0 w-full"
+                                    class="flex text-center justify-center border-0 bg-transparent p-0 w-full disabled:text-gray-400"
+                                    {{ $row['name'] == 'OUTRO' ? 'disabled="true"' : '' }}"
                                 />
                             </td>
                             @endforeach
@@ -208,8 +209,10 @@
                 <x-status.loading />
             </button>
 
-            <a href="{{ route('preview') }}" class="bg-red-600 px-6 py-2 text-white rounded-lg text-xl font-bold">
+            <a href="{{ route('preview') }}" class="bg-red-600 px-6 py-2 text-white rounded-lg text-xl font-bold relative">
                 Cancelar
+
+                <x-status.loading />
             </a>
         </div>
     </div>

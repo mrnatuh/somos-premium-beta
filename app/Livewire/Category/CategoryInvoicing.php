@@ -34,24 +34,37 @@ class CategoryInvoicing extends Component
     public function addColumnPrice($companyIndex, $value)
     {
         if (isset($this->companies[$companyIndex])) {
+            // atualiza o nome da coluna
+            $colspan = sizeof($this->companies[$companyIndex]['labels']);
+
+            for ($r = 0; $r < sizeof($this->companies[$companyIndex]['rows']); $r++) {
+                $this->companies[$companyIndex]['rows'][$r][$colspan]['name'] = $value;
+            }
+
             // cadastra novo label de preco
             array_push($this->companies[$companyIndex]['labels'], $value);
 
             // atualiza o valor
-            array_push($this->companies[$companyIndex]['prices'], $this->companies[$companyIndex]['prices_vlr'][Str::slug($value)]);
+            array_push(
+                $this->companies[$companyIndex]['prices'],
+                $this->companies[$companyIndex]['prices_vlr'][Str::slug($value)]
+            );
 
             // adiciona o preco selecionado
             array_push($this->companies[$companyIndex]['prices_selected'], $value);
 
-            // adiciona mais 1 coluna
-            $this->companies[$companyIndex]['colspan'] += 1;
+
 
             // atualiza a lista de quantidade
             for ($r = 0; $r < sizeof($this->companies[$companyIndex]['rows']); $r++) {
                 array_push($this->companies[$companyIndex]['rows'][$r], [
                     'value' => 0,
+                    'name' => 'OUTRO',
                 ]);
             }
+
+            // pega a quantidade de colunas
+            $this->companies[$companyIndex]['colspan'] = sizeof($this->companies[$companyIndex]['rows'][0]);
 
             $this->save();
         }
@@ -94,16 +107,15 @@ class CategoryInvoicing extends Component
                     "label" => trim($row->B1_DESC),
                 ]);
 
-                $precos_vlr[$preco_option] = ['value' => $row->DA1_PRCVEN,  'edit' => true];
+                $precos_vlr[$preco_option] = [
+                    'value' => $row->DA1_PRCVEN,
+                    'edit' => true,
+                    'name' => $preco_option
+                ];
             }
         }
 
         if ($exists) {
-            session()->flash('message', [
-                'type' => 'warning',
-                'message' => 'Cliente já adicionado.'
-            ]);
-
             return;
         }
 
@@ -132,6 +144,7 @@ class CategoryInvoicing extends Component
             for ($c = 0; $c < $add_client['colspan']; $c++) {
                 array_push($cols, [
                     'value' => 0,
+                    'name' => 'OUTRO'
                 ]);
             }
 
@@ -193,7 +206,7 @@ class CategoryInvoicing extends Component
             unset($this->companies[$rowIndex]);
         }
 
-        return true;
+        $this->save();
     }
 
     public function deleteColumnItem($companyIndex, $columnIndex)
@@ -217,19 +230,47 @@ class CategoryInvoicing extends Component
     public function confirmDeleteColumnItem($companyIndex, $labelIndex)
     {
         if (isset($this->companies[$companyIndex])) {
-            unset($this->companies[$companyIndex]['labels'][$labelIndex]);
+            $value = $this->companies[$companyIndex]['labels'][$labelIndex];
 
-            unset($this->companies[$companyIndex]['prices'][$labelIndex]);
+            $tmp_prices_selected = [];
+            foreach ($this->companies[$companyIndex]['prices_selected'] as $label) {
+                if ($label != $value) {
+                    array_push($tmp_prices_selected, $label);
+                }
+            }
+            $this->companies[$companyIndex]['prices_selected'] = $tmp_prices_selected;
 
-            unset($this->companies[$companyIndex]['prices_selected'][$labelIndex]);
+            // deleta o label
+            $tmp_labels = [];
+            foreach ($this->companies[$companyIndex]['labels'] as $label) {
+                if ($label != $value) {
+                    array_push($tmp_labels, $label);
+                }
+            }
+            $this->companies[$companyIndex]['labels'] = $tmp_labels;
 
-            $this->companies[$companyIndex]['colspan'] -= 1;
+            // deleta o preço
+            $tmp_prices = [];
+            foreach ($this->companies[$companyIndex]['prices'] as $price) {
+                if ($price['name'] != $value) {
+                    array_push($tmp_prices, $price);
+                }
+            }
+            $this->companies[$companyIndex]['prices'] = $tmp_prices;
 
             // update rows
             for ($r = 0; $r < sizeof($this->companies[$companyIndex]['rows']); $r++) {
-                unset($this->companies[$companyIndex]['rows'][$r][$labelIndex]);
-                $this->companies[$companyIndex]['rows'][$r] = array_values($this->companies[$companyIndex]['rows'][$r]);
+                $tmp_rows = [];
+                foreach ($this->companies[$companyIndex]['rows'][$r] as $item) {
+                    if ($item['name'] != $value) {
+                        array_push($tmp_rows, $item);
+                    }
+                }
+                $this->companies[$companyIndex]['rows'][$r] = $tmp_rows;
             }
+
+            // pega a quantidade de colunas
+            $this->companies[$companyIndex]['colspan'] = sizeof($this->companies[$companyIndex]['rows'][0]);
 
             $this->deleteCompanyColumn[$companyIndex][$labelIndex] = false;
 
@@ -243,7 +284,7 @@ class CategoryInvoicing extends Component
         $cc = session('preview')['cc'];
 
         // acha o preview
-        $preview = Preview::where('week_ref', $weekref)->first();
+        $preview = Preview::where([['cc', '=', $cc], ['week_ref', '=', $weekref]])->first();
 
         // calcula o total
         $total = number_format($this->getTotal(), 2);
@@ -282,13 +323,18 @@ class CategoryInvoicing extends Component
         $this->lastOfMonth = (int) Carbon::now()->lastOfMonth()->format('d');
 
         $weekref = session('preview')['week_ref'];
+        $cc = session('preview')['cc'] ?? false;
 
-        $faturamento = Option::where('week_ref', $weekref)
-            ->where('option_name', 'faturamento')
-            ->first();
+        if ($cc) {
+            $faturamento = Option::where([
+                ['cc', '=', $cc],
+                ['week_ref', '=', $weekref],
+                ['option_name', '=', 'faturamento']
+            ])->first();
 
-        if ($faturamento) {
-            $this->companies = unserialize($faturamento->option_value);
+            if ($faturamento) {
+                $this->companies = unserialize($faturamento->option_value);
+            }
         }
     }
 

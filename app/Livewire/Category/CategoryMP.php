@@ -147,13 +147,15 @@ class CategoryMP extends Component
     public function mount()
     {
         $weekref = session('preview')['week_ref'];
+        $cc = session('preview')['cc'] ?? false;
 
-        $mp = Option::where('week_ref', $weekref)
-            ->where('option_name', 'mp')
-            ->first();
+        if ($cc) {
+            $mp = Option::where([['cc', '=', $cc], ['week_ref', '=', $weekref], ['option_name', '=', 'mp']])->first();
 
-        if ($mp) {
-            $this->mp = unserialize($mp->option_value);
+
+            if ($mp) {
+                $this->mp = unserialize($mp->option_value);
+            }
         }
     }
 

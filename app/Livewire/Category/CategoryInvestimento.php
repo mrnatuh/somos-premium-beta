@@ -147,13 +147,14 @@ class CategoryInvestimento extends Component
     public function mount()
     {
         $weekref = session('preview')['week_ref'];
+        $cc = session('preview')['cc'] ?? false;
 
-        $investimento = Option::where('week_ref', $weekref)
-            ->where('option_name', 'investimento')
-            ->first();
+        if ($cc) {
+            $investimento = Option::where([['cc', '=', $cc], ['week_ref', '=', $weekref], ['option_name', '=', 'investimento']])->first();
 
-        if ($investimento) {
-            $this->investimento = unserialize($investimento->option_value);
+            if ($investimento) {
+                $this->investimento = unserialize($investimento->option_value);
+            }
         }
     }
 

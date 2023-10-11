@@ -104,7 +104,7 @@ class CategoryGD extends Component
         $cc = session('preview')['cc'];
 
         // acha o preview
-        $preview = Preview::where('week_ref', $weekref)->first();
+        $preview = Preview::where([['cc', '=', $cc], ['week_ref', '=', $weekref]])->first();
 
         // calcula o total
         $total = number_format($this->getTotal(), 2);
@@ -142,13 +142,14 @@ class CategoryGD extends Component
     public function mount()
     {
         $weekref = session('preview')['week_ref'];
+        $cc = session('preview')['cc'] ?? false;
 
-        $gd = Option::where('week_ref', $weekref)
-            ->where('option_name', 'gd')
-            ->first();
+        if ($cc) {
+            $gd = Option::where([['cc', '=', $cc], ['week_ref', '=', $weekref], ['option_name', '=', 'gd']])->first();
 
-        if ($gd) {
-            $this->gd = unserialize($gd->option_value);
+            if ($gd) {
+                $this->gd = unserialize($gd->option_value);
+            }
         }
     }
 

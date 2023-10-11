@@ -35,10 +35,9 @@ class SearchClient extends Component
 
         $this->clients = DB::connection('mysql_dump')
             ->table('CLIENTES')
-            ->where('A1_CC', $cc)
-            ->where('A1_NOME', 'LIKE', "%{$this->q}%")
-            ->orWhere('A1_COD', 'LIKE', "%{$this->q}%")
-            ->orWhere('A1_CGC', 'LIKE', "%{$this->q}%")
+            ->where([['A1_CC', '=', $cc], ['A1_NOME', 'LIKE', "%{$this->q}%"]])
+            ->orWhere([['A1_CC', '=', $cc], ['A1_COD', 'LIKE', "%{$this->q}%"]])
+            ->orWhere([['A1_CC', '=', $cc], ['A1_CGC', 'LIKE', "%{$this->q}%"]])
             ->get();
     }
 }

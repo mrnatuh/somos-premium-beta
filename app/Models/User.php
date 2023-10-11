@@ -44,4 +44,24 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function isAdmin()
+    {
+        return $this->access === 'admin';
+    }
+
+    public function isManager()
+    {
+        return $this->access === 'manager';
+    }
+
+    public function isDirector()
+    {
+        return $this->access === 'director';
+    }
+
+    public function isCoordinator()
+    {
+        return $this->access === 'coordinator';
+    }
 }

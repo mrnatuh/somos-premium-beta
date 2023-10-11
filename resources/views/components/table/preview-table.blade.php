@@ -17,6 +17,9 @@
                 <th
                     class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 w-[100px]">
                     Previa</th>
+                @if(!Auth::user()->cc)
+                <td class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 w-[100px]">Centro de Custo</td>
+                @endif
                 <th
                     class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
                     Faturamento</th>
@@ -52,12 +55,16 @@
                         @csrf
                         @method('post')
                         <input type="hidden" name="weekref" value="{{ $preview->week_ref }}" />
+                        <input type="hidden" name="cc" value="{{ $preview->cc }}" />
 
                         <button type="submit" class="hover:underline">
                             {{ $preview->week_ref }}
                         </button>
                     </form>
                 </td>
+                @if(!Auth::user()->cc)
+                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">{{ $preview->cc }}</td>
+                @endif
                 <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">R$ {{ $preview->invoicing ? number_format($preview->invoicing, 2, ',', '.') : '0,00' }}</td>
                 <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">R$ {{ $preview->events ? number_format($preview->events, 2, ',', '.') : '0,00' }}</td>
                 <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">R$ {{ $preview->mp ? number_format($preview->mp, 2, ',', '.') : '0,00' }}</td>
@@ -72,15 +79,16 @@
                             @csrf
                             @method('post')
                             <input type="hidden" name="weekref" value="{{ $preview->week_ref }}" />
+                            <input type="hidden" name="cc" value="{{ $preview->cc }}" />
 
                             <button type="submit">
                                 <img src="/img/edit.svg" alt="Edit" />
                             </button>
                         </form>
 
-                        <button>
+                        {{-- <button>
                             <img src="/img/delete.svg" alt="Delete" />
-                        </button>
+                        </button> --}}
                     </div>
                 </td>
             </tr>

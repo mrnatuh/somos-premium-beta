@@ -66,27 +66,29 @@ class PreviewCreate extends Component
         $weekref = "{$month}{$week}{$year}";
         $monthref = "{$month}_{$year}";
 
-        $cc = Auth::user()->cc ?? 1;
+        $cc = Auth::user()->cc ?? false;
 
-        $preview = Preview::firstOrCreate(
-            [
+        if ($cc) {
+            $preview = Preview::firstOrCreate(
+                [
+                    'cc' => $cc,
+                    'week_ref' => $weekref
+                ],
+                [
+                    'cc' => $cc,
+                    'month_ref' => $monthref
+                ],
+            )->save();
+
+            session()->put('preview', [
                 'cc' => $cc,
                 'week_ref' => $weekref
-            ],
-            [
-                'cc' => $cc,
-                'month_ref' => $monthref
-            ],
-        )->save();
+            ]);
 
-        session()->put('preview', [
-            'cc' => $cc,
-            'week_ref' => $weekref
-        ]);
-
-        return to_route('category', [
-            'filter' => 'faturamento',
-        ]);
+            return to_route('category', [
+                'filter' => 'faturamento',
+            ]);
+        }
     }
 
     public function render()

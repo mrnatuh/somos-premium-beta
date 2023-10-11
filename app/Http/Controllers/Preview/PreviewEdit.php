@@ -10,15 +10,21 @@ class PreviewEdit extends Controller
 {
     public function __invoke(Request $request)
     {
-        $cc = Auth::user()->cc ?? 1;
+        $cc = Auth::user()->cc ?? false;
 
-        session()->put('preview', [
-            'cc' => $cc,
-            'week_ref' => $request->input('weekref')
-        ]);
+        if (!$cc) {
+            $cc = $request->input('cc');
+        }
 
-        return to_route('category', [
-            'filter' => 'faturamento'
-        ]);
+        if ($cc) {
+            session()->put('preview', [
+                'cc' => $cc,
+                'week_ref' => $request->input('weekref')
+            ]);
+
+            return to_route('category', [
+                'filter' => 'faturamento'
+            ]);
+        }
     }
 }
