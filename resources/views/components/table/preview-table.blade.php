@@ -71,7 +71,17 @@
                 <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">R$ {{ $preview->mo ? number_format($preview->mo, 2, ',', '.') : '0,00' }}</td>
                 <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">R$ {{ $preview->gd ? number_format($preview->gd, 2, ',', '.') : '0,00' }}</td>
                 <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">{{ $preview->rou ?? '0%' }}</td>
-                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-center {{ $preview->status }}">{{ $preview_status[$preview->status] ?? '-' }}</td>
+                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-center ">
+                    @if (Auth::user()->access == 'user')
+                        <span class="{{ $preview->status }}">{{ $preview_status[$preview->status] ?? '-' }}</span>
+                    @else
+                    <select class="rounded border border-gray-200">
+                        @foreach($preview_status as $key => $value)
+                            <option value="{{ $key }}" {{ $preview->status == $key ? 'selected="selected"' : '' }} class="{{ $key }}">{{ $value }}</option>
+                        @endforeach
+                    </select>
+                    @endif
+                </td>
                 <td class="p-4 text-center align-middle [&amp;:has([role=checkbox])]:pr-0">{{ $preview->variation ?? '0%' }}</td>
                 <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
                     <div class="flex gap-3">

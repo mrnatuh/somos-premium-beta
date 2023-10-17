@@ -1,6 +1,40 @@
 <div class="flex flex-col justify-between w-full">
 
-    <div class="flex w-full flex-shrink flex-grow mt-10">
+    <div class="flex w-full flex-shrink flex-grow mt-10 gap-3 items-center">
+        <select class="rounded-lg border border-gray-300 p-2" wire:model.lazy="parameter" wire:change.lazy="handleParameter">
+            <option value>Selecionar parâmetros</option>
+            @foreach($parameters_options as $param)
+            <option value="{{ $param['value'] }}">
+                {{ $param['label'] }}
+            </option>
+            @endforeach
+        </select>
+
+        <a
+            href="{{ route('category.parameters') }}"
+            class="text-gray-500 text-sm flex items-center gap-2 border border-gray-300 p-2.5 px-3 rounded-xl"
+        >
+            <x-icons.engine />
+
+            Gerenciar Parâmetros
+        </a>
+    </div>
+
+    @if(isset($parameters['labels']))
+    <div class="flex w-full mt-10 gap-3">
+        <div class="flex flex-col mb-3 gap-3">
+            <label for="qtde_dias_seg_sab" class="w-full text-center text-gray-400">Dias<br /> Seg a Sáb</label>
+            <input type="number" id="qtde_dias_seg_sab" placeholder="Dias Seg a Sáb" max="31" value="30" class="rounded-lg border border-gray-300 p-2 w-[100px] justify-center flex items-center text-center" />
+        </div>
+
+        <div class="flex flex-col mb-3 gap-3">
+            <label for="qtde_dias_domingos_feriados" class="w-full text-center text-gray-400">Domingos<br /> Feriados</label>
+            <input type="number" id="qtde_dias_domingos_feriados" placeholder="Domingos e Feriados" value="0" class="rounded-lg border border-gray-300 p-2 w-[100px] justify-center flex items-center text-center" />
+        </div>
+    </div>
+
+
+    <div class="flex w-full flex-shrink flex-grow mt-4">
         @php
             $tdWidth = 100;
             $width = sizeof($parameters['labels']) * $tdWidth;
@@ -44,12 +78,17 @@
             </tbody>
         </table>
     </div>
+    @else
+    <div class="border-dashed border-2 w-full h-[120px] flex items-center justify-center mt-10">
+        <span class="text-xs uppercase text-gray-500">Selecionar parâmetros</span>
+    </div>
+    @endif
 
     <div class="flex flex-shrink flex-gro w-full mt-4 overflow-auto">
         @php
             $width = sizeof($mo['labels']) * 125;
         @endphp
-        <table class="cursor-default mt-10" style="width: {{ $width }}px">
+        <table class="cursor-default" style="width: {{ $width }}px">
             <thead>
                 <tr>
                     @foreach($mo['labels'] as $row)
@@ -74,6 +113,8 @@
                                 <option value="1" {{ $item['value'] === 1 ? 'selected="selected"' : '' }}>Sim</option>
                                 <option value="0" {{ $item['value'] === 0 ? 'selected="selected"' : '' }}>Não</option>
                             </select>
+                        @elseif(isset($item['type']) && $item['type'] == 'number')
+                            <input type="number" id="qtde_dias_trabalhados" placeholder="Dias trabalhados" max="31" value="{{ $item['value'] }}" class="w-full justify-center border-0 bg-transparent flex items-center text-center" />
                         @else
                             {{ $item['label'] ?? '-' }}
                         @endif

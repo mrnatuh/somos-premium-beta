@@ -64,4 +64,9 @@ class User extends Authenticatable
     {
         return $this->access === 'coordinator';
     }
+
+    public function isSupervisor()
+    {
+        return $this->access === 'user';
+    }
 }

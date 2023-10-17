@@ -9,6 +9,7 @@ use App\Http\Controllers\Preview\PreviewDelete;
 use App\Http\Controllers\Preview\PreviewEdit;
 use App\Livewire\Category\CategoryIndex;
 use App\Livewire\Dashboard\DashboardIndex;
+use App\Livewire\Parameters\ParametersIndex;
 use App\Livewire\Preview\PreviewCreate;
 use App\Livewire\Preview\PreviewIndex;
 use App\Livewire\User\UserCreate;
@@ -35,7 +36,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/dashboard', DashboardIndex::class)->name('dashboard');
+
     Route::get('/categoria', CategoryIndex::class)->name('category');
+    Route::get('/categoria/parametros', ParametersIndex::class)->name('category.parameters');
 
     Route::get('/previa', PreviewIndex::class)->name('preview');
     Route::get('/previa/create', PreviewCreate::class)->name('preview.create');

@@ -2,127 +2,18 @@
 
 namespace App\Livewire\Category;
 
+use App\Models\Parameter;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class CategoryMO extends Component
 {
 
-    public $parameters = [
-        'labels' => [
-            [
-                'label' => '<span>Dias</span><span>Seg a Sáb</span>'
-            ],
-            [
-                'label' => '<span>Domingos</span><span>Feriados</span>'
-            ],
-            [
-                'label' => '<span>Cesta</span><span>Básica</span>'
-            ],
-            [
-                'label' => '<span>Assitência</span><span>Médica</span><span>Titular</span>'
-            ],
-            [
-                'label' => '<span>Assitência</span><span>Médica</span><span>Dependentes</span>'
-            ],
-            [
-                'label' => '<span>Exames</span>'
-            ],
-            [
-                'label' => '<span>Assistência</span><span>Odontológica</span>'
-            ],
-            [
-                'label' => '<span>Contribuição</span><span>Sindical</span>'
-            ],
-            [
-                'label' => '<span>INSS</span>'
-            ],
-            [
-                'label' => '<span>FGTS</span>'
-            ],
-            [
-                'label' => '<span>Provisão</span><span>Férias</span>'
-            ],
-            [
-                'label' => '<span>Provisão</span><span>13º</span>'
-            ],
-            [
-                'label' => '<span>Taxa</span><span>Vale Transporte</span>'
-            ],
-        ],
+    public $parameter = null;
 
-        "rows" => [
-            [
-                [
-                    'label' => '26',
-                    'value' => 26,
-                    'name' => 'dias_uteis',
-                    'type' => 'number'
-                ],
-                [
-                    'label' => '5',
-                    'value' => 5,
-                    'name' => 'feriados',
-                    'type' => 'number'
-                ],
-                [
-                    'label' => '190,00',
-                    'value' => 190,
-                    'name' => 'cesta_basica',
-                ],
-                [
-                    'label' => '430,00',
-                    'value' => 430,
-                    'name' => 'assistencia_medica_titular',
-                ],
-                [
-                    'label' => '150,00',
-                    'value' => 150,
-                    'name' => 'assistencia_medica_dependentes',
-                ],
-                [
-                    'label' => '22,50',
-                    'value' => 22.5,
-                    'name' => 'exames',
-                ],
-                [
-                    'label' => '12,45',
-                    'value' => 12.45,
-                    'name' => 'assistencia_odontologica',
-                ],
-                [
-                    'label' => '50',
-                    'value' => 50,
-                    'name' => 'contribuicao_sindical',
-                ],
-                [
-                    'label' => '28,80%',
-                    'value' => 28.8,
-                    'name' => 'inss',
-                ],
-                [
-                    'label' => '8%',
-                    'value' => 8,
-                    'name' => 'fgts',
-                ],
-                [
-                    'label' => '15,10%',
-                    'value' => 15.1,
-                    'name' => 'provisao_ferias',
-                ],
-                [
-                    'label' => '11,40%',
-                    'value' => 11.4,
-                    'name' => 'provisao_decimo_terceiro',
-                ],
-                [
-                    'label' => '0',
-                    'value' => 0,
-                    'name' => 'taxa_vale_transporte',
-                ]
-            ]
-        ]
-    ];
+    public $parameters = [];
+
+    public $parameters_options = [];
 
     public $mo = [
         'labels' => [
@@ -240,8 +131,53 @@ class CategoryMO extends Component
         "rows" => [],
     ];
 
+    public function handleParameter()
+    {
+        if (empty($this->parameter)) {
+            return;
+        }
+
+        $params = Parameter::where('id', '=', $this->parameter)->first();
+
+        $tmp_params = unserialize($params->parameters_value);
+
+        $tmp_rows = [];
+
+        foreach ($tmp_params['rows'] as $row) {
+            $tmp_row = [];
+
+            foreach ($row as $col) {
+
+                $obj = [
+                    'label' => $col['label'],
+                    'value' => $col['value'],
+                    'name' => $col['name']
+                ];
+
+                array_push($tmp_row, $obj);
+            }
+
+            array_push($tmp_rows, $tmp_row);
+        }
+
+        $tmp_params['rows'] = $tmp_rows;
+
+        $this->parameters = $tmp_params;
+
+        $this->calculateRows();
+    }
+
     public function mount()
     {
+        $params = Parameter::all();
+
+        foreach ($params as $param) {
+            array_push($this->parameters_options, [
+                'label' => $param->name,
+                'value' => $param->id
+            ]);
+        }
+
         $cc = session('preview')['cc'];
 
         if ($cc) {
@@ -263,7 +199,12 @@ class CategoryMO extends Component
                         'value' => $row->RA_SALARIO,
                         'name' => 'salario'
                     ],
-                    ['label' => '30', 'value' => 30, 'name' => 'dias_trabalhados'],
+                    [
+                        'label' => '30',
+                        'value' => 30,
+                        'name' => 'dias_trabalhados',
+                        'type' => 'number'
+                    ],
                     ['label' => 'Ativo', 'value' => 1, 'name' => 'situacao'],
                     ['label' => $row->R0_VLRCESTA > 0 ? 'Sim' : 'Não', 'value' => $row->R0_VLRCESTA > 0 ? 1 : 0, 'name' => 'cesta_basica', "type" => "select"],
                     ['label' => $row->RA_PLSAUDE > 0 ? 'Sim' : 'Não', 'value' => $row->RA_PLSAUDE > 0 ? $row->RA_PLSAUDE : 0, 'name' => 'assistencia_medica', "type" => "select"],
@@ -284,6 +225,8 @@ class CategoryMO extends Component
 
     public function calculateRows()
     {
+        // dd($this->mo);
+
         foreach ($this->mo['rows'] as $row) {
         }
     }
