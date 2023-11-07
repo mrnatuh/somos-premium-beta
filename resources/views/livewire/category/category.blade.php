@@ -27,7 +27,6 @@ $category = array_values(array_filter($categories, function($v, $k) use($active)
             <li class="mr-4">
                 <a
                     href="?filter={{ $category['slug'] }}"
-                    wire:navigate
                     class="text-lg inline-block p-2 px-3 rounded-lg    {{ $category['slug'] === $active ? 'bg-blue-500  hover:bg-blue-500 text-gray-100' : 'hover:bg-gray-50 hover:text-gray-600' }}"
                 >{{ $category['label'] }}</a>
             </li>

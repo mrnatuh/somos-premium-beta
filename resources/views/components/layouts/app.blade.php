@@ -18,14 +18,7 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body id="app" class="font-sans antialiased h-screen bg-white relative"
-        @if (session()->has('message'))
-            <x-alert
-                message="{{ session('message')['message'] }}"
-                type="{{ session('message')['type'] }}"
-            />
-        @endif
-
+    <body id="app" class="font-sans antialiased h-screen bg-white relative">
         <div id="app">
             <div class="flex w-full h-full">
                 <x-nav />

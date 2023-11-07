@@ -13,7 +13,7 @@ $messageType = [
 ][$type];
 @endphp
 
-<div class="alert flex items-center justify-center absolute -top-10 right-8 z-50 -translate-y-full">
+<div class="alert flex items-center justify-center absolute -top-10 right-8 z-50 -translate-y-full absolute">
     <div class="flex py-3 px-5 mb-4 text-lg rounded-lg {{ $messageType }}" role="alert">
         {{ $message }}
     </div>
