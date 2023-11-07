@@ -21,14 +21,51 @@ class CategoryMO extends Component
     {
         $cc = session('preview')['cc'];
         $weekref = session('preview')['week_ref'];
-        $dias_seg_sab = 31;
-        $dias_dom_fer = 0;
 
         $mo = Option::where([
             'cc' => $cc,
             'week_ref' => $weekref,
             'option_name' => 'mo',
         ])->first();
+
+        if ($weekref) {
+            preg_match('/(\d{2})(\d{2})(\d{2})/', $weekref, $matches, PREG_OFFSET_CAPTURE);
+
+            $month = $matches[1][0];
+            // $week = $matches[2][0];
+            $year = $matches[3][0];
+
+            $this->lastOfMonth = (int) Carbon::parse("{$year}-{$month}-01")->lastOfMonth()->format('d');
+
+            $tmp_he = Option::where(
+                [
+                    'cc' => $cc,
+                    'week_ref' => $weekref,
+                    'option_name' => 'he',
+                ]
+            )->first();
+
+            $arr_he = [];
+            $he = [];
+
+            if ($tmp_he) {
+                $he = unserialize($tmp_he->option_value);
+
+                foreach ($he as $key => $value) {
+                    array_push($arr_he, [
+                        "id" => trim($value['id']),
+                        "total_vlr_50" => $value['total_vlr_50'],
+                        "total_vlr_100" => $value['total_vlr_100'],
+                        "total_vlr_adicional_noturno" => $value['total_vlr_adicional_noturno'],
+                        "total_vlr_atrasos" => $value['total_vlr_atrasos'],
+                        "total_vlr_faltas" => $value['total_vlr_faltas'],
+                    ]);
+                }
+            }
+        }
+
+        $dias_seg_sab = $this->lastOfMonth;
+        $dias_dom_fer = 0;
 
         if ($mo) {
 
@@ -88,41 +125,7 @@ class CategoryMO extends Component
             }
         }
 
-        if ($weekref) {
-            preg_match('/(\d{2})(\d{2})(\d{2})/', $weekref, $matches, PREG_OFFSET_CAPTURE);
 
-            $month = $matches[1][0];
-            // $week = $matches[2][0];
-            $year = $matches[3][0];
-
-            $this->lastOfMonth = (int) Carbon::parse("{$year}-{$month}-01")->lastOfMonth()->format('d');
-
-            $tmp_he = Option::where(
-                [
-                    'cc' => $cc,
-                    'week_ref' => $weekref,
-                    'option_name' => 'he',
-                ]
-            )->first();
-
-            $arr_he = [];
-            $he = [];
-
-            if ($tmp_he) {
-                $he = unserialize($tmp_he->option_value);
-
-                foreach ($he as $key => $value) {
-                    array_push($arr_he, [
-                        "id" => trim($value['id']),
-                        "total_vlr_50" => $value['total_vlr_50'],
-                        "total_vlr_100" => $value['total_vlr_100'],
-                        "total_vlr_adicional_noturno" => $value['total_vlr_adicional_noturno'],
-                        "total_vlr_atrasos" => $value['total_vlr_atrasos'],
-                        "total_vlr_faltas" => $value['total_vlr_faltas'],
-                    ]);
-                }
-            }
-        }
 
         return view('livewire.category.category-m-o', [
             'mo' => [
