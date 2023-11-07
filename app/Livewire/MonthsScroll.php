@@ -48,7 +48,6 @@ class MonthsScroll extends Component
         ]
     ];
 
-
     public $month = [];
     public $year = 2023;
 
@@ -63,6 +62,7 @@ class MonthsScroll extends Component
         }
 
         $this->month = $this->months[$this->selectedMonth];
+
         $this->dispatch('update-month', month: $this->selectedMonth, year: $this->year);
     }
 
@@ -81,6 +81,7 @@ class MonthsScroll extends Component
 
     public function mount()
     {
+
         $this->year = (int) date('Y');
         $this->selectedMonth = (int) date('m') - 1;
 

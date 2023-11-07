@@ -2,237 +2,138 @@
 
 namespace App\Livewire\Category;
 
+use App\Models\CostsParams;
+use App\Models\Option;
 use App\Models\Parameter;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class CategoryMO extends Component
 {
+    public int $lastOfMonth;
 
-    public $parameter = null;
-
-    public $parameters = [];
-
-    public $parameters_options = [];
-
-    public $mo = [
-        'labels' => [
-            [
-                'label' => '<span>Nome</span>',
-            ],
-            [
-                'label' => '<span>Salário</span>',
-            ],
-            [
-                'label' => '<span>Dias</span><span>Trabalhados</span>',
-            ],
-            [
-                'label' => '<span>Situação</span>',
-            ],
-            [
-                'label' => '<span>Cesta</span><span>Básica   </span>',
-            ],
-            [
-                'label' => '<span>Assistência</span><span>Médica</span>',
-            ],
-            [
-                'label' => '<span>Número</span><span>Dependentes</span>',
-            ],
-            [
-                'label' => '<span>Assistência</span><span>Odontológica</span>',
-            ],
-            [
-                'label' => '<span>Contribuição</span><span>Sindical</span>',
-            ],
-            [
-                'label' => '<span>Vale</span><span>Transporte</span>',
-            ],
-            [
-                'label' => '<span>Vale</span><span>Transporte</span><span>Valor Diário</span>',
-            ],
-            [
-                'label' => '<span>Salário Bruto</span>',
-            ],
-            [
-                'label' => '<span>Total</span><span>Funcionário</span>',
-            ],
-            [
-                'label' => '<span>DSR</span>',
-            ],
-        ],
-
-        // "rows" => [
-        //     [
-        //         ['label' => 'Oliveira Silva', 'value' => 'Oliveira Silva', 'name' => 'name'],
-        //         ['label' => '1.200,00', 'value' => 1200, 'name' => 'salario'],
-        //         ['label' => '30', 'value' => 30, 'name' => 'dias_trabalhados'],
-        //         ['label' => 'Ativo', 'value' => 1, 'name' => 'situacao'],
-        //         ['label' => 'Sim', 'value' => 1, 'name' => 'cesta_basica', "type" => "select"],
-        //         ['label' => 'Sim', 'value' => 1, 'name' => 'assistencia_medica', "type" => "select"],
-        //         ['label' => '1', 'value' => 1, 'name' => 'numero_dependentes'],
-        //         ['label' => 'Sim', 'value' => 1, 'name' => 'assistencia_odontologica', "type" => "select"],
-        //         ['label' => 'Sim', 'value' => 1, 'name' => 'contribuicao_sindical', "type" => "select"],
-        //         ['label' => 'Sim', 'value' => 1, 'name' => 'vale_transporte', "type" => "select"],
-        //         ['label' => '6,90', 'value' => 6.9, 'name' => 'valor_transporte_valor_diario'],
-        //         ['label' => '1.200,00', 'value' => 1200, 'name' => 'salario_bruto'],
-        //         ['label' => '1.400,00', 'value' => 1400, 'name' => 'total_funcionario'],
-        //         ['label' => '0', 'value' => 0, 'name' => 'dsr'],
-        //     ],
-        //     [
-        //         ['label' => 'Kratos', 'value' => 'Kratos', 'name' => 'name'],
-        //         ['label' => '1.000,00', 'value' => 1200, 'name' => 'salario'],
-        //         ['label' => '30', 'value' => 30, 'name' => 'dias_trabalhados'],
-        //         ['label' => 'Ativo', 'value' => 1, 'name' => 'situacao'],
-        //         ['label' => 'Sim', 'value' => 1, 'name' => 'cesta_basica', "type" => "select"],
-        //         ['label' => 'Sim', 'value' => 1, 'name' => 'assistencia_medica', "type" => "select"],
-        //         ['label' => '0', 'value' => 0, 'name' => 'numero_dependentes'],
-        //         ['label' => 'Sim', 'value' => 1, 'name' => 'assistencia_odontologica', "type" => "select"],
-        //         ['label' => 'Sim', 'value' => 1, 'name' => 'contribuicao_sindical', "type" => "select"],
-        //         ['label' => 'Sim', 'value' => 1, 'name' => 'vale_transporte', "type" => "select"],
-        //         ['label' => '6,90', 'value' => 6.9, 'name' => 'valor_transporte_valor_diario'],
-        //         ['label' => '1.000,00', 'value' => 1200, 'name' => 'salario_bruto'],
-        //         ['label' => '1.200,00', 'value' => 1400, 'name' => 'total_funcionario'],
-        //         ['label' => '0',  'value' => 0, 'name' => 'dsr'],
-        //     ],
-        //     [
-        //         ['label' => 'Batman', 'value' => 'Kratos', 'name' => 'name'],
-        //         ['label' => '1.400,00', 'value' => 1200, 'name' => 'salario'],
-        //         ['label' => '10', 'value' => 30, 'name' => 'dias_trabalhados'],
-        //         ['label' => 'Afastado', 'value' => 2, 'name' => 'situacao'],
-        //         ['label' => 'Não', 'value' => 0, 'name' => 'cesta_basica', "type" => "select"],
-        //         ['label' => 'Sim', 'value' => 1, 'name' => 'assistencia_medica', "type" => "select"],
-        //         ['label' => '3', 'value' => 3, 'name' => 'numero_dependentes'],
-        //         ['label' => 'Sim', 'value' => 1, 'name' => 'assistencia_odontologica', "type" => "select"],
-        //         ['label' => 'Sim', 'value' => 1, 'name' => 'contribuicao_sindical', "type" => "select"],
-        //         ['label' => 'Não', 'value' => 0, 'name' => 'vale_transporte', "type" => "select"],
-        //         ['label' => '0', 'value' => 0, 'name' => 'valor_transporte_valor_diario'],
-        //         ['label' => '466,67', 'value' => 466.67, 'name' => 'salario_bruto'],
-        //         ['label' => '1.800,00', 'value' => 1400, 'name' => 'total_funcionario'],
-        //         ['label' => '0',  'value' => 0, 'name' => 'dsr'],
-        //     ],
-        //     [
-        //         ['label' => 'Total', 'value' => 'Total', 'name' => 'total_name'],
-        //         ['label' => '3.600,00', 'value' => 3600, 'name' => 'total_salario'],
-        //         ['label' => '', 'value' => 0, 'name' => 'total_dias_trabalhados'],
-        //         ['label' => '', 'value' => 0, 'name' => 'total_situacao'],
-        //         ['label' => '', 'value' => 0, 'name' => 'total_cesta_basica'],
-        //         ['label' => '', 'value' => 0, 'name' => 'total_assistencia_medica'],
-        //         ['label' => '', 'value' => 0, 'name' => 'total_numero_dependentes'],
-        //         ['label' => '', 'value' => 0, 'name' => 'total_assistencia_odontologica', "type" => "select"],
-        //         ['label' => '', 'value' => 0, 'name' => 'total_contribuicao_sindical', "type" => "select"],
-        //         ['label' => '', 'value' => 0, 'name' => 'total_vale_transporte', "type" => "select"],
-        //         ['label' => '', 'value' => 0, 'name' => 'total_valor_transporte_valor_diario'],
-        //         ['label' => '2.666,67', 'value' => 2666.67, 'name' => 'total_salario_bruto'],
-        //         ['label' => '5.400,00', 'value' => 5400, 'name' => 'total_total_funcionario'],
-        //         ['label' => '',  'value' => 0, 'name' => 'total_dsr'],
-        //     ]
-        // ]
-
-        "rows" => [],
-    ];
-
-    public function handleParameter()
-    {
-        if (empty($this->parameter)) {
-            return;
-        }
-
-        $params = Parameter::where('id', '=', $this->parameter)->first();
-
-        $tmp_params = unserialize($params->parameters_value);
-
-        $tmp_rows = [];
-
-        foreach ($tmp_params['rows'] as $row) {
-            $tmp_row = [];
-
-            foreach ($row as $col) {
-
-                $obj = [
-                    'label' => $col['label'],
-                    'value' => $col['value'],
-                    'name' => $col['name']
-                ];
-
-                array_push($tmp_row, $obj);
-            }
-
-            array_push($tmp_rows, $tmp_row);
-        }
-
-        $tmp_params['rows'] = $tmp_rows;
-
-        $this->parameters = $tmp_params;
-
-        $this->calculateRows();
-    }
-
-    public function mount()
-    {
-        $params = Parameter::all();
-
-        foreach ($params as $param) {
-            array_push($this->parameters_options, [
-                'label' => $param->name,
-                'value' => $param->id
-            ]);
-        }
-
-        $cc = session('preview')['cc'];
-
-        if ($cc) {
-            $employees = DB::connection('mysql_dump')
-                ->table('FUNCIONARIOS')
-                ->where('RA_CC', $cc)
-                ->get();
-
-            foreach ($employees as $row) {
-                array_push($this->mo['rows'], [
-                    [
-                        'label' => $row->RA_NOME,
-                        'value' => $row->RA_NOME,
-                        'name' => 'name',
-                        'align' => 'text-left'
-                    ],
-                    [
-                        'label' => 'R$' . number_format($row->RA_SALARIO, 2, ',', '.'),
-                        'value' => $row->RA_SALARIO,
-                        'name' => 'salario'
-                    ],
-                    [
-                        'label' => '30',
-                        'value' => 30,
-                        'name' => 'dias_trabalhados',
-                        'type' => 'number'
-                    ],
-                    ['label' => 'Ativo', 'value' => 1, 'name' => 'situacao'],
-                    ['label' => $row->R0_VLRCESTA > 0 ? 'Sim' : 'Não', 'value' => $row->R0_VLRCESTA > 0 ? 1 : 0, 'name' => 'cesta_basica', "type" => "select"],
-                    ['label' => $row->RA_PLSAUDE > 0 ? 'Sim' : 'Não', 'value' => $row->RA_PLSAUDE > 0 ? $row->RA_PLSAUDE : 0, 'name' => 'assistencia_medica', "type" => "select"],
-                    ['label' => $row->RB_QTDEPEN, 'value' => $row->RB_QTDEPEN, 'name' => 'numero_dependentes'],
-                    ['label' => 'Sim', 'value' => 1, 'name' => 'assistencia_odontologica', "type" => "select"],
-                    ['label' => 'Sim', 'value' => 1, 'name' => 'contribuicao_sindical', "type" => "select"],
-                    ['label' => $row->R0_VLRVT > 0 ? 'Sim' : 'Não', 'value' => $row->R0_VLRVT > 0 ? 1 : 0, 'name' => 'vale_transporte', "type" => "select"],
-                    ['label' => number_format($row->R0_VLRVT, 2, ',', '.'), 'value' => $row->R0_VLRVT, 'name' => 'valor_transporte_valor_diario'],
-                    ['label' => '0,00', 'value' => 0, 'name' => 'salario_bruto'],
-                    ['label' => '0,00', 'value' => 0, 'name' => 'total_funcionario'],
-                    ['label' => '0', 'value' => 0, 'name' => 'dsr'],
-                ]);
-            }
-        }
-
-        $this->calculateRows();
-    }
-
-    public function calculateRows()
-    {
-        // dd($this->mo);
-
-        foreach ($this->mo['rows'] as $row) {
-        }
-    }
+    public $json = '';
 
     public function render()
     {
-        return view('livewire.category.category-m-o');
+        $cc = session('preview')['cc'];
+        $weekref = session('preview')['week_ref'];
+        $dias_seg_sab = 31;
+        $dias_dom_fer = 0;
+
+        $mo = Option::where([
+            'cc' => $cc,
+            'week_ref' => $weekref,
+            'option_name' => 'mo',
+        ])->first();
+
+        if ($mo) {
+
+            $content = unserialize($mo->option_value);
+            $parameters = $content->params;
+            $employees = $content->employees;
+            $dias_seg_sab = $content->dias_seg_sab;
+            $dias_dom_fer = $content->dias_dom_fer;
+
+        } else {
+            $param = CostsParams::where('costs_center_id', $cc)->first();
+
+            $tmp_parameters = Parameter::where('id', $param->param_id)->first();
+            $tmp_parameters= unserialize($tmp_parameters->parameters_value);
+
+            $parameters = [];
+            foreach($tmp_parameters['rows'] as $key => $value) {
+                foreach ($value as $item) {
+                    $parameters[$item['name']] = $item['value'];
+                }
+            }
+
+            // TODO: trazer os funcionários e dados da prévia anterior, se estiver anquele mês.
+
+            $employees = [];
+            if ($cc) {
+                $tmp_employees = DB::connection('mysql_dump')
+                    ->table('FUNCIONARIOS')
+                        ->where('RA_CC', $cc)
+                        ->get();
+
+                foreach($tmp_employees as $item) {
+                    array_push($employees, [
+                        "id" => trim($item->RA_ID),
+                        'status' => 1,
+                        'nome' => trim($item->RA_NOME),
+                        'salario' => $item->RA_SALARIO,
+                        'plano_saude' => $item->RA_PLSAUDE,
+                        'qtde_dependentes' => (int) $item->RB_QTDEPEN ?? 0,
+                        'vlr_plano' => (int) $item->RD_VLRPLAN ?? 0,
+                        'vlr_dependentes' => (int) $item->RD_VLRDEPEND ?? 0,
+                        'odonto' => (float) $item->RD_VLRODONTO ?? 0,
+                        'odonto_dependentes' => (float) $item->RD_VLRODONTODEP ?? 0,
+                        'vlr_vt' => (int) $item->R0_VLRVT ?? 0,
+                        'vlr_cesta' => (int) $item->R0_VLRCESTA ?? 0,
+                        'dias_trabalhados' => $this->lastOfMonth,
+                        'contribuicao_sindical' => 1,
+                        'assistencia_odontologica' => 0,
+                        'vlr_salario_bruto' => 0,
+                        'option_cesta_basica' => !empty($item->R0_VLRCESTA) ? 1 : 0,
+                        'option_assistencia_medica' => !empty($item->RA_PLSAUDE) ? 1 : 0,
+                        'option_assistencia_odontologica' => !empty($item->RD_VLRODONTO) ? 1 : 0,
+                        'option_contribuicao_sindical' => 1,
+                        'option_vale_transporte' => !empty($item->R0_VLRVT) ? 1 : 0,
+                    ]);
+                }
+            }
+        }
+
+        if ($weekref) {
+            preg_match('/(\d{2})(\d{2})(\d{2})/', $weekref, $matches, PREG_OFFSET_CAPTURE);
+
+            $month = $matches[1][0];
+            // $week = $matches[2][0];
+            $year = $matches[3][0];
+
+            $this->lastOfMonth = (int) Carbon::parse("{$year}-{$month}-01")->lastOfMonth()->format('d');
+
+            $tmp_he = Option::where(
+                [
+                    'cc' => $cc,
+                    'week_ref' => $weekref,
+                    'option_name' => 'he',
+                ]
+            )->first();
+
+            $arr_he = [];
+            $he = [];
+
+            if ($tmp_he) {
+                $he = unserialize($tmp_he->option_value);
+
+                foreach ($he as $key => $value) {
+                    array_push($arr_he, [
+                        "id" => trim($value['id']),
+                        "total_vlr_50" => $value['total_vlr_50'],
+                        "total_vlr_100" => $value['total_vlr_100'],
+                        "total_vlr_adicional_noturno" => $value['total_vlr_adicional_noturno'],
+                        "total_vlr_atrasos" => $value['total_vlr_atrasos'],
+                        "total_vlr_faltas" => $value['total_vlr_faltas'],
+                    ]);
+                }
+            }
+        }
+
+        return view('livewire.category.category-m-o', [
+            'mo' => [
+                'cc' => $cc,
+                'weekref' => $weekref,
+                'dias_seg_sab' => $dias_seg_sab,
+                'dias_dom_fer' => $dias_dom_fer,
+                'parameters' => $parameters,
+                'employees' => $employees,
+                'he' => $arr_he,
+            ]
+        ]);
     }
 }

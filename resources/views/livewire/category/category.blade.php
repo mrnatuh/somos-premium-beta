@@ -4,6 +4,7 @@ $categories = [
     ["slug" => "eventos", "label" => "Eventos"],
     ["slug" => "mp", "label" => "MP"],
     ["slug" => "mo", "label" => "MO"],
+    ["slug" => "he", "label" => "HE, Faltas e Atrasos"],
     ["slug" => "gd", "label" => "GD"],
     ["slug" => "investimento", "label" => "Investimento"],
 ];
@@ -48,6 +49,10 @@ $category = array_values(array_filter($categories, function($v, $k) use($active)
 
         @if($active === 'mo')
         <livewire:category.category-m-o />
+        @endif
+
+        @if($active === 'he')
+        <livewire:category.category-h-e />
         @endif
 
         @if($active === 'gd')

@@ -1,41 +1,16 @@
-import 'flowbite';
-import { initFlowbite } from 'flowbite';
-import anime from 'animejs';
+import Alpine from 'alpinejs'
+import mask from '@alpinejs/mask'
 
-function alerts()
-{
-    var alerts = document.querySelectorAll('.alert');
+Alpine.plugin(mask)
 
-    console.log('alerts', alerts.length);
+import { createApp } from 'vue';
+import IncrementCounter from './components/IncrementCounter.vue';
+import CategoryMo from './components/CategoryMo.vue';
 
-    if (alerts.length) {
-        anime({
-            targets: '.alert',
-            translateY: -10,
-            duration: 500,
-            complete: function (anim) {
-                anime({
-                    targets: '.alert',
-                    translateY: 0,
-                    duration: 500,
-                    complete: function (anim) {
-                        document.querySelector('.alert').remove();
-                    },
-                    delay: 3000
-                });
-            }
-        });
-    }
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    initFlowbite();
-
-    alerts();
-});
-
-document.addEventListener('livewire:navigate', () => {
-    initFlowbite();
-
-    alerts();
+// hack para funcionar na navegação ajax
+document.addEventListener('livewire:navigated', () => {
+    createApp({})
+        .component('IncrementCounter', IncrementCounter)
+        .component('CategoryMo', CategoryMo)
+        .mount('#app')
 });

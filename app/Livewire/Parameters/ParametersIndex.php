@@ -2,7 +2,10 @@
 
 namespace App\Livewire\Parameters;
 
+use App\Models\CostsParams;
 use App\Models\Parameter;
+use App\Models\User;
+use Illuminate\Http\Request;
 use Livewire\Component;
 use Livewire\Attributes\Rule;
 use Illuminate\Support\Str;
@@ -13,6 +16,14 @@ class ParametersIndex extends Component
     public string $name = '';
 
     public $results = [];
+
+    public $ccs = [];
+
+    public $selectedParameter = '';
+
+    public $selectedParamData = [];
+
+    public $selectedCcs = [];
 
     public $parameters = [
         'labels' => [
@@ -150,9 +161,75 @@ class ParametersIndex extends Component
         return redirect('/categoria/parametros')->with('success', 'Parâmetros criados com sucesso');
     }
 
-    public function mount()
+    public function handleSelectCc($value)
     {
+        if (empty($value)) {
+            return back()->with('error', 'Parâmetro não selecionado');
+        }
+
+        CostsParams::updateOrCreate([
+            "param_id" => $this->selectedParameter,
+            'costs_center_id' => $value,
+        ], [
+            "param_id" => $this->selectedParameter,
+            'costs_center_id' => $value,
+        ]);
+
+        $this->selectedCcs = CostsParams::where('param_id', $this->selectedParameter)->get();
+    }
+
+    public function handleRemoveCostsParam($id)
+    {
+        CostsParams::where('id', $id)->delete();
+
+        $this->selectedCcs = CostsParams::where('param_id', $this->selectedParameter)->get();
+
+        return back()->with('success', 'Centro de custo removido com sucesso!');
+    }
+
+    public function mount(Request $request)
+    {
+        $this->selectedParameter = isset($_GET['id']) ? $_GET['id'] : '';
+
+        $this->ccs = User::where('cc', '!=', '')->get();
+
         $this->results = Parameter::all();
+
+        if ($this->selectedParameter) {
+            foreach($this->results as $item) {
+                if ($item['id'] == $this->selectedParameter) {
+                    $this->selectedParamData = $item;
+
+                    $this->name = $item->name;
+
+                    $this->parameters = unserialize($item->parameters_value);
+
+                    $this->selectedCcs = CostsParams::where('param_id', $this->selectedParameter)->get();
+                }
+            }
+        }
+    }
+
+    public function update()
+    {
+
+        $this->validate();
+
+        $id = $this->selectedParameter;
+
+        $parameter = Parameter::where('id', '=', $id)->first();
+        $slug = Str::slug($this->name);
+
+        if (!$parameter) {
+            return back()->with('error', 'Parâmetro não encontrado');
+        }
+
+        $parameter->name = $this->name;
+        $parameter->slug = $slug;
+        $parameter->parameters_value = serialize($this->parameters);
+        $parameter->save();
+
+        return redirect('/categoria/parametros')->with('success', 'Parâmetros alterados com sucesso');
     }
 
     public function render()

@@ -17,11 +17,11 @@ class PreviewIndex extends Component
     #[On('update-month')]
     public function setMonthRef($month, $year)
     {
-        $month += 1;
-        $month = $month < 10 ? 0 . '' . $month : $month;
-        $this->month_ref = $month . '_' . substr($year, -2);
+        $selectedMonth = $month + 1;
+        $selectedMonth = $selectedMonth < 10 ? 0 . '' . $selectedMonth : $selectedMonth;
+        $this->month_ref = $selectedMonth . '_' . substr($year, -2);
 
-        $this->render();
+        //$this->render();
     }
 
     public function mount()
@@ -67,8 +67,10 @@ class PreviewIndex extends Component
 
             // regra para supervisores
         } else if ($cc) {
-            $this->previews = Preview::where([['cc', '=', $cc], ['month_ref', '=', $this->month_ref]])
-                ->get();
+            $this->previews = Preview::where([
+                ['cc', '=', $cc],
+                ['month_ref', '=', $this->month_ref]
+            ])->get();
         } else {
             $this->previews = Preview::where('month_ref', $this->month_ref)->get();
         }
@@ -79,17 +81,18 @@ class PreviewIndex extends Component
             'mp' => 0,
             'mo' => 0,
             'gd' => 0,
+            'he' => 0,
             'investimento' => 0
         ];
 
-        foreach ($this->previews as $preview) {
-            $total['faturamento'] += $preview->invoicing ?? 0;
-            $total['events'] += $preview->events ?? 0;
-            $total['mp'] += $preview->mp ?? 0;
-            $total['mo'] += $preview->mo ?? 0;
-            $total['gd'] += $preview->gd ?? 0;
-            $total['investimento'] += $preview->rou ?? 0;
-        }
+        // foreach ($this->previews as $preview) {
+        //     $total['faturamento'] += $preview->invoicing ?? 0;
+        //     $total['events'] += $preview->events ?? 0;
+        //     $total['mp'] += $preview->mp ?? 0;
+        //     $total['mo'] += $preview->mo ?? 0;
+        //     $total['gd'] += $preview->gd ?? 0;
+        //     $total['investimento'] += $preview->rou ?? 0;
+        // }
 
         return view('livewire.preview.index', [
             'previews' => $this->previews,

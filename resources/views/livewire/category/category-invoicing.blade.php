@@ -200,21 +200,21 @@
     </div>
 
     <div class="bg-white/50 w-full flex items-center justify-end gap-4 position fixed px-10 py-5 bottom-0 right-0">
-        <div>
-            <button
-                wire:click="save"
-                class="bg-green-600 cursor-pointer px-6 py-2 text-white rounded-xl text-lg font-bold disabled:opacity-50 disabled:cursor-not-allowed relative">
-                Salvar
 
-                <x-status.loading />
-            </button>
+        <button
+            wire:click="save"
+            class="bg-green-600 cursor-pointer px-6 py-2 text-white rounded-xl text-lg font-bold disabled:opacity-50 disabled:cursor-not-allowed relative">
+            Salvar
 
-            <a href="{{ route('preview') }}" class="bg-red-600 px-6 py-2 text-white rounded-lg text-xl font-bold relative">
-                Cancelar
+            <x-status.loading />
+        </button>
 
-                <x-status.loading />
-            </a>
-        </div>
+        <a href="{{ route('preview') }}" class="bg-red-600 px-6 py-2 text-white rounded-lg text-xl font-bold relative">
+            Cancelar
+
+            <x-status.loading />
+        </a>
+
     </div>
 
     <div class="h-20"></div>

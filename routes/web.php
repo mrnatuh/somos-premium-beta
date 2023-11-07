@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardControllerIndex;
+use App\Http\Controllers\MoSaveController;
 // use App\Http\Controllers\Preview\PreviewCreate;
 use App\Http\Controllers\Preview\PreviewDelete;
 use App\Http\Controllers\Preview\PreviewEdit;
@@ -39,6 +40,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/categoria', CategoryIndex::class)->name('category');
     Route::get('/categoria/parametros', ParametersIndex::class)->name('category.parameters');
+
+    Route::post('/categoria/mo', MoSaveController::class)->name('mo.store');
 
     Route::get('/previa', PreviewIndex::class)->name('preview');
     Route::get('/previa/create', PreviewCreate::class)->name('preview.create');

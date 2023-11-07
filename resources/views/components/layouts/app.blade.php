@@ -13,11 +13,12 @@
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
 
         @livewireStyles
+        @livewireScripts
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased h-screen bg-white relative">
+    <body id="app" class="font-sans antialiased h-screen bg-white relative"
         @if (session()->has('message'))
             <x-alert
                 message="{{ session('message')['message'] }}"
@@ -25,14 +26,14 @@
             />
         @endif
 
-        <div class="flex w-full h-full">
-            <x-nav />
+        <div id="app">
+            <div class="flex w-full h-full">
+                <x-nav />
 
-            <main class="w-full h-full relative overflow-y-scroll overflow-x-hidden">
-                {{ $slot }}
-            </main>
+                <main class="w-full h-full relative overflow-y-scroll overflow-x-hidden">
+                    {{ $slot }}
+                </main>
+            </div>
         </div>
-
-        @livewireScripts
     </body>
 </html>
