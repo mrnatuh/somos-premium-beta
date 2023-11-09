@@ -10,6 +10,7 @@ export default {
             he: {},
             cc: null,
             weekref: null,
+            total: 0,
         }
     },
 
@@ -29,10 +30,11 @@ export default {
         this.dias_dom_fer = mo.dias_dom_fer;
 
         // console.log(this.params);
-        console.log(this.employees);
         this.employees.forEach(function(item) {
             self.handleDiasTrabalhados(item);
         });
+
+        this.getTotal();
     },
 
     methods: {
@@ -56,6 +58,16 @@ export default {
 
             this.employees.forEach(function (item) {
                 self.handleDiasTrabalhados(item);
+            });
+        },
+
+        getTotal() {
+            let self = this;
+
+            this.total = 0;
+
+            this.employees.forEach(function (item) {
+                self.total += item?.tmp_vlr_total_funcionario ?? 0;
             });
         },
 
@@ -139,9 +151,12 @@ export default {
 
             const vlr_total_funcionario = vlr_total_salario + vlr_total_he + vlr_cesta_basica + vlr_total_assistencia_medica + vlr_exames + vlr_assistencia_odontologica;
 
+            item.tmp_vlr_total_funcionario = vlr_total_funcionario;
+
             item.vlr_total_funcionario = this.formatCurrency(vlr_total_funcionario);
 
             this.save();
+            this.getTotal();
         },
 
         save() {
@@ -152,6 +167,7 @@ export default {
                 dias_dom_fer: this.dias_dom_fer,
                 params: this.params,
                 employees: this.employees,
+                total: this.total,
             };
 
             document.querySelector('#mo_json').value = JSON.stringify(obj);

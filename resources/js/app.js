@@ -4,15 +4,13 @@ import mask from '@alpinejs/mask'
 Alpine.plugin(mask)
 
 import { createApp } from 'vue';
-import IncrementCounter from './components/IncrementCounter.vue';
 import CategoryMo from './components/CategoryMo.vue';
 
 // hack para funcionar na navegação ajax
-document.addEventListener('livewire:navigated', () => {
-    if (location.href.indexOf('=mo') > -1) {
+if (location.href.indexOf('=mo') > -1) {
+    document.addEventListener('livewire:navigated', () => {
         createApp({})
-            .component('IncrementCounter', IncrementCounter)
             .component('CategoryMo', CategoryMo)
             .mount('#app');
-    }
-});
+    });
+}

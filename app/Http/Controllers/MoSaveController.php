@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Option;
+use App\Models\Preview;
 use Illuminate\Http\Request;
 
 class MoSaveController extends Controller
@@ -17,6 +18,8 @@ class MoSaveController extends Controller
         // serializa o conteúdo
         $content = serialize($tmp_content);
 
+        $total = isset($tmp_content->total) ? $tmp_content->total : 0;
+
         // cria ou faz update da invoicing para aquela prévia
         Option::updateOrCreate(
             [
@@ -29,9 +32,14 @@ class MoSaveController extends Controller
                 'week_ref' => $weekref,
                 'option_name' => 'mo',
                 'option_value' => $content,
-                'total' => 0,
+                'total' => $total,
             ]
         );
+
+        // acha o preview e seta o total
+        $preview = Preview::where([['cc', '=', $cc], ['week_ref', '=', $weekref]])->first();
+        $preview->mo = $total;
+        $preview->save();
 
         return redirect('/categoria?filter=mo')->with('success', 'MO salva com sucesso');
     }

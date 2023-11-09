@@ -1,7 +1,7 @@
 <div class="flex flex-col mt-10">
     <livewire:search-client />
 
-    <div class="flex flex-col flex-shrink flex-grow mt-10">
+    <div class="flex flex-col flex-shrink flex-grow mt-10 overflow-x-auto">
         @if (sizeof($events['rows']))
         <table class="w-full">
             <thead>
