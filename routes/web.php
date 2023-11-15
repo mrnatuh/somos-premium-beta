@@ -39,7 +39,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', DashboardIndex::class)->name('dashboard');
 
     Route::get('/categoria', CategoryIndex::class)->name('category');
-    Route::get('/categoria/parametros', ParametersIndex::class)->name('category.parameters');
+
+
 
     Route::post('/categoria/mo', MoSaveController::class)->name('mo.store');
 
@@ -51,6 +52,8 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth', 'is-admin'])->group(function () {
+    Route::get('/categoria/parametros', ParametersIndex::class)->name('category.parameters');
+
     Route::get('/profiles', UserIndex::class)->name('profiles.index');
     Route::get('/profiles/create', UserCreate::class)->name('profiles.create');
     Route::get('/profiles/edit/{user}', UserEdit::class)->name('profiles.edit');

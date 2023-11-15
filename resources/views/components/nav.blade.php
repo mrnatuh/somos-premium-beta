@@ -7,20 +7,34 @@
                     alt="{{ auth()->user()->name }}"
                     class="w-10 h-10 object-cover"
                 />
+
                 <div class="flex flex-col">
                     <span>Bem vindo,</span>
                     <strong>{{ auth()->user()->name }}</strong>
                 </div>
-
             </div>
 
-            <a
-                class="flex items-center justify-center w-[50px] h-10 rounded-md hover:bg-slate-100 hover:opacity-95"
-                wire:navigate
-                href="{{ route('profile.edit') }}"
-            >
-                <x-icons.engine />
-            </a>
+            <div x-data="{dropdownMenu: false}" class="relative">
+                <button @click="dropdownMenu = ! dropdownMenu" class="flex items-center bg-gray-100 rounded-md p-2">
+                    <x-icons.engine />
+                </button>
+
+                <div x-show="dropdownMenu" class="border absolute flex flex-col right-0 top-7 mt-2 bg-white rounded-md shadow-xl w-44">
+                    <a
+                        class="flex items-center p-2.5 h-10 rounded-md hover:bg-slate-100 hover:opacity-95 w-full"
+                        href="{{ route('profile.edit') }}"
+                    >
+                        Perfil
+                    </a>
+
+                    @if( auth()->user()->isAdmin() )
+                    <a class="flex items-center justify-center w-full h-10 rounded-md hover:bg-slate-100 hover:opacity-95"
+                        href="{{ route('category.parameters') }}">
+                        Parâmetros
+                    </a>
+                    @endif
+                </div>
+            </div>
         </div>
 
         <div class="flex flex-col p-3 gap-6">

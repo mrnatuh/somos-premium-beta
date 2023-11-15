@@ -7,6 +7,7 @@ use App\Models\Option;
 use App\Models\Parameter;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -17,19 +18,35 @@ class CategoryMO extends Component
 
     public $json = '';
 
-    public function render()
+    public $cc = '';
+
+    public $weekref = '';
+
+    public $dias_seg_sab = '';
+
+    public $dias_dom_fer = '';
+
+    public $parameters = [];
+
+    public $employees = [];
+
+    public $he = [];
+
+    public $modal_type = null;
+
+    public function mount()
     {
-        $cc = session('preview')['cc'];
-        $weekref = session('preview')['week_ref'];
+        $this->cc = session('preview')['cc'];
+        $this->weekref = session('preview')['week_ref'];
 
         $mo = Option::where([
-            'cc' => $cc,
-            'week_ref' => $weekref,
+            'cc' => $this->cc,
+            'week_ref' => $this->weekref,
             'option_name' => 'mo',
         ])->first();
 
-        if ($weekref) {
-            preg_match('/(\d{2})(\d{2})(\d{2})/', $weekref, $matches, PREG_OFFSET_CAPTURE);
+        if ($this->weekref) {
+            preg_match('/(\d{2})(\d{2})(\d{2})/', $this->weekref, $matches, PREG_OFFSET_CAPTURE);
 
             $month = $matches[1][0];
             // $week = $matches[2][0];
@@ -39,20 +56,20 @@ class CategoryMO extends Component
 
             $tmp_he = Option::where(
                 [
-                    'cc' => $cc,
-                    'week_ref' => $weekref,
+                    'cc' => $this->cc,
+                    'week_ref' => $this->weekref,
                     'option_name' => 'he',
                 ]
             )->first();
 
-            $arr_he = [];
+            $this->arr_he = [];
             $he = [];
 
             if ($tmp_he) {
                 $he = unserialize($tmp_he->option_value);
 
                 foreach ($he as $key => $value) {
-                    array_push($arr_he, [
+                    array_push($this->arr_he, [
                         "id" => trim($value['id']),
                         "total_vlr_50" => $value['total_vlr_50'],
                         "total_vlr_100" => $value['total_vlr_100'],
@@ -64,41 +81,50 @@ class CategoryMO extends Component
             }
         }
 
-        $dias_seg_sab = $this->lastOfMonth;
-        $dias_dom_fer = 0;
+        $this->dias_seg_sab = $this->lastOfMonth;
+        $this->dias_dom_fer = 0;
 
         if ($mo) {
 
             $content = unserialize($mo->option_value);
-            $parameters = $content->params;
-            $employees = $content->employees;
-            $dias_seg_sab = $content->dias_seg_sab;
-            $dias_dom_fer = $content->dias_dom_fer;
-
+            $this->parameters = $content->params;
+            $this->employees = $content->employees;
+            $this->dias_seg_sab = $content->dias_seg_sab;
+            $this->dias_dom_fer = $content->dias_dom_fer;
         } else {
-            $param = CostsParams::where('costs_center_id', $cc)->first();
+            $param = CostsParams::where('costs_center_id', $this->cc)->first();
+
+            if (!$param) {
+                if (Auth::user()->isAdmin()) {
+                    $this->modal_type = 'admin';
+                } else {
+                    $this->modal_type = 'other';
+                }
+
+                return;
+            }
 
             $tmp_parameters = Parameter::where('id', $param->param_id)->first();
-            $tmp_parameters= unserialize($tmp_parameters->parameters_value);
+            $tmp_parameters = unserialize($tmp_parameters->parameters_value);
 
-            $parameters = [];
-            foreach($tmp_parameters['rows'] as $key => $value) {
+            $this->parameters = [];
+            foreach ($tmp_parameters['rows'] as $key => $value) {
                 foreach ($value as $item) {
-                    $parameters[$item['name']] = $item['value'];
+                    $this->parameters[$item['name']] = $item['value'];
                 }
             }
 
             // TODO: trazer os funcionários e dados da prévia anterior, se estiver anquele mês.
 
-            $employees = [];
-            if ($cc) {
+            $this->employees = [];
+            if ($this->cc) {
                 $tmp_employees = DB::connection('mysql_dump')
                     ->table('FUNCIONARIOS')
-                        ->where('RA_CC', $cc)
-                        ->get();
+                    ->where('RA_CC', $this->cc)
+                    ->get();
 
-                foreach($tmp_employees as $item) {
-                    array_push($employees, [
+                foreach ($tmp_employees as $item) {
+                    array_push($this->employees, [
                         "id" => trim($item->RA_ID),
                         'status' => 1,
                         'nome' => trim($item->RA_NOME),
@@ -124,18 +150,19 @@ class CategoryMO extends Component
                 }
             }
         }
+    }
 
-
-
+    public function render()
+    {
         return view('livewire.category.category-m-o', [
             'mo' => [
-                'cc' => $cc,
-                'weekref' => $weekref,
-                'dias_seg_sab' => $dias_seg_sab,
-                'dias_dom_fer' => $dias_dom_fer,
-                'parameters' => $parameters,
-                'employees' => $employees,
-                'he' => $arr_he,
+                'cc' => $this->cc,
+                'weekref' => $this->weekref,
+                'dias_seg_sab' => $this->dias_seg_sab,
+                'dias_dom_fer' => $this->dias_dom_fer,
+                'parameters' => $this->parameters,
+                'employees' => $this->employees,
+                'he' => $this->arr_he,
             ]
         ]);
     }
