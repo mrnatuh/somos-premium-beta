@@ -1,4 +1,6 @@
 <script>
+import axios from 'axios';
+
 export default {
 
     data() {
@@ -171,6 +173,26 @@ export default {
             };
 
             document.querySelector('#mo_json').value = JSON.stringify(obj);
+
+            const csrf = document.querySelector("[name='csrf-token']").getAttribute('content');
+
+            console.log(csrf);
+
+            axios.post("http://localhost:8000/categoria/mo", {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "X-CSRF-Token": csrf,
+                },
+                method: "POST",
+                body: {
+                    'mo_json': JSON.stringify(obj)
+                },
+            }).then(function(response) {
+                console.log(response);
+            }).catch(function(error) {
+                console.log(error);
+            });
         }
     }
 }

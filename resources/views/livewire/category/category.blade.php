@@ -18,7 +18,9 @@ $category = array_values(array_filter($categories, function($v, $k) use($active)
 
 <div class="flex flex-col w-full h-full p-8">
 
-    <livewire:category.category-header :title="'Inclusão de '. $category['label']" />
+    <livewire:category.category-header
+        :title="'Inclusão de '. $category['label']"
+    />
 
     <livewire:dashboard.dashboard-bar :active="$active" />
 

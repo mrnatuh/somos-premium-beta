@@ -44,12 +44,12 @@ class CategoryMP extends Component
 
         'new' => [
             ['value' => '', 'disabled' => true],
-            ['value' => '', 'type' => 'text'],
-            ['value' => '', 'type' => 'text'],
-            ['value' => '', 'type' => 'text'],
-            ['value' => '', 'type' => 'date'],
-            ['value' => '0,00', 'name' => 'value', 'type' => 'number'],
-            ['value' => '', 'type' => 'text']
+            ['value' => '', 'type' => 'text', 'name' => 'order'],
+            ['value' => '', 'type' => 'text', 'name' => 'type'],
+            ['value' => '', 'type' => 'text', 'name' => 'gc'],
+            ['value' => '', 'type' => 'date', 'name' => 'date'],
+            ['value' => '0', 'name' => 'value', 'type' => 'number'],
+            ['value' => '', 'type' =>'text', 'name' => 'description']
         ]
     ];
 
@@ -68,12 +68,14 @@ class CategoryMP extends Component
         unset($this->mp['rows'][$rowIndex]);
         unset($this->deleteItem[$rowIndex]);
 
-        return true;
+        $this->save();
     }
 
     public function updateRow($rowIndex, $columnIndex, $value)
     {
         $this->mp['rows'][$rowIndex][$columnIndex]['value'] = $value;
+
+        $this->save();
     }
 
     public function increment()
@@ -102,10 +104,6 @@ class CategoryMP extends Component
 
     public function save()
     {
-        if (sizeof($this->mp['rows']) == 0) {
-            return;
-        }
-
         $weekref = session('preview')['week_ref'];
         $cc = session('preview')['cc'];
 
@@ -113,7 +111,7 @@ class CategoryMP extends Component
         $preview = Preview::where('week_ref', $weekref)->first();
 
         // calcula o total
-        $total = number_format($this->getTotal(), 2);
+        $total = $this->getTotal();
         $preview->mp = $total;
         $preview->save();
 
@@ -128,9 +126,6 @@ class CategoryMP extends Component
                 'option_name' => 'mp',
             ],
             [
-                'cc' => $cc,
-                'week_ref' => $weekref,
-                'option_name' => 'mp',
                 'option_value' => $content,
                 'total' => $total,
             ]
@@ -141,7 +136,12 @@ class CategoryMP extends Component
             'message' => 'Salvo com sucesso.',
         ]);
 
-        return $this->redirect('/categoria?filter=mp', navigate: true);
+        $this->dispatch('update-bar-total', [
+            'cc' => $cc,
+            'weekref' => $weekref
+        ]);
+
+        // return $this->redirect('/categoria?filter=mp', navigate: true);
     }
 
     public function mount()

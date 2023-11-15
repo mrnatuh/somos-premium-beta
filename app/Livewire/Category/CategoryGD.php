@@ -38,10 +38,10 @@ class CategoryGD extends Component
 
         'new' => [
             ['value' => '', 'disabled' => true],
-            ['value' => '', 'type' => 'text'],
-            ['value' => '', 'type' => 'date'],
+            ['value' => '', 'type' => 'text', 'name' => 'account'],
+            ['value' => '', 'type' =>'date', 'name' => 'date'],
             ['value' => '', 'type' => 'text', 'name' => 'value'],
-            ['value' => '']
+            ['value' =>'', 'type' => 'text', 'name' => 'description']
         ]
 
     ];
@@ -61,12 +61,14 @@ class CategoryGD extends Component
         unset($this->gd['rows'][$rowIndex]);
         unset($this->deleteItem[$rowIndex]);
 
-        return true;
+        $this->save();
     }
 
     public function updateRow($rowIndex, $columnIndex, $value)
     {
         $this->gd['rows'][$rowIndex][$columnIndex]['value'] = $value;
+
+        $this->save();
     }
 
     public function increment()
@@ -76,6 +78,8 @@ class CategoryGD extends Component
         $newItem[2]['value'] = date('Y-m-d');
 
         array_push($this->gd['rows'], $newItem);
+
+        $this->save();
     }
 
     public function getTotal()
@@ -135,8 +139,10 @@ class CategoryGD extends Component
             'message' => 'Salvo com sucesso.',
         ]);
 
-
-        return $this->redirect('/categoria?filter=gd', navigate: true);
+        $this->dispatch('update-bar-total', [
+            'cc' => $cc,
+            'weekref' => $weekref
+        ]);;
     }
 
     public function mount()

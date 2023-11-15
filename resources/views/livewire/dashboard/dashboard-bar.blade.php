@@ -25,5 +25,5 @@
 
     <x-dashboard.card label="GD" :value="$total['gd']" :selected="$active == 'gd'" />
 
-    <x-dashboard.card label="Investimento" :value="$total['investimento']" value-align="text-center" :selected="$active == 'investimento'" type="percent" />
+    <x-dashboard.card label="Investimento" :value="$total['investimento']" value-align="text-center" :selected="$active == 'investimento'" />
 </div>

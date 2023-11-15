@@ -27,6 +27,8 @@ class CategoryInvoicing extends Component
         if (isset($this->companies[$companyIndex])) {
             if (isset($this->companies[$companyIndex]['rows'])) {
                 $this->companies[$companyIndex]['rows'][$rowIndex][$qtyIndex]['value'] = (int) $value ?? 0;
+
+                $this->save();
             }
         }
     }
@@ -53,8 +55,6 @@ class CategoryInvoicing extends Component
             // adiciona o preco selecionado
             array_push($this->companies[$companyIndex]['prices_selected'], $value);
 
-
-
             // atualiza a lista de quantidade
             for ($r = 0; $r < sizeof($this->companies[$companyIndex]['rows']); $r++) {
                 array_push($this->companies[$companyIndex]['rows'][$r], [
@@ -67,6 +67,8 @@ class CategoryInvoicing extends Component
             $this->companies[$companyIndex]['colspan'] = sizeof($this->companies[$companyIndex]['rows'][0]);
 
             $this->save();
+
+            $this->redirect('/categoria?filter=faturamento', navigate: true);
         }
     }
 
@@ -280,15 +282,19 @@ class CategoryInvoicing extends Component
 
     public function save()
     {
-        $weekref = session('preview')['week_ref'];
         $cc = session('preview')['cc'];
+        $weekref = session('preview')['week_ref'];
 
         // acha o preview
-        $preview = Preview::where([['cc', '=', $cc], ['week_ref', '=', $weekref]])->first();
+        $preview = Preview::where([
+            ['cc', '=', $cc],
+            ['week_ref', '=', $weekref]
+        ])->first();
 
         // calcula o total
-        $total = number_format($this->getTotal(), 2);
+        $total = $this->getTotal();
         $preview->invoicing = $total;
+
         $preview->save();
 
         // serializa o conteúdo
@@ -302,9 +308,6 @@ class CategoryInvoicing extends Component
                 'option_name' => 'faturamento',
             ],
             [
-                'cc' => $cc,
-                'week_ref' => $weekref,
-                'option_name' => 'faturamento',
                 'option_value' => $content,
                 'total' => $total,
             ]
@@ -315,15 +318,18 @@ class CategoryInvoicing extends Component
             'message' => 'Salvo com sucesso.',
         ]);
 
-        return $this->redirect('/categoria?filter=faturamento', navigate: true);
+        $this->dispatch('update-bar-total', [
+            'cc' => $cc,
+            'weekref' => $weekref
+        ]);
     }
 
     public function mount()
     {
         $this->lastOfMonth = (int) Carbon::now()->lastOfMonth()->format('d');
 
-        $weekref = session('preview')['week_ref'];
         $cc = session('preview')['cc'] ?? false;
+        $weekref = session('preview')['week_ref'];
 
         if ($cc) {
             $faturamento = Option::where([
@@ -336,6 +342,11 @@ class CategoryInvoicing extends Component
                 $this->companies = unserialize($faturamento->option_value);
             }
         }
+
+        $this->dispatch('update-bar-total', [
+            'cc' => $cc,
+            'weekref' => $weekref
+        ]);
     }
 
     public function render()

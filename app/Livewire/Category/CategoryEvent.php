@@ -45,13 +45,16 @@ class CategoryEvent extends Component
         unset($this->events['rows'][$rowIndex]);
         unset($this->deleteItem[$rowIndex]);
 
-        return true;
+        $this->save();
     }
 
     public function updateRow($rowIndex, $columnIndex, $value)
     {
         $this->events['rows'][$rowIndex][$columnIndex]['value'] = $value;
+
         $this->updateRowTotal($rowIndex);
+
+        $this->save();
     }
 
     public function updateRowTotal($rowIndex)
@@ -78,6 +81,8 @@ class CategoryEvent extends Component
 
         $this->events['rows'][$rowIndex][$totalIndex]['set'] = $totalRow;
         $this->events['rows'][$rowIndex][$totalIndex]['value'] = 'R$ ' . number_format($totalRow, 2, ',', '.');
+
+        $this->save();
     }
 
     #[On('search-add-client')]
@@ -97,12 +102,14 @@ class CategoryEvent extends Component
             ['value' => 0, 'type' => 'number', 'name' => 'qty'],
             ['value' => 0, 'type' => 'number', 'name' => 'value'],
             ['value' => 'R$ 0,00', 'disabled' => true, 'name' => 'total', 'set' => 0],
-            ['value' => '', 'type' => 'date'],
-            ['value' => '', 'type' => 'date'],
-            ['value' => '', 'type' => 'text']
+            ['value' => '', 'type' => 'date', 'name' => 'date_event'],
+            ['value' => '', 'type' => 'date', 'name' => 'date_invoicing'],
+            ['value' => '', 'type' => 'text', 'name' => 'description']
         ];
 
         array_push($this->events['rows'], $add_row);
+
+        $this->save();
     }
 
     public function getTotal()
@@ -129,7 +136,7 @@ class CategoryEvent extends Component
         $preview = Preview::where([['cc', '=', $cc], ['week_ref', '=', $weekref]])->first();
 
         // calcula o total
-        $total = number_format($this->getTotal(), 2);
+        $total = $this->getTotal();
         $preview->events = $total;
         $preview->save();
 
@@ -155,6 +162,11 @@ class CategoryEvent extends Component
         session()->flash('message', [
             'type' => 'success',
             'message' => 'Salvo com sucesso.',
+        ]);
+
+        $this->dispatch('update-bar-total', [
+            'cc' => $cc,
+            'weekref' => $weekref
         ]);
 
         return true;

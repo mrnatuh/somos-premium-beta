@@ -37,7 +37,11 @@ class MoSaveController extends Controller
         );
 
         // acha o preview e seta o total
-        $preview = Preview::where([['cc', '=', $cc], ['week_ref', '=', $weekref]])->first();
+        $preview = Preview::where([
+            ['cc', '=', $cc],
+            ['week_ref', '=', $weekref]
+        ])->first();
+
         $preview->mo = $total;
         $preview->save();
 

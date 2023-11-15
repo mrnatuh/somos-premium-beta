@@ -33,7 +33,7 @@
                             value="{{ $row['value'] }}"
                             class="flex text-center justify-center border-0 bg-transparent py-2 w-full"
                             {{ isset($row['disabled']) ? 'disabled' : '' }}
-                            @if(isset($row['name']) && ($row['name'] == 'qty' || $row['name'] == 'value'))
+                            @if(isset($row['name']))
                             wire:change.lazy="updateRow({{ $rowIndex }}, {{ $columnIndex }}, $event.target.value)"
                             @endif
                         />
@@ -77,18 +77,14 @@
     </div>
 
     <div class="bg-white/50 w-full flex items-center justify-end gap-4 position fixed px-10 py-5 bottom-0 right-0">
-        <div>
-            <button
-                wire:click="save"
-                class="bg-green-600 cursor-pointer px-6 py-2 text-white rounded-xl text-lg font-bold disabled:opacity-50 disabled:cursor-not-allowed relative">
-                Salvar
 
-                <x-status.loading />
-            </button>
+        <button
+            class="bg-green-600 cursor-pointer px-6 py-2 text-white rounded-xl text-lg font-bold disabled:opacity-50 disabled:cursor-not-allowed relative">
+            Enviar para aprovação
 
-            <a href="{{ route('preview') }}" class="bg-red-600 px-6 py-2 text-white rounded-lg text-xl font-bold">
-                Cancelar
-            </a>
-        </div>
+            <x-status.loading />
+        </button>
     </div>
+
+    <div class="h-20"></div>
 </div>

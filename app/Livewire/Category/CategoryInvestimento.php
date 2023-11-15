@@ -39,10 +39,10 @@ class CategoryInvestimento extends Component
 
         'new' => [
             ['value' => '', 'disabled' => true],
-            ['value' => '', 'type' => 'text'],
-            ['value' => '', 'type' => 'date'],
-            ['set' => 0, 'value' => 'R$ 0,00', 'type' => 'text', 'name' => 'value'],
-            ['value' => '']
+            ['value' => '', 'type' => 'text', 'name' => 'account'],
+            ['value' => '', 'type' => 'date', 'name' => 'date'],
+            ['value' => '0', 'type' => 'number', 'name' => 'value'],
+            ['value' => '', 'type' => 'text', 'name' => 'description']
         ]
     ];
 
@@ -56,6 +56,8 @@ class CategoryInvestimento extends Component
         } else {
             $this->investimento['rows'][$rowIndex][$columnIndex]['value'] = $value;
         }
+
+        $this->save();
     }
 
     public function deleteRowItem($rowIndex)
@@ -73,7 +75,7 @@ class CategoryInvestimento extends Component
         unset($this->investimento['rows'][$rowIndex]);
         unset($this->deleteItem[$rowIndex]);
 
-        return true;
+        $this->save();
     }
 
     public function increment()
@@ -89,10 +91,12 @@ class CategoryInvestimento extends Component
     {
         $total = 0;
 
+        dd($this->investimento['rows']);
+
         foreach ($this->investimento['rows'] as $row) {
             foreach ($row as $key => $arr) {
                 if (isset($arr['name']) && $arr['name'] == 'value') {
-                    $total += $arr['set'] ?? 0;
+                    $total += (float) $arr['value'];
                 }
             }
         }
@@ -113,8 +117,11 @@ class CategoryInvestimento extends Component
         $preview = Preview::where('week_ref', $weekref)->first();
 
         // calcula o total
-        $total = number_format($this->getTotal(), 2);
-        $preview->events = $total;
+        $total = $this->getTotal();
+        $preview->rou = $total;
+
+        dd($total);
+
         $preview->save();
 
         // serializa o conteúdo
@@ -125,12 +132,9 @@ class CategoryInvestimento extends Component
             [
                 'cc' => $cc,
                 'week_ref' => $weekref,
-                'option_name' => 'investimento',
+                'option_name' => 'rou',
             ],
             [
-                'cc' => $cc,
-                'week_ref' => $weekref,
-                'option_name' => 'investimento',
                 'option_value' => $content,
                 'total' => $total,
             ]
@@ -141,7 +145,10 @@ class CategoryInvestimento extends Component
             'message' => 'Salvo com sucesso.',
         ]);
 
-        return $this->redirect('/categoria?filter=investimento', navigate: true);
+        $this->dispatch('update-bar-total', [
+            'cc' => $cc,
+            'weekref' => $weekref
+        ]);;
     }
 
     public function mount()
@@ -150,7 +157,7 @@ class CategoryInvestimento extends Component
         $cc = session('preview')['cc'] ?? false;
 
         if ($cc) {
-            $investimento = Option::where([['cc', '=', $cc], ['week_ref', '=', $weekref], ['option_name', '=', 'investimento']])->first();
+            $investimento = Option::where([['cc', '=', $cc], ['week_ref', '=', $weekref], ['option_name', '=', 'rou']])->first();
 
             if ($investimento) {
                 $this->investimento = unserialize($investimento->option_value);
