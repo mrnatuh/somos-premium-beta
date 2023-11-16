@@ -28,7 +28,7 @@
                     </a>
 
                     @if( auth()->user()->isAdmin() )
-                    <a class="flex items-center justify-center w-full h-10 rounded-md hover:bg-slate-100 hover:opacity-95"
+                    <a class="flex items-center w-full p-2.5 h-10 rounded-md hover:bg-slate-100 hover:opacity-95"
                         href="{{ route('category.parameters') }}">
                         Parâmetros
                     </a>

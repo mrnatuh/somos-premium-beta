@@ -16,6 +16,8 @@ use App\Livewire\Preview\PreviewIndex;
 use App\Livewire\User\UserCreate;
 use App\Livewire\User\UserEdit;
 use App\Livewire\User\UserIndex;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +47,43 @@ Route::middleware('auth')->group(function () {
     Route::get('/previa', PreviewIndex::class)->name('preview');
     Route::get('/previa/create', PreviewCreate::class)->name('preview.create');
     Route::post('/previa/edit', PreviewEdit::class)->name('preview.edit');
+
+    Route::get('/orcamentos', function() {
+        $tmp_users = [];
+        $users = User::where('cc', '!=', '')->get();
+
+        foreach ($users as $user) {
+            array_push($tmp_users, $user->cc);
+        }
+
+        $orcamentos = [];
+
+        $tmp_orcamento = DB::connection('mysql_dump')
+        ->table('ORCAMENTO')
+        ->get();
+
+        foreach ($tmp_orcamento as $orc) {
+            $cc = trim($orc->CV1_CTTINI);
+
+            if (in_array($cc, $tmp_users)) {
+                $dt = explode("/", $orc->CV1_DTINI);
+                $month_ref = $dt[1] . '_' . substr($dt[2], -2);
+                $dt = array_reverse($dt);
+                $dt = join('-', $dt);
+
+                array_push($orcamentos, [
+                    'cc' => trim($orc->CV1_CTTINI),
+                    'dt' => $dt,
+                    'period' => $orc->CV1_PERIOD,
+                    'value' => $orc->CV1_VALOR,
+                    'month_ref' => $month_ref,
+                    'group' => trim($orc->CT1_GRUPO),
+                ]);
+            }
+        }
+
+        return $orcamentos;
+    });
 
     Route::delete('/previa/delete', PreviewDelete::class)->name('preview.delete');
 });

@@ -31,6 +31,7 @@ class CategoryMO extends Component
     public $employees = [];
 
     public $he = [];
+    public $arr_he = [];
 
     public $modal_type = null;
 
@@ -85,8 +86,8 @@ class CategoryMO extends Component
         $this->dias_dom_fer = 0;
 
         if ($mo) {
-
             $content = unserialize($mo->option_value);
+
             $this->parameters = $content->params;
             $this->employees = $content->employees;
             $this->dias_seg_sab = $content->dias_seg_sab;
