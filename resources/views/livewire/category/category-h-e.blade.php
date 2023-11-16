@@ -63,7 +63,7 @@
                             <tr>
                                 <td class="text-center w-[125px]">
                                     <span class="flex w-full justify-center text-[16px] text-[#404D61]  leading-normal text-center overflow-hidden">
-                                        {{ $employe['total_hr_50'] }}
+                                       {{ $employe['total_hr_50'] }}
                                     </span>
                                 </td>
                                 <td class="text-center w-[125px]">

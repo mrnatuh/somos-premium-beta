@@ -45,6 +45,11 @@ class MoSaveController extends Controller
         $preview->mo = $total;
         $preview->save();
 
-        return redirect('/categoria?filter=mo')->with('success', 'MO salva com sucesso');
+        return response()->json([
+            'cc' => $cc,
+            'week_ref' => $weekref,
+            'option_name' => 'mo',
+            'total' => $total,
+        ]);
     }
 }

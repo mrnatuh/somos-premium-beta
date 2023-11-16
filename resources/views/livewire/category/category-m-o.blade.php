@@ -20,12 +20,7 @@
     <category-mo></category-mo>
 
     <div class="bg-white/50 w-full flex items-center justify-end gap-4 position fixed px-10 py-5 bottom-0 right-0">
-
-        <form method="post" action="{{ route('mo.store') }}" class="flex flex-col" id="mo_form">
-            @csrf
-
-            <textarea id="mo_json" name="mo_json" class="hidden">{{ json_encode($mo) }}</textarea>
-        </form>
+        <textarea id="mo_json" name="mo_json" class="hidden">{{ json_encode($mo) }}</textarea>
     </div>
 
     <div class="bg-white/50 w-full flex items-center justify-end gap-4 position fixed px-10 py-5 bottom-0 right-0">

@@ -130,7 +130,7 @@ class CategoryHE extends Component
             }
 
             $this->employees[$ep]['total_hr_50'] = $total_hr_50;
-            $this->employees[$ep]['total_vlr_50'] = $total_vlr_50;
+            $this->employees[$ep]['total_vlr_50'] = number_format($total_vlr_50, 2, ",", ".");
 
             // horas 100
             foreach ($arr_hr_100 as $qty) {
@@ -170,7 +170,7 @@ class CategoryHE extends Component
             }
 
             $this->employees[$ep]['total_hr_100'] = $total_hr_100;
-            $this->employees[$ep]['total_vlr_100'] = $total_vlr_100;
+            $this->employees[$ep]['total_vlr_100'] = number_format($total_vlr_100, 2, ",", ".");
 
             // Atrasos
             foreach ($arr_hr_atrasos as $qty) {
@@ -208,7 +208,7 @@ class CategoryHE extends Component
             }
 
             $this->employees[$ep]['total_hr_atrasos'] = $total_hr_atrasos;
-            $this->employees[$ep]['total_vlr_atrasos'] = $total_vlr_atrasos;
+            $this->employees[$ep]['total_vlr_atrasos'] = number_format($total_vlr_atrasos, 2, ",", ".");
 
             // Faltas
             foreach ($arr_hr_faltas as $qty) {
@@ -247,7 +247,8 @@ class CategoryHE extends Component
 
 
             $this->employees[$ep]['total_hr_faltas'] = $total_hr_faltas;
-            $this->employees[$ep]['total_vlr_faltas'] = $total_vlr_faltas;
+            $this->employees[$ep]['total_vlr_faltas'] =
+            number_format($total_vlr_faltas, 2, ",", ".");;
 
 
             // Adicional Noturno
@@ -290,8 +291,11 @@ class CategoryHE extends Component
             }
 
             $this->employees[$ep]['total_hr_adicional_noturno'] = $total_hr_adicional_noturno;
-            $this->employees[$ep]['total_vlr_adicional_noturno'] = $total_vlr_adicional_noturno;
+            $this->employees[$ep]['total_vlr_adicional_noturno'] =
+            number_format($total_vlr_adicional_noturno, 2, ",", ".");;
         }
+
+        $this->save();
     }
 
     public function mount()
@@ -449,8 +453,6 @@ class CategoryHE extends Component
             'type' => 'success',
             'message' => 'Salvo com sucesso.',
         ]);
-
-        return $this->redirect('/categoria?filter=he', navigate: true);
     }
 
     public function render()

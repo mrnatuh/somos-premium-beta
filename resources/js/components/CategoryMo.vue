@@ -21,8 +21,6 @@ export default {
 
         const mo = JSON.parse(document.querySelector('#mo_json').value);
 
-        console.log(mo);
-
         this.params = mo.parameters;
         this.employees = mo.employees;
         this.he = mo.he;
@@ -73,9 +71,7 @@ export default {
             });
         },
 
-        handleDiasTrabalhados(item) {
-            console.log(item);
-
+        handleDiasTrabalhados(item, update = false) {
             const vlr_salario_bruto = (item.salario / 30) * item.dias_trabalhados;
 
             item.vlr_salario = this.formatCurrency(item.salario);
@@ -159,6 +155,11 @@ export default {
 
             this.save();
             this.getTotal();
+
+            if (update) {
+                console.log('update', update);
+                window.autoSave();
+            }
         },
 
         save() {
@@ -173,29 +174,29 @@ export default {
             };
 
             document.querySelector('#mo_json').value = JSON.stringify(obj);
-
-            const csrf = document.querySelector("[name='csrf-token']").getAttribute('content');
-
-            console.log(csrf);
-
-            axios.post("http://localhost:8000/categoria/mo", {
-                headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json",
-                    "X-CSRF-Token": csrf,
-                },
-                method: "POST",
-                body: {
-                    'mo_json': JSON.stringify(obj)
-                },
-            }).then(function(response) {
-                console.log(response);
-            }).catch(function(error) {
-                console.log(error);
-            });
         }
     }
 }
+
+window.autoSave = function()
+{
+    var data = document.querySelector('#mo_json').value;
+    var json = JSON.parse(data);
+
+    axios.post('/categoria/mo', {
+        mo_json: data,
+    }).then(function(response) {
+
+        window.Livewire.dispatch('update-bar-total', {
+            cc: json.cc,
+            weekref: json.weekref,
+        });
+    }).catch(function(error) {
+        console.log(error);
+    });
+}
+
+
 </script>
 
 <template>
@@ -510,14 +511,14 @@ export default {
                             />
                         </td>
                         <td class="text-[14px] text-[#404D61] text-center">
-                            <select class="border-0" v-model="item.option_cesta_basica" @change="handleDiasTrabalhados(item)">
+                            <select class="border-0" v-model="item.option_cesta_basica" @change="handleDiasTrabalhados(item, true)">
                                 <option value="0" :selected="!item.option_cesta_basica">Não</option>
                                 <option value="1" :selected="item.option_cesta_basica">Sim</option>
                             </select>
 
                         </td>
                         <td class="text-[14px] text-[#404D61] text-center">
-                            <select class="border-0" v-model="item.option_assistencia_medica" @change="handleDiasTrabalhados(item)">
+                            <select class="border-0" v-model="item.option_assistencia_medica" @change="handleDiasTrabalhados(item, true)">
                                 <option value="0" :selected="!item.option_assistencia_medica">Não</option>
                                 <option value="1" :selected="item.option_assistencia_medica">Sim</option>
                             </select>
@@ -526,19 +527,19 @@ export default {
                             {{ item.qtde_dependentes }}
                         </td>
                         <td class="text-[14px] text-[#404D61] text-center">
-                            <select class="border-0" v-model="item.option_assistencia_odontologica" @change="handleDiasTrabalhados(item)">
+                            <select class="border-0" v-model="item.option_assistencia_odontologica" @change="handleDiasTrabalhados(item, true)">
                                 <option value="0" :selected="!item.option_assistencia_odontologica">Não</option>
                                 <option value="1" :selected="item.option_assistencia_odontologica">Sim</option>
                             </select>
                         </td>
                         <td class="text-[14px] text-[#404D61] text-center">
-                            <select class="border-0" v-model="item.option_contribuicao_sindical" @change="handleDiasTrabalhados(item)">
+                            <select class="border-0" v-model="item.option_contribuicao_sindical" @change="handleDiasTrabalhados(item, true)">
                                 <option value="0" :selected="!item.option_contribuicao_sindical">Não</option>
                                 <option value="1" :selected="item.option_contribuicao_sindical">Sim</option>
                             </select>
                         </td>
                         <td class="text-[14px] text-[#404D61] text-center">
-                            <select class="border-0" v-model="item.option_vale_transporte" @change="handleDiasTrabalhados(item)">
+                            <select class="border-0" v-model="item.option_vale_transporte" @change="handleDiasTrabalhados(item, true)">
                                 <option value="0" :selected="!item.option_vale_transporte">Não</option>
                                 <option value="1" :selected="item.option_vale_transporte">Sim</option>
                             </select>

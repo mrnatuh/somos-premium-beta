@@ -40,8 +40,6 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/categoria', CategoryIndex::class)->name('category');
 
-
-
     Route::post('/categoria/mo', MoSaveController::class)->name('mo.store');
 
     Route::get('/previa', PreviewIndex::class)->name('preview');

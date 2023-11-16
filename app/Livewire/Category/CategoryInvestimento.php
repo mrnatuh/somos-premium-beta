@@ -41,7 +41,7 @@ class CategoryInvestimento extends Component
             ['value' => '', 'disabled' => true],
             ['value' => '', 'type' => 'text', 'name' => 'account'],
             ['value' => '', 'type' => 'date', 'name' => 'date'],
-            ['value' => '0', 'type' => 'number', 'name' => 'value'],
+            ['value' => '', 'type' => 'number', 'name' => 'value'],
             ['value' => '', 'type' => 'text', 'name' => 'description']
         ]
     ];
@@ -49,10 +49,13 @@ class CategoryInvestimento extends Component
     public function updateRow($rowIndex, $columnIndex, $value)
     {
         if (isset($this->investimento['rows'][$rowIndex][$columnIndex]['name']) && $this->investimento['rows'][$rowIndex][$columnIndex]['name'] == 'value') {
-            $value = (float) str_replace(',', '.', $value);
 
+            $value = $value ?? 0;
+
+            $value = (float) str_replace(',', '.', $value);
             $this->investimento['rows'][$rowIndex][$columnIndex]['set'] = number_format($value, 2);
-            $this->investimento['rows'][$rowIndex][$columnIndex]['value'] = 'R$ ' . number_format($value, 2, ',', '.');
+
+            $this->investimento['rows'][$rowIndex][$columnIndex]['value'] = number_format($value, 2);
         } else {
             $this->investimento['rows'][$rowIndex][$columnIndex]['value'] = $value;
         }
@@ -91,12 +94,12 @@ class CategoryInvestimento extends Component
     {
         $total = 0;
 
-        dd($this->investimento['rows']);
-
         foreach ($this->investimento['rows'] as $row) {
             foreach ($row as $key => $arr) {
                 if (isset($arr['name']) && $arr['name'] == 'value') {
-                    $total += (float) $arr['value'];
+                    if (isset($arr['set'])) {
+                        $total += (float) $arr['set'];
+                    }
                 }
             }
         }
@@ -119,8 +122,6 @@ class CategoryInvestimento extends Component
         // calcula o total
         $total = $this->getTotal();
         $preview->rou = $total;
-
-        dd($total);
 
         $preview->save();
 
@@ -148,7 +149,7 @@ class CategoryInvestimento extends Component
         $this->dispatch('update-bar-total', [
             'cc' => $cc,
             'weekref' => $weekref
-        ]);;
+        ]);
     }
 
     public function mount()

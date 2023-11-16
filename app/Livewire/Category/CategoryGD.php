@@ -100,10 +100,6 @@ class CategoryGD extends Component
 
     public function save()
     {
-        if (sizeof($this->gd['rows']) == 0) {
-            return;
-        }
-
         $weekref = session('preview')['week_ref'];
         $cc = session('preview')['cc'];
 
