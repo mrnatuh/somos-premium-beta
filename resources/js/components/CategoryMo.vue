@@ -59,6 +59,12 @@ export default {
             this.employees.forEach(function (item) {
                 self.handleDiasTrabalhados(item);
             });
+
+            this.save();
+
+            this.getTotal();
+
+            window.autoSave();
         },
 
         getTotal() {
@@ -117,7 +123,7 @@ export default {
 
             item.vrl_vale_transporte = item.vlr_vt == "0,01" ? item.vlr_desconto_vale_transporte : this.formatCurrency(item.vlr_vt);
 
-            const vlr_cesta_basica = this.params.cesta_basica * item.option_cesta_basica;
+            const vlr_cesta_basica = this.params.cesta_basica * parseInt(item.option_cesta_basica);
             item.vlr_cesta_basica = this.formatCurrency(vlr_cesta_basica);
 
             const vlr_assistencia_medica_funcionarios = item.plano_saude * this.params.assistencia_medica_titular;
@@ -126,7 +132,7 @@ export default {
 
             const vlr_assistencia_medica_dependentes = item.qtde_dependentes * this.params.assistencia_medica_dependentes;
 
-            const vlr_total_assistencia_medica = (vlr_assistencia_medica_funcionarios + vlr_assistencia_medica_dependentes) * item.option_assistencia_medica;
+            const vlr_total_assistencia_medica = (vlr_assistencia_medica_funcionarios + vlr_assistencia_medica_dependentes) * parseInt(item.option_assistencia_medica);
 
             item.vlr_assistencia_medica_dependentes = this.formatCurrency(vlr_assistencia_medica_dependentes);
 
@@ -158,6 +164,7 @@ export default {
 
             if (update) {
                 console.log('update', update);
+
                 window.autoSave();
             }
         },

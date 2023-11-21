@@ -413,6 +413,13 @@ class CategoryHE extends Component
         }
     }
 
+    public function to_float($val)
+    {
+        $val = str_replace(",", ".", $val);
+        $val = preg_replace('/\.(?=.*\.)/', '', $val);
+        return floatval($val);
+    }
+
     public function save()
     {
         if (sizeof($this->employees) == 0) {
@@ -427,7 +434,7 @@ class CategoryHE extends Component
 
         // calcula o total
         $total = 0.00;
-        $preview->he = $total ;
+        $preview->he = $total;
         $preview->save();
 
         // serializa o conteúdo
@@ -453,6 +460,134 @@ class CategoryHE extends Component
             'type' => 'success',
             'message' => 'Salvo com sucesso.',
         ]);
+
+        // Update para calcular MO depois de salvar HE.
+        $mo = Option::where([
+            'cc' => $cc,
+            'week_ref' => $weekref,
+            'option_name' => 'mo',
+        ])->first();
+
+        if ($mo) {
+            $content_mo = unserialize($mo->option_value);
+
+            $tmp_he = Option::where([
+                'cc' => $cc,
+                'week_ref' => $weekref,
+                'option_name' => 'he',
+            ])->first();
+
+            if ($tmp_he) {
+
+                $he = unserialize($tmp_he->option_value);
+
+                foreach($content_mo->employees as $item){
+                    $vlr_salario_bruto = ($item->salario / 30) * $item-> dias_trabalhados;
+
+                    $item->vlr_salario_bruto = number_format($vlr_salario_bruto, 2, ',', '.');
+
+                    $item->dias_trabalhados;
+
+                    $item->vlr_salario = number_format($item->salario, 2, ',', '.');
+
+                    $extras = array_filter($he, function($var) use($item) {
+                        return $var['id'] == $item->id;
+                    });
+
+                    $vlr_total_50 =  0;
+                    $vlr_total_100 = 0;
+                    $vlr_total_faltas = 0;
+                    $vlr_total_atrasos = 0;
+                    $vlr_total_adicional_noturno = 0;
+                    $dsr = 0;
+                    $vlr_total_he = 0;
+
+                    if (sizeof($extras) > 0 && isset($extras[0])) {
+                        $vlr_total_50 = $this->to_float($extras[0]['total_vlr_50']) ?? 0;
+
+                        $vlr_total_100 = $this->to_float($extras[0]['total_vlr_100']) ?? 0;
+
+                        $vlr_total_adicional_noturno = $this->to_float($extras[0]['total_vlr_adicional_noturno']) ?? 0;
+
+                        $vlr_he_total_add = $vlr_total_50 + $vlr_total_100 + $vlr_total_adicional_noturno;
+
+                        $vlr_total_faltas =
+                        $this->to_float($extras[0]['total_vlr_faltas']) ?? 0;
+
+                        $vlr_total_atrasos =
+                        $this->to_float($extras[0]['total_vlr_atrasos']) ?? 0;
+
+                        $vlr_he_total_sub = $vlr_total_faltas + $vlr_total_atrasos;
+
+                        $dsr = ($vlr_total_50 / $content_mo->dias_seg_sab) * $content_mo->dias_dom_fer;
+
+                        $dsr += ($vlr_total_100 / $content_mo->dias_seg_sab) * $content_mo->dias_dom_fer;
+
+                        $dsr += ($vlr_total_adicional_noturno / $content_mo->dias_seg_sab) * $content_mo->dias_dom_fer;
+
+                        $item->vlr_total_he = $vlr_he_total_add - $vlr_he_total_sub;
+                    }
+
+                    $item->vlr_dsr = number_format($dsr, 2, ',', '.');
+
+                    $item->vlr_salario_bruto = number_format($vlr_salario_bruto, 2, ',', '.');
+
+                    $vlr_vr = $vlr_salario_bruto * (1 / 100);
+                    $item->vlr_desconto_refeicao = number_format($vlr_vr, 2, ',', '.');
+
+                    $vlr_vt = $vlr_salario_bruto * (5.5 / 100);
+                    $item->vlr_desconto_vale_transporte = number_format( $vlr_vt, 2, ',', '.');
+
+                    $item->vrl_vale_transporte = $item->vlr_vt == "0,01" ? $item->vlr_desconto_vale_transporte : number_format($item->vlr_vt, 2, ',', '.');
+
+                    $vlr_cesta_basica = $content_mo->params->cesta_basica * $item->option_cesta_basica;
+
+                    $item->vlr_cesta_basica = number_format($vlr_cesta_basica, 2, ',', '.');
+
+                    $vlr_assistencia_medica_funcionarios = $item->plano_saude * $content_mo->params->assistencia_medica_titular;
+
+                    $item->vlr_assistencia_medica_funcionario = number_format($vlr_assistencia_medica_funcionarios, 2, ',', '.');
+
+                    $vlr_assistencia_medica_dependentes = $item->qtde_dependentes * $content_mo->params->assistencia_medica_dependentes;
+
+                    $vlr_total_assistencia_medica = ($vlr_assistencia_medica_funcionarios + $vlr_assistencia_medica_dependentes) * $item->option_assistencia_medica;
+
+                    $item->vlr_assistencia_medica_dependentes = number_format($vlr_total_assistencia_medica, 2, ',', '.');
+
+                    $vlr_exames = 0 * $content_mo->params->exames;
+                    $item->vlr_exames = number_format($vlr_exames, 2, ',', '.');
+
+                    $vlr_assistencia_odontologica = ($item->odonto + $item->odonto_dependentes) * $content_mo->params->assistencia_odontologica;
+
+                    $item->vlr_assistencia_odontologica = number_format( $vlr_assistencia_odontologica, 2, ',', '.');
+
+                    $item->vlr_contribuicao_sindical = number_format(($item->contribuicao_sindical * $content_mo->params->contribuicao_sindical), 2, ',', '.');
+
+                    $item->vlr_inss = number_format(($content_mo->params->inss / 100) * ($dsr + $vlr_salario_bruto), 2, ',', '.');
+
+                    $item->vlr_fgts = number_format((($content_mo->params->fgts / 100) * ($dsr + $vlr_salario_bruto)), 2, ',', '.');
+
+                    $item->vlr_provisao_ferias = number_format((($content_mo->params->provisao_ferias / 100) * ($dsr + $vlr_salario_bruto)), 2, ',', '.');
+
+                    $item->vlr_decimo_terceiro = number_format((($content_mo->params->provisao_decimo_terceiro / 100) * ($dsr + $vlr_salario_bruto)), 2, ',', '.');
+
+                    $vlr_total_salario = $vlr_salario_bruto + $dsr - $vlr_vt - $vlr_vr;
+
+                    $item->vlr_total_salario = number_format( $vlr_total_salario, 2, ',', '.');
+
+                    $vlr_total_funcionario = $vlr_total_salario + $vlr_total_he + $vlr_cesta_basica + $vlr_total_assistencia_medica + $vlr_exames + $vlr_assistencia_odontologica;
+
+                    $item->tmp_vlr_total_funcionario = number_format( $vlr_total_funcionario, 2, ',', '.');
+
+                    $item->vlr_total_funcionario = number_format( $vlr_total_funcionario, 2, ',', '.');
+                }
+
+                $mo->option_value = serialize($content_mo);
+
+                $mo->update();
+            }
+
+        }
     }
 
     public function render()
