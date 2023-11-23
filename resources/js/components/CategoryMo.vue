@@ -60,9 +60,9 @@ export default {
                 self.handleDiasTrabalhados(item);
             });
 
-            this.save();
-
             this.getTotal();
+
+            this.save();
 
             window.autoSave();
         },
@@ -121,7 +121,9 @@ export default {
             const vlr_vt = vlr_salario_bruto * (5.5 / 100);
             item.vlr_desconto_vale_transporte = this.formatCurrency(vlr_vt);
 
-            item.vrl_vale_transporte = item.vlr_vt == "0,01" ? item.vlr_desconto_vale_transporte : this.formatCurrency(item.vlr_vt);
+            const vrl_vale_transporte = item.vlr_vt == "0,01" ? item.vlr_desconto_vale_transporte : this.formatCurrency(item.vlr_vt);
+
+            item.vrl_vale_transporte = vrl_vale_transporte;
 
             const vlr_cesta_basica = this.params.cesta_basica * parseInt(item.option_cesta_basica);
             item.vlr_cesta_basica = this.formatCurrency(vlr_cesta_basica);
@@ -143,7 +145,8 @@ export default {
 
             item.vlr_assistencia_odontologica = this.formatCurrency(vlr_assistencia_odontologica);
 
-            item.vlr_contribuicao_sindical = this.formatCurrency(item.contribuicao_sindical * this.params.contribuicao_sindical);
+            const vlr_contribuicao_sindical = (item.contribuicao_sindical * this.params.contribuicao_sindical) * parseInt(item.option_contribuicao_sindical);
+            item.vlr_contribuicao_sindical = this.formatCurrency(vlr_contribuicao_sindical);
 
             item.vlr_inss = this.formatCurrency((this.params.inss / 100) * (dsr + vlr_salario_bruto));
             item.vlr_fgts = this.formatCurrency((this.params.fgts / 100) * (dsr + vlr_salario_bruto));
@@ -159,8 +162,9 @@ export default {
 
             item.vlr_total_funcionario = this.formatCurrency(vlr_total_funcionario);
 
-            this.save();
             this.getTotal();
+
+            this.save();
 
             if (update) {
                 console.log('update', update);
@@ -193,6 +197,8 @@ window.autoSave = function()
     axios.post('/categoria/mo', {
         mo_json: data,
     }).then(function(response) {
+
+        console.log(response.data);
 
         window.Livewire.dispatch('update-bar-total', {
             cc: json.cc,
@@ -514,7 +520,7 @@ window.autoSave = function()
                                 min="1"
                                 max="31"
                                 v-model="employees[index].dias_trabalhados"
-                                @change="handleDiasTrabalhados(item)"
+                                @change="handleDiasTrabalhados(item, true)"
                             />
                         </td>
                         <td class="text-[14px] text-[#404D61] text-center">

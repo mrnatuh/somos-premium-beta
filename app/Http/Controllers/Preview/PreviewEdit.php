@@ -19,7 +19,7 @@ class PreviewEdit extends Controller
         if ($cc) {
             session()->put('preview', [
                 'cc' => $cc,
-                'week_ref' => $request->input('weekref')
+                'week_ref' => $request->input('weekref'),
             ]);
 
             return to_route('category', [

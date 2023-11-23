@@ -5,9 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardControllerIndex;
 use App\Http\Controllers\MoSaveController;
-// use App\Http\Controllers\Preview\PreviewCreate;
 use App\Http\Controllers\Preview\PreviewDelete;
 use App\Http\Controllers\Preview\PreviewEdit;
+use App\Http\Controllers\PreviewStatusController;
 use App\Livewire\Category\CategoryIndex;
 use App\Livewire\Dashboard\DashboardIndex;
 use App\Livewire\Parameters\ParametersIndex;
@@ -43,6 +43,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/categoria', CategoryIndex::class)->name('category');
 
     Route::post('/categoria/mo', MoSaveController::class)->name('mo.store');
+
 
     Route::get('/previa', PreviewIndex::class)->name('preview');
     Route::get('/previa/create', PreviewCreate::class)->name('preview.create');
@@ -86,6 +87,8 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::delete('/previa/delete', PreviewDelete::class)->name('preview.delete');
+
+    Route::post('/previa/status', PreviewStatusController::class)->name('preview.status');
 });
 
 Route::middleware(['auth', 'is-admin'])->group(function () {

@@ -138,7 +138,7 @@ class CategoryGD extends Component
         $this->dispatch('update-bar-total', [
             'cc' => $cc,
             'weekref' => $weekref
-        ]);;
+        ]);
     }
 
     public function mount()

@@ -24,6 +24,9 @@ class Preview extends Model
         'gd',
         'rou',
         'variation',
-        'status'
+        'status',
+        'published_at',
+        'approved_at',
+        'logs',
     ];
 }

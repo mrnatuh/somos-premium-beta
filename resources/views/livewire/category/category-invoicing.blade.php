@@ -199,15 +199,5 @@
         </div>
     </div>
 
-    <div class="bg-white/50 w-full flex items-center justify-end gap-4 position fixed px-10 py-5 bottom-0 right-0">
-
-        <button
-            class="bg-green-600 cursor-pointer px-6 py-2 text-white rounded-xl text-lg font-bold disabled:opacity-50 disabled:cursor-not-allowed relative">
-            Enviar para aprovação
-
-            <x-status.loading />
-        </button>
-    </div>
-
     <div class="h-20"></div>
 </div>
