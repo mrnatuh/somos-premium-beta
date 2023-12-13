@@ -53,9 +53,9 @@ class CategoryInvestimento extends Component
             $value = $value ?? 0;
 
             $value = (float) str_replace(',', '.', $value);
-            $this->investimento['rows'][$rowIndex][$columnIndex]['set'] = number_format($value, 2);
+            $this->investimento['rows'][$rowIndex][$columnIndex]['set'] = $value;
 
-            $this->investimento['rows'][$rowIndex][$columnIndex]['value'] = number_format($value, 2);
+            $this->investimento['rows'][$rowIndex][$columnIndex]['value'] = $value;
         } else {
             $this->investimento['rows'][$rowIndex][$columnIndex]['value'] = $value;
         }
