@@ -303,7 +303,7 @@ if ($log_level == '3' && $log_status == 'validado') {
                         <span>
                             Enviado para aprovação
                         </span>
-                    @if($log['status_from'] == $log['status'])
+                    @elseif($log['status_from'] == $log['status'])
                         <span>
                             {{ $log_status[$log['status']] }}
                         </span>
