@@ -89,7 +89,7 @@ class CategoryGD extends Component
         foreach ($this->gd['rows'] as $row) {
             foreach ($row as $key => $arr) {
                 if (isset($arr['name']) && $arr['name'] == 'value') {
-                    $total += $arr['value'] ?? 0;
+                    $total += $arr['value'] ? (float) $arr['value'] : 0;
                 }
             }
         }
