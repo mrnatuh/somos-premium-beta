@@ -289,21 +289,28 @@ if ($log_level == '3' && $log_status == 'validado') {
         @foreach($logs as $log)
             <div class="bg-white flex flex-col w-full border shadow rounded-lg p-2.5">
                 <p class="flex gap-2 items-center mb-1">
-                    <span>
+                    <strong class="text-xs">
+                        {{ $log['user_name'] }}
+                    </strong>
+
+                    <span class="text-xs">
                         {{ $log['timestamp']->isToday() ?  $log['timestamp']->diffForHumans() : $log['timestamp']->format('H:i d/m/Y') }}
                     </span>
-
-                    <strong class="text-[14px]">
-                        Por: {{ $log['user_name'] }}
-                    </strong>
                 </p>
 
                 <p class="text-xs mb-1">
-                    @if($log['status_from'])
-                    <span>De: {{ $log_status[$log['status_from']] }}</span> @endif
-                    <span>
-                        Para: {{ $log_status[$log['status']] }}
-                    </span>
+                    @if($log['status_from'] == $log['status'])
+                        <span>
+                            {{ $log_status[$log['status']] }}
+                        </span>
+                    @else
+                        @if($log['status_from'])
+                        <span>{{ $log_status[$log['status_from']] }}</span> para
+                        @endif
+                        <span>
+                            {{ $log_status[$log['status']] }}
+                        </span>
+                    @endif
                 </p>
 
                 @if(isset($log['text']))
