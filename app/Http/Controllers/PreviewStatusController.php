@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Preview;
+use App\Models\User;
+use App\Notifications\notificationUser;
 use Illuminate\Http\Request;
 
 class PreviewStatusController extends Controller
@@ -27,23 +29,15 @@ class PreviewStatusController extends Controller
         $logs = isset($preview->logs) ? unserialize($preview->logs) : [];
         $last_log = sizeof($logs) ? $logs[sizeof($logs) - 1] : null;
 
+        $user = User::where('id', auth()->user()->id)->first();
+
+
+        // publica a prévia para aprovação
         if ($input['status'] == 'publish') {
 
-            $preview->status = 'em-analise';
-            $preview->published_at = now();
 
-            array_push($logs, [
-                'status_from' => $last_log ? $last_log['status'] : '',
-                'status' => $preview->status,
-                'user_id' => auth()->user()->id,
-                'user_name' => auth()->user()->name,
-                'timestamp' => now(),
-            ]);
 
-            $preview->logs = serialize($logs);
-
-            $preview->update();
-
+        // reprova a prévia
         } else if($input['status'] == 'reprove') {
 
             $preview->status = 'recusado';
@@ -61,6 +55,7 @@ class PreviewStatusController extends Controller
 
             $preview->update();
 
+        // aprova a prévia
         } else if($input['status'] == 'approve') {
 
             $preview->status = 'validado';

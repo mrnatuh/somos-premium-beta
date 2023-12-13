@@ -107,8 +107,10 @@ document.addEventListener('livewire:initialized', () => {
                 approve_modal.classList.remove('hidden');
 
                 window.preview = {
+                    id: e.target.dataset.preview,
                     cc: e.target.dataset.cc,
                     weekref: e.target.dataset.weekref,
+                    level: e.target.dataset.level,
                 };
             });
 
@@ -117,8 +119,10 @@ document.addEventListener('livewire:initialized', () => {
                 approve_modal.classList.remove('flex');
 
                 window.preview = {
+                    id: null,
                     cc: null,
                     weekref: null,
+                    level: null,
                 };
             });
 
@@ -127,8 +131,10 @@ document.addEventListener('livewire:initialized', () => {
                 approve_modal.classList.remove('flex');
 
                 window.preview = {
+                    id: null,
                     cc: null,
                     weekref: null,
+                    level: null,
                 };
             });
 
@@ -137,10 +143,11 @@ document.addEventListener('livewire:initialized', () => {
                 approve_modal_cancel.setAttribute('disabled', true);
                 approve_modal_confirm.setAttribute('disabled', true);
 
-                axios.post('/previa/status', {
+                axios.post('/previa/'+ window.preview.id +'/publish', {
                     cc: window.preview.cc,
                     weekref: window.preview.weekref,
                     status: 'publish',
+                    level: window.preview.level,
                 }).then(function(response) {
                     location.href = location.href;
                 }).catch(function(error) {
@@ -160,6 +167,8 @@ document.addEventListener('livewire:initialized', () => {
 
             var approve_status_modal_close = document.getElementById('approve-status-modal-close');
 
+            var approve_status_modal_text = document.getElementById('approve-status-modal-text');
+
             console.log('[btn-cancel-approve][btn-confirm-approve]');
 
             btn_status_approve.addEventListener('click', function(e) {
@@ -168,10 +177,17 @@ document.addEventListener('livewire:initialized', () => {
 
                 approve_status_modal_message.innerHTML = 'Deseja aprovar a prévia?';
 
+                approve_status_modal_text.value = '';
+                approve_status_modal_text.classList.remove('flex');
+                approve_status_modal_text.classList.add('hidden');
+
                 window.preview = {
+                    id: e.target.dataset.preview,
                     cc: e.target.dataset.cc,
                     weekref: e.target.dataset.weekref,
                     status: 'approve',
+                    level: e.target.dataset.level,
+                    text: '',
                 };
             });
 
@@ -179,12 +195,17 @@ document.addEventListener('livewire:initialized', () => {
                 approve_status_modal.classList.add('flex');
                 approve_status_modal.classList.remove('hidden');
 
+                approve_status_modal_text.classList.remove('hidden');
+                approve_status_modal_text.classList.add('flex');
+
                 approve_status_modal_message.innerHTML = 'Deseja reprovar a prévia?';
 
                 window.preview = {
+                    id: e.target.dataset.preview,
                     cc: e.target.dataset.cc,
                     weekref: e.target.dataset.weekref,
                     status: 'reprove',
+                    level: e.target.dataset.level,
                 };
             });
 
@@ -193,9 +214,12 @@ document.addEventListener('livewire:initialized', () => {
                 approve_status_modal.classList.remove('flex');
 
                 window.preview = {
+                    id: null,
                     cc: null,
                     weekref: null,
                     status: null,
+                    level: 1,
+                    text: '',
                 };
             });
 
@@ -204,22 +228,47 @@ document.addEventListener('livewire:initialized', () => {
                 approve_status_modal.classList.remove('flex');
 
                 window.preview = {
+                    id: null,
                     cc: null,
                     weekref: null,
                     status: null,
+                    level: null,
+                    text: null,
                 };
             });
 
             approve_status_modal_confirm.addEventListener('click', function(e) {
+                var obj = {
+                    id: window.preview.id,
+                    cc: window.preview.cc,
+                    weekref: window.preview.weekref,
+                    status: window.preview.status,
+                    level: window.preview.level,
+                };
+
+                var action = 'approve';
+
+                if (approve_status_modal_text.classList.contains('flex')) {
+                    action = 'reprove';
+
+                    var text = approve_status_modal_text.value.trim();
+
+                    if (text.length < 10) {
+                        approve_status_modal_text.classList.add('border-red-400');
+                        return;
+                    } else {
+                        approve_status_modal_text.classList.remove('border-red-400');
+                    }
+
+                    obj.text = approve_status_modal_text.value;
+                }
+
                 approve_status_modal_cancel.setAttribute('disabled', true);
                 approve_status_modal_close.setAttribute('disabled', true);
                 approve_status_modal_confirm.setAttribute('disabled', true);
 
-                axios.post('/previa/status', {
-                    cc: window.preview.cc,
-                    weekref: window.preview.weekref,
-                    status: window.preview.status,
-                }).then(function(response) {
+                axios.post('/previa/'+ window.preview.id +'/'+ action +'/' + window.preview.level, obj).then(function(response) {
+                    console.log(response.data);
                     location.href = location.href;
                 }).catch(function(error) {
                     console.log(error);

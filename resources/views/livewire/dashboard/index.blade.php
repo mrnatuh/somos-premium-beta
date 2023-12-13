@@ -6,7 +6,7 @@
                 <p class="text-gray-600">1 resultado encontrado</p>
             </div>
 
-            <x-notification.icon />
+            <x-notification.notification />
         </div>
 
         <livewire:dashboard.dashboard-bar />

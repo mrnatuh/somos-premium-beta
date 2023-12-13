@@ -69,4 +69,15 @@ class User extends Authenticatable
     {
         return $this->access === 'user';
     }
+
+    public function level()
+    {
+        if ($this->isAdmin() || $this->isManager() || $this->isDirector()) {
+            return 3;
+        } else if ($this->isCoordinator()) {
+            return 2;
+        } else {
+            return 1;
+        }
+    }
 }

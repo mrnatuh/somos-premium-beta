@@ -3,6 +3,5 @@
         {{ $title }}
     </strong>
 
-
-    <x-notification.icon :items="$notifications" />
+    <x-notification.notification />
 </div>

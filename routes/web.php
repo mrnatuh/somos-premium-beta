@@ -7,6 +7,7 @@ use App\Http\Controllers\DashboardControllerIndex;
 use App\Http\Controllers\MoSaveController;
 use App\Http\Controllers\Preview\PreviewDelete;
 use App\Http\Controllers\Preview\PreviewEdit;
+use App\Http\Controllers\PreviewForceController;
 use App\Http\Controllers\PreviewStatusController;
 use App\Livewire\Category\CategoryIndex;
 use App\Livewire\Dashboard\DashboardIndex;
@@ -89,6 +90,17 @@ Route::middleware('auth')->group(function () {
     Route::delete('/previa/delete', PreviewDelete::class)->name('preview.delete');
 
     Route::post('/previa/status', PreviewStatusController::class)->name('preview.status');
+
+
+    Route::post('/previa/{preview}/publish', [PreviewForceController::class, 'publish'])->name('preview.publish');
+
+    Route::get('/previa/{preview}/redirect', [PreviewForceController::class, 'redirect'])->name('preview.redirect');
+
+    Route::get('/previa/{preview}/clear', [PreviewForceController::class, 'clear'])->name('preview.clear');
+
+    Route::post('/previa/{preview}/approve/{level}', [PreviewForceController::class, 'approve'])->name('preview.approve');
+
+    Route::post('/previa/{preview}/reprove/{level}', [PreviewForceController::class, 'reprove'])->name('preview.reprove');
 });
 
 Route::middleware(['auth', 'is-admin'])->group(function () {

@@ -107,7 +107,7 @@ class CategoryGD extends Component
         $preview = Preview::where([['cc', '=', $cc], ['week_ref', '=', $weekref]])->first();
 
         // calcula o total
-        $total = number_format($this->getTotal(), 2);
+        $total = $this->getTotal();
         $preview->gd = $total;
         $preview->save();
 

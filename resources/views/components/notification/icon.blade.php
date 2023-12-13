@@ -1,7 +1,7 @@
 @props([
     'w' => 45,
     'h' => 45,
-    'items' => []
+    'items' => auth()->user()->unreadNotifications
 ])
 
 <div class="flex w-[{{ $w }}px] h-[{{ $h }}px] absolute top-8 right-5">

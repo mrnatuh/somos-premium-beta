@@ -69,48 +69,99 @@ $category = array_values(array_filter($categories, function($v, $k) use($active)
     <div class="bg-white/50 w-full flex items-center justify-end gap-4 position fixed px-10 py-5 bottom-0 right-0"
         id="approve_area">
 
-        @if ( !$published_at )
+        @php
+            $log_status = isset($last_log['status']) ? $last_log['status'] : 'em-analise';
+
+            $log_level = isset($last_log['level']) ? $last_log['level'] : 1;
+
+            $action_publish = false;
+            $action_wait = false;
+            $action_approve_reprove = false;
+            $action_approved = false;
+
+            if (auth()->user()->isSupervisor()) {
+                if (!$published_at || $log_status == 'recusado') {
+                    $action_publish = true;
+                } else {
+                    $action_wait = true;
+                }
+            }
+
+            if (auth()->user()->isCoordinator() && $published_at) {
+                if ($log_level == '1' && $log_status == 'em-analise') {
+                    $action_approve_reprove = true;
+                } else {
+                    $action_wait = true;
+                }
+            }
+
+            if (auth()->user()->isDirector() && $published_at) {
+                if ($log_level == '2' && $log_status == 'validado') {
+                    $action_approve_reprove = true;
+                } else {
+                    $action_wait = true;
+                }
+            }
+
+            if (auth()->user()->isManager() || auth()->user()->isAdmin()) {
+                if ($published_at) {
+                    $action_approve_reprove = true;
+                } else {
+                    $action_wait = true;
+                }
+            }
+        @endphp
+
+        {{ auth()->user()->level() }} {{ $log_status }} {{ $log_level }}
+
+        @if ($action_wait)
+        <span class="bg-black/90 px-6 py-2 text-white rounded-xl text-lg font-bold disabled:opacity-50 cursor-wait relative">
+            Em análise, aguarde
+        </span>
+        @endif
+
+        @if ($action_publish)
         <button
             class="bg-green-600 cursor-pointer px-6 py-2 text-white rounded-xl text-lg font-bold disabled:opacity-50 disabled:cursor-not-allowed relative"
-            id="btn_approve" data-cc="{{ session('preview')['cc'] }}" data-weekref="{{ session('preview')['week_ref'] }}"
+            id="btn_approve"
+            data-preview="{{ $id }}"
+            data-cc="{{ session('preview')['cc'] }}"
+            data-weekref="{{ session('preview')['week_ref'] }}"
+            data-level="1"
             data-modal-target="approve-modal"
             data-modal-toggle="approve-modal"
         >
             Enviar para aprovação
+            <x-status.loading />
+        </button>
+        @endif
+
+        @if($action_approve_reprove)
+        <button
+            class="bg-green-600 cursor-pointer px-6 py-2 text-white rounded-xl text-lg font-bold disabled:opacity-50 disabled:cursor-not-allowed relative"
+            id="btn_status_approve" data-preview="{{ $id }}" data-cc="{{ session('preview')['cc'] }}"
+            data-weekref="{{ session('preview')['week_ref'] }}"
+            data-level="{{ auth()->user()->level() }}">
+            Aprovar
+
+            <x-status.loading />
+        </button>
+
+        <button
+            class="bg-red-600 cursor-pointer px-6 py-2 text-white rounded-xl text-lg font-bold disabled:opacity-50 disabled:cursor-not-allowed relative"
+            id="btn_status_reprove" data-preview="{{ $id }}" data-cc="{{ session('preview')['cc'] }}"
+            data-weekref="{{ session('preview')['week_ref'] }}"
+            data-level="{{ auth()->user()->level() }}">
+            Reprovar
 
             <x-status.loading />
         </button>
         @endif
 
-        @if (($published_at && !$approved_at)&& auth()->user()->isSupervisor())
-            <span class="bg-black/90 px-6 py-2 text-white rounded-xl text-lg font-bold disabled:opacity-50 cursor-wait relative">Em análise, aguarde aprovação</span>
-        @elseif (($published_at && !$approved_at))
-            <button
-                class="bg-green-600 cursor-pointer px-6 py-2 text-white rounded-xl text-lg font-bold disabled:opacity-50 disabled:cursor-not-allowed relative"
-                id="btn_status_approve"
-                data-cc="{{ session('preview')['cc'] }}"
-                data-weekref="{{ session('preview')['week_ref'] }}"
-            >
-                Aprovar
 
-                <x-status.loading />
-            </button>
-
-            <button
-                class="bg-red-600 cursor-pointer px-6 py-2 text-white rounded-xl text-lg font-bold disabled:opacity-50 disabled:cursor-not-allowed relative"
-                id="btn_status_reprove"
-                data-cc="{{ session('preview')['cc'] }}"
-                data-weekref="{{ session('preview')['week_ref'] }}"
-            >
-                Reprovar
-
-                <x-status.loading />
-            </button>
-        @endif
-
-        @if ($approved_at)
+        @if ($action_approved)
             <span class="bg-green-600/90 px-6 py-2 text-white rounded-xl text-lg font-bold disabled:opacity-50 cursor-none relative select-none">Aprovado:
-                {{ \Carbon\Carbon::create($approved_at)->format('H:i d/m/Y') }}
+                {{ \Carbon\Carbon::create($last_log['timestamp'])->format('H:i d/m/Y') }}
             </span>
         @endauth
 
@@ -200,15 +251,27 @@ $category = array_values(array_filter($categories, function($v, $k) use($active)
 
                     </h3>
 
+
+                    <textarea class="rounded-lg border-gray-400 w-full p-3 m-3 hidden" id="approve-status-modal-text" placeholder="Motivo..." required></textarea>
+
                     <button data-modal-hide="approve-modal" type="button"
                         class="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center me-2 disabled:opacity-50"
-                        id="approve-status-modal-confirm">
+                        id="approve-status-modal-confirm"
+                        data-preview="{{ $id }}"
+                data-cc="{{ session('preview')['cc'] }}"
+                data-weekref="{{ session('preview')['week_ref'] }}"
+                data-level="{{ auth()->user()->level() }}">
                         Sim, prosseguir
                     </button>
 
                     <button data-modal-hide="approve-modal" type="button"
                         class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600 disabled:opacity-50"
-                        id="approve-status-modal-cancel">Não, cancelar</button>
+                        id="approve-status-modal-cancel"
+                        data-preview="{{ $id }}"
+                data-cc="{{ session('preview')['cc'] }}"
+                data-weekref="{{ session('preview')['week_ref'] }}"
+                data-level="{{ auth()->user()->level() }}"
+                >Não, cancelar</button>
                 </div>
             </div>
         </div>
@@ -240,6 +303,10 @@ $category = array_values(array_filter($categories, function($v, $k) use($active)
                 <strong class="text-[16px] ">
                     Por: {{ $log['user_name'] }}
                 </strong>
+
+                @if(isset($log['text']))
+                <p>{{ $log['text'] }}</p>
+                @endif
             </div>
         @endforeach
     </div>

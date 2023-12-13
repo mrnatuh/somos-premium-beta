@@ -22,7 +22,7 @@
             </div>
 
             <div class="flex">
-                <x-notification.icon />
+                <x-notification.notification />
             </div>
         </div>
 
