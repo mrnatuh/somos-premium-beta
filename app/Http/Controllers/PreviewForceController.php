@@ -16,7 +16,8 @@ class PreviewForceController extends Controller
 
     /**
      * level = 1 => supervisão para coordenação
-     * level = 2 => coordenação para diretoria/controlador
+     * level = 2 => coordenação para diretoria
+     * level = 3 => controlador, manager, admin
      */
 
     public function __construct(Preview $preview)
@@ -54,7 +55,7 @@ class PreviewForceController extends Controller
         $action = 'Ver prévia';
         $action_url = "/previa/{$preview->id}/redirect";
 
-        // coordenadores
+        // coordenadores e diretores
         $tmp_ids = DB::table('link_user')->where('parent_id', $this->user->id)->get();
         $ids = [];
         foreach ($tmp_ids as $tmp_user_id) {
@@ -133,7 +134,10 @@ class PreviewForceController extends Controller
         ]);
 
         $preview->status = 'validado';
-        $preview->approved_at = now();
+
+        if ($inputs['level'] == '3') {
+            $preview->approved_at = now();
+        }
 
         array_push($logs, [
             'status_from' => $last_log ? $last_log['status'] : '',

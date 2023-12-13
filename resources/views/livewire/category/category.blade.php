@@ -14,6 +14,51 @@ $active = $_GET['filter'] ?? "faturamento";
 $category = array_values(array_filter($categories, function($v, $k) use($active) {
     return $v['slug'] === $active;
 }, ARRAY_FILTER_USE_BOTH))[0];
+
+$action_publish = false;
+$action_wait = false;
+$action_approve_reprove = false;
+$action_approved = false;
+
+$log_status = isset($last_log['status']) ? $last_log['status'] : 'em-analise';
+$log_level = isset($last_log['level']) ? $last_log['level'] : 1;
+
+if (auth()->user()->isSupervisor()) {
+    if (!$published_at || $log_status == 'recusado') {
+        $action_publish = true;
+    } else {
+        $action_wait = true;
+    }
+}
+
+if (auth()->user()->isCoordinator() && $published_at) {
+    if ($log_level == '1' && $log_status == 'em-analise') {
+        $action_approve_reprove = true;
+    } else {
+        $action_wait = true;
+    }
+}
+
+if (auth()->user()->isDirector() && $published_at) {
+    if ($log_level == '2' && $log_status == 'validado') {
+        $action_approve_reprove = true;
+    } else {
+        $action_wait = true;
+    }
+}
+
+if (auth()->user()->isManager() || auth()->user()->isAdmin()) {
+    if ($published_at) {
+        $action_approve_reprove = true;
+    }
+}
+
+if ($log_level == '3' && $log_status == 'validado') {
+    $action_publish = false;
+    $action_wait = false;
+    $action_approve_reprove = false;
+    $action_approved = true;
+}
 @endphp
 
 <div class="flex flex-col w-full h-full p-8">
@@ -35,7 +80,7 @@ $category = array_values(array_filter($categories, function($v, $k) use($active)
         @endforeach
     </ul>
 
-    <div class="flex flex-col w-full h-full">
+    <div class="flex flex-col w-full h-full relative">
         @if($active === 'faturamento')
             <livewire:category.category-invoicing />
         @endif
@@ -63,56 +108,17 @@ $category = array_values(array_filter($categories, function($v, $k) use($active)
         @if($active === 'investimento')
         <livewire:category.category-investimento />
         @endif
+
+        @if ($action_approved)
+        <div class="block absolute bg-white/20 top-0 left-0 w-full h-full z-20">
+
+        </div>
+        @endif
     </div>
 
     <!-- Approve Area -->
     <div class="bg-white/50 w-full flex items-center justify-end gap-4 position fixed px-10 py-5 bottom-0 right-0"
         id="approve_area">
-
-        @php
-            $log_status = isset($last_log['status']) ? $last_log['status'] : 'em-analise';
-
-            $log_level = isset($last_log['level']) ? $last_log['level'] : 1;
-
-            $action_publish = false;
-            $action_wait = false;
-            $action_approve_reprove = false;
-            $action_approved = false;
-
-            if (auth()->user()->isSupervisor()) {
-                if (!$published_at || $log_status == 'recusado') {
-                    $action_publish = true;
-                } else {
-                    $action_wait = true;
-                }
-            }
-
-            if (auth()->user()->isCoordinator() && $published_at) {
-                if ($log_level == '1' && $log_status == 'em-analise') {
-                    $action_approve_reprove = true;
-                } else {
-                    $action_wait = true;
-                }
-            }
-
-            if (auth()->user()->isDirector() && $published_at) {
-                if ($log_level == '2' && $log_status == 'validado') {
-                    $action_approve_reprove = true;
-                } else {
-                    $action_wait = true;
-                }
-            }
-
-            if (auth()->user()->isManager() || auth()->user()->isAdmin()) {
-                if ($published_at) {
-                    $action_approve_reprove = true;
-                } else {
-                    $action_wait = true;
-                }
-            }
-        @endphp
-
-        {{ auth()->user()->level() }} {{ $log_status }} {{ $log_level }}
 
         @if ($action_wait)
         <span class="bg-black/90 px-6 py-2 text-white rounded-xl text-lg font-bold disabled:opacity-50 cursor-wait relative">
