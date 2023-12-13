@@ -98,7 +98,7 @@ class CategoryInvestimento extends Component
             foreach ($row as $key => $arr) {
                 if (isset($arr['name']) && $arr['name'] == 'value') {
                     if (isset($arr['set'])) {
-                        $total += (float) $arr['set'];
+                        $total += $arr['set'] ?? 0;
                     }
                 }
             }
