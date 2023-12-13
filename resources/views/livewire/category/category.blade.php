@@ -299,6 +299,10 @@ if ($log_level == '3' && $log_status == 'validado') {
                 </p>
 
                 <p class="text-xs mb-1">
+                    @if ($log['status'] == 'em-analise' && $published_at)
+                        <span>
+                            Enviado para aprovação
+                        </span>
                     @if($log['status_from'] == $log['status'])
                         <span>
                             {{ $log_status[$log['status']] }}
