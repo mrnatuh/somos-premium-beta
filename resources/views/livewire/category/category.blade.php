@@ -108,16 +108,10 @@ if ($log_level == '3' && $log_status == 'validado') {
         @if($active === 'investimento')
         <livewire:category.category-investimento />
         @endif
-
-        @if ($action_approved)
-        <div class="block absolute bg-white/20 top-0 left-0 w-full h-full z-20">
-
-        </div>
-        @endif
     </div>
 
     <!-- Approve Area -->
-    <div class="bg-white/50 w-full flex items-center justify-end gap-4 position fixed px-10 py-5 bottom-0 right-0"
+    <div class="bg-white/50 w-full flex items-center justify-end gap-4 position fixed px-10 py-5 bottom-0 right-0 z-30"
         id="approve_area">
 
         @if ($action_wait)
@@ -166,7 +160,7 @@ if ($log_level == '3' && $log_status == 'validado') {
 
 
         @if ($action_approved)
-            <span class="bg-green-600/90 px-6 py-2 text-white rounded-xl text-lg font-bold disabled:opacity-50 cursor-none relative select-none">Aprovado:
+            <span class="bg-green-600/90 px-6 py-2 text-white rounded-xl text-lg font-bold disabled:opacity-50 cursor-none relative select-none z-30">Aprovado:
                 {{ \Carbon\Carbon::create($last_log['timestamp'])->format('H:i d/m/Y') }}
             </span>
         @endauth
