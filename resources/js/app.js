@@ -28,7 +28,10 @@ if (location.href.indexOf('=mo') > -1) {
 document.addEventListener('livewire:initialized', () => {
 
     // hack para setas
-    if (location.href.indexOf('/previa') > -1) {
+    if (location.href.indexOf('/previa') > -1 || location.href.indexOf('/categoria') > -1) {
+        var is_preview = location.href.indexOf('/previa') > -1;
+        var is_category = location.href.indexOf('/categoria') > -1;
+
         axios.get('/orcamentos').then(function(response) {
             var json = response.data;
             var groups = document.querySelectorAll('[data-group]');
@@ -67,8 +70,13 @@ document.addEventListener('livewire:initialized', () => {
                     }
                 }
 
-                if (arrow) {
+                if (is_preview && arrow) {
+                    console.log(arrow);
                     group.innerHTML = '<img src="/img/' + arrow + '.svg" />';
+                }
+
+                if (is_category) {
+                    console.log(code);
                 }
             });
         });

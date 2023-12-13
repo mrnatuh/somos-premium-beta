@@ -22,7 +22,7 @@
             </div>
 
             <div class="flex">
-                <x-notification.notification />
+                <livewire:notifications />
             </div>
         </div>
 

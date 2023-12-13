@@ -4,14 +4,13 @@
     'valueAlign' => '',
     'arrow' => '',
     'selected' => false,
-    'type' => 'money'
+    'type' => 'money',
+    'group' => '',
 ])
 
-<div class="rounded-xl border bg-card text-card-foreground shadow {{ $selected ? 'bg-blue-500': '' }}">
+<div class="dashboard-card rounded-xl border bg-card text-card-foreground shadow {{ $selected ? 'bg-blue-500': '' }}" data-group="{{ $group }}">
     <div class="p-4 flex items-center gap-2 pb-2">
         <h3 class="tracking-tight text-sm {{ $selected ? 'text-white' : 'text-[#757D8A]' }} font-medium">{{ $label }}</h3>
-
-        <x-arrow :arrow="$arrow" />
     </div>
 
     <div class="p-4 pt-0 {{ $valueAlign }}">

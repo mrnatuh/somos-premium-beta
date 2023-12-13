@@ -3,5 +3,5 @@
         {{ $title }}
     </strong>
 
-    <x-notification.notification />
+    <livewire:notifications />
 </div>

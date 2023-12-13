@@ -6,10 +6,13 @@
                 <p class="text-gray-600">1 resultado encontrado</p>
             </div>
 
-            <x-notification.notification />
+            <livewire:notifications />
         </div>
 
-        <livewire:dashboard.dashboard-bar />
+        <livewire:dashboard.dashboard-bar
+            :cc="$preview['cc'] ?? ''"
+            :weekref="$preview['week_ref'] ?? ''"
+        />
 
         @if($preview)
         <x-table.silver

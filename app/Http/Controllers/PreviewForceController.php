@@ -56,8 +56,8 @@ class PreviewForceController extends Controller
         $action_url = "/previa/{$preview->id}/redirect";
 
         // coordenadores e diretores
-        $tmp_ids = DB::table('link_user')->where('parent_id', $this->user->id)->get();
         $ids = [];
+        $tmp_ids = DB::table('link_user')->where('parent_id', $this->user->id)->get();
         foreach ($tmp_ids as $tmp_user_id) {
             array_push($ids, $tmp_user_id->user_id);
         }
@@ -105,21 +105,31 @@ class PreviewForceController extends Controller
 
         $preview->update();
 
-        $last_log_user = User::where('id', $last_log['user_id'])->first();
+        // notifications
+        $log_users_ids = [];
+        foreach ($logs as $log) {
+            if (!isset($log_users_ids[$log['user_id']]) && $log['user_id'] != $this->user['id']) {
+                array_push($log_users_ids, $log['user_id']);
+            }
+        }
 
-        if ($last_log_user) {
-            $message = 'Prévia recusada: ' . $inputs['text'];
+        $log_users = User::whereIn('id', $log_users_ids)->get();
+
+        if (sizeof($log_users)) {
+            $message = "Prévia {$preview->week_ref} recusada por {$this->user['name']}, motivo: " . $inputs['text'];
             $action = 'Ver prévia';
             $action_url = "/previa/{$preview->id}/redirect";
 
-            $last_log_user->notify(new notificationUser(
-                $last_log_user,
-                $message,
-                $preview->id,
-                $this->user['id'],
-                $action,
-                $action_url,
-            ));
+            foreach ($log_users as $log_user) {
+                $log_user->notify(new notificationUser(
+                    $log_user,
+                    $message,
+                    $preview->id,
+                    $this->user['id'],
+                    $action,
+                    $action_url,
+                ));
+            }
         }
     }
 
@@ -152,21 +162,43 @@ class PreviewForceController extends Controller
 
         $preview->update();
 
-        $last_log_user = User::where('id', $last_log['user_id'])->first();
+        // notifications
+        $log_users_ids = [];
+        foreach($logs as $log) {
+            if (!isset($log_users_ids[$log['user_id']]) && $log['user_id'] != $this->user['id']) {
+                array_push($log_users_ids, $log['user_id']);
+            }
+        }
 
-        if ($last_log_user) {
-            $message = 'Prévia aprovada.';
+        // notifica o diretor
+        if ($inputs['level'] == '2') {
+            $tmp_ids = DB::table('link_user')->where('parent_id', $this->user->id)->get();
+            foreach ($tmp_ids as $tmp_user_id) {
+                $user_id = $tmp_user_id->user_id;
+                if (!isset($log_users_ids[$user_id])) {
+                    array_push($log_users_ids, $user_id);
+                }
+            }
+
+        }
+
+        $log_users = User::whereIn('id', $log_users_ids)->get();
+
+        if (sizeof($log_users)) {
+            $message = "Prévia {$preview->week_ref} aprovada por {$this->user['name']}.";
             $action = 'Ver prévia';
             $action_url = "/previa/{$preview->id}/redirect";
 
-            $last_log_user->notify(new notificationUser(
-                $last_log_user,
-                $message,
-                $preview->id,
-                $this->user['id'],
-                $action,
-                $action_url,
-            ));
+            foreach($log_users as $log_user) {
+                $log_user->notify(new notificationUser(
+                    $log_user,
+                    $message,
+                    $preview->id,
+                    $this->user['id'],
+                    $action,
+                    $action_url,
+                ));
+            }
         }
     }
 

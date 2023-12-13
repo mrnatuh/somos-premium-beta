@@ -285,14 +285,20 @@ if ($log_level == '3' && $log_status == 'validado') {
             'validado' => 'Validado',
         ];
     @endphp
-    <div id="logs_area" class="hidden fixed flex-col gap-2 bottom-20 right-10 w-full max-w-[300px]">
+    <div id="logs_area" class="hidden fixed flex-col gap-2 bottom-20 right-10 w-full max-w-[320px]">
         @foreach($logs as $log)
             <div class="bg-white flex flex-col w-full border shadow rounded-lg p-2.5">
-                <p class="flex flex-col text-xs mb-2">
-                    <span class="italic mb-2">
+                <p class="flex gap-2 items-center mb-1">
+                    <span>
                         {{ $log['timestamp']->isToday() ?  $log['timestamp']->diffForHumans() : $log['timestamp']->format('H:i d/m/Y') }}
                     </span>
 
+                    <strong class="text-[14px]">
+                        Por: {{ $log['user_name'] }}
+                    </strong>
+                </p>
+
+                <p class="text-xs mb-1">
                     @if($log['status_from'])
                     <span>De: {{ $log_status[$log['status_from']] }}</span> @endif
                     <span>
@@ -300,12 +306,8 @@ if ($log_level == '3' && $log_status == 'validado') {
                     </span>
                 </p>
 
-                <strong class="text-[16px] ">
-                    Por: {{ $log['user_name'] }}
-                </strong>
-
                 @if(isset($log['text']))
-                <p>{{ $log['text'] }}</p>
+                <p class="text-xs"><strong>Motivo:</strong> {{ $log['text'] }}</p>
                 @endif
             </div>
         @endforeach
