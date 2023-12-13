@@ -145,7 +145,7 @@ class PreviewForceController extends Controller
 
         $preview->status = 'validado';
 
-        if ($inputs['level'] == '3') {
+        if ($inputs['level'] == '4') {
             $preview->approved_at = now();
         }
 

@@ -288,6 +288,8 @@ if ($log_level == '3' && $log_status == 'validado') {
     <div id="logs_area" class="hidden fixed flex-col gap-2 bottom-20 right-10 w-full max-w-[320px]">
         @foreach($logs as $log)
             <div class="bg-white flex flex-col w-full border shadow rounded-lg p-2.5">
+                {{ $log['level'] }}
+
                 <p class="flex gap-2 items-center mb-1">
                     <strong class="text-xs">
                         {{ $log['user_name'] }}

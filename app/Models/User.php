@@ -72,7 +72,9 @@ class User extends Authenticatable
 
     public function level()
     {
-        if ($this->isAdmin() || $this->isManager() || $this->isDirector()) {
+        if ($this->isAdmin() || $this->isManager()) {
+            return 4;
+        } else if ($this->isDirector()) {
             return 3;
         } else if ($this->isCoordinator()) {
             return 2;
