@@ -586,13 +586,12 @@ class CategoryHE extends Component
 
                 $mo->update();
             }
-
-            $this->dispatch('update-bar-total', [
-                'cc' => $cc,
-                'weekref' => $weekref
-            ]);
-
         }
+
+        $this->dispatch('update-bar-total', [
+            'cc' => $cc,
+            'weekref' => $weekref
+        ]);
     }
 
     public function render()
