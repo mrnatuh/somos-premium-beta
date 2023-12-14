@@ -53,7 +53,7 @@ if (auth()->user()->isManager() || auth()->user()->isAdmin()) {
     }
 }
 
-if ($log_level == '3' && $log_status == 'validado') {
+if ($log_level == '4' && $log_status == 'validado') {
     $action_publish = false;
     $action_wait = false;
     $action_approve_reprove = false;
@@ -277,6 +277,7 @@ if ($log_level == '3' && $log_status == 'validado') {
         </div>
     </div>
 
+
     @if (sizeof($logs))
     @php
         $log_status = [
@@ -284,7 +285,7 @@ if ($log_level == '3' && $log_status == 'validado') {
             'recusado' => 'Recusado',
             'validado' => 'Validado',
         ];
-    @endphp
+        @endphp
     <div id="logs_area" class="hidden fixed flex-col gap-2 bottom-20 right-10 w-full max-w-[320px]">
         @foreach($logs as $log)
             <div class="bg-white flex flex-col w-full border shadow rounded-lg p-2.5">
