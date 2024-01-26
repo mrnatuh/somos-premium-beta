@@ -4,10 +4,13 @@ namespace App\Livewire\Category;
 
 use App\Models\Option;
 use App\Models\Preview;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 
 class CategoryMP extends Component
 {
+    public $edit = true;
+
     public $deleteItem = [];
 
     public $mp = [
@@ -49,7 +52,7 @@ class CategoryMP extends Component
             ['value' => '', 'type' => 'text', 'name' => 'gc'],
             ['value' => '', 'type' => 'date', 'name' => 'date'],
             ['value' => '0', 'name' => 'value', 'type' => 'number'],
-            ['value' => '', 'type' =>'text', 'name' => 'description']
+            ['value' => '', 'type' => 'text', 'name' => 'description']
         ]
     ];
 
@@ -104,6 +107,8 @@ class CategoryMP extends Component
 
     public function save()
     {
+        if (!$this->edit) return;
+
         $weekref = session('preview')['week_ref'];
         $cc = session('preview')['cc'];
 
@@ -146,15 +151,27 @@ class CategoryMP extends Component
 
     public function mount()
     {
+        $is_page_realizadas = (int) session('preview')['realizadas'];
+
         $weekref = session('preview')['week_ref'];
         $cc = session('preview')['cc'] ?? false;
 
         if ($cc) {
-            $mp = Option::where([['cc', '=', $cc], ['week_ref', '=', $weekref], ['option_name', '=', 'mp']])->first();
+            $filename = "/previews/{$cc}_{$weekref}_mp.json";
+            $data_exists = Storage::exists($filename);
+
+            if ($data_exists && !$is_page_realizadas) {
+                $data = Storage::get($filename);
+                $eventos = json_decode($data, true);
+                $this->mp = $eventos['option_value'];
+                $this->edit = false;
+            } else {
+                $mp = Option::where([['cc', '=', $cc], ['week_ref', '=', $weekref], ['option_name', '=', 'mp']])->first();
 
 
-            if ($mp) {
-                $this->mp = unserialize($mp->option_value);
+                if ($mp) {
+                    $this->mp = unserialize($mp->option_value);
+                }
             }
         }
     }

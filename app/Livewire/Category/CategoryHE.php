@@ -6,10 +6,12 @@ use App\Models\Option;
 use App\Models\Preview;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 
 class CategoryHE extends Component
 {
+    public $edit = false;
 
     public int $lastOfMonth;
 
@@ -34,7 +36,7 @@ class CategoryHE extends Component
 
     public function sum()
     {
-        for($ep = 0; $ep < sizeof($this->employees); $ep++) {
+        for ($ep = 0; $ep < sizeof($this->employees); $ep++) {
             $total_hr_50 = "00:00:00";
             $total_vlr_50 = 0.00;
             $arr_hr_50 = [];
@@ -52,7 +54,7 @@ class CategoryHE extends Component
             $arr_hr_atrasos = [];
 
             $total_hr_adicional_noturno = "00:00:00";
-            $total_vlr_adicional_noturno= 0.00;
+            $total_vlr_adicional_noturno = 0.00;
             $arr_hr_adicional_noturno = [];
 
             $normal_hours = 220;
@@ -93,7 +95,7 @@ class CategoryHE extends Component
             }
 
             // horas 50
-            foreach($arr_hr_50 as $qty) {
+            foreach ($arr_hr_50 as $qty) {
                 $total_hr = explode(':', $total_hr_50);
                 $total_hours = (int) $total_hr[0];
                 $total_minutes = (int) $total_hr[1];
@@ -248,7 +250,7 @@ class CategoryHE extends Component
 
             $this->employees[$ep]['total_hr_faltas'] = $total_hr_faltas;
             $this->employees[$ep]['total_vlr_faltas'] =
-            number_format($total_vlr_faltas, 2, ",", ".");;
+                number_format($total_vlr_faltas, 2, ",", ".");;
 
 
             // Adicional Noturno
@@ -280,7 +282,7 @@ class CategoryHE extends Component
 
                 $tmp_total_salary = $vlr_salary / $normal_hours;
                 $tmp_vlr_extra = $tmp_total_salary * $total_hours_worked;
-                $tmp_vlr_extra += ($tmp_vlr_extra * (35/100));
+                $tmp_vlr_extra += ($tmp_vlr_extra * (35 / 100));
 
                 $str_total_hours = $total_hours > 9 ? $total_hours : '0' . $total_hours;
                 $str_total_minutes = $total_minutes > 9 ? $total_minutes : '0' . $total_minutes;
@@ -292,7 +294,7 @@ class CategoryHE extends Component
 
             $this->employees[$ep]['total_hr_adicional_noturno'] = $total_hr_adicional_noturno;
             $this->employees[$ep]['total_vlr_adicional_noturno'] =
-            number_format($total_vlr_adicional_noturno, 2, ",", ".");;
+                number_format($total_vlr_adicional_noturno, 2, ",", ".");;
         }
 
         $this->save();
@@ -300,6 +302,8 @@ class CategoryHE extends Component
 
     public function mount()
     {
+        $is_page_realizadas = (int) session('preview')['realizadas'];
+
         $weekref = session('preview')['week_ref'] ?? null;
         $cc  = session('preview')['cc'] ?? null;
 
@@ -315,12 +319,22 @@ class CategoryHE extends Component
 
         // caso exista no banco
         if ($cc) {
-            $he = Option::where([['cc', '=', $cc], ['week_ref', '=', $weekref], ['option_name', '=', 'he']])->first();
+            $filename = "/previews/{$cc}_{$weekref}_he.json";
+            $data_exists = Storage::exists($filename);
+
+            if ($data_exists && !$is_page_realizadas) {
+                $data = Storage::get($filename);
+                $employees = json_decode($data, true);
+                $this->employees = $employees['option_value'];
+                $this->edit = false;
+            } else {
+                $he = Option::where([['cc', '=', $cc], ['week_ref', '=', $weekref], ['option_name', '=', 'he']])->first();
 
 
-            if ($he) {
-                $this->employees = unserialize($he->option_value);
-                return;
+                if ($he) {
+                    $this->employees = unserialize($he->option_value);
+                    return;
+                }
             }
         }
 
@@ -332,7 +346,7 @@ class CategoryHE extends Component
                 ->where('RA_CC', $cc)
                 ->get();
 
-            foreach($tmp_employees as $row) {
+            foreach ($tmp_employees as $row) {
                 $add = [
                     "id" => trim($row->RA_ID),
 
@@ -378,7 +392,7 @@ class CategoryHE extends Component
                     "rows" => []
                 ];
 
-                for($d = 1; $d <= $this->lastOfMonth; $d++) {
+                for ($d = 1; $d <= $this->lastOfMonth; $d++) {
                     array_push($add['rows'], [
                         [
                             "name" => "hr_50",
@@ -481,8 +495,8 @@ class CategoryHE extends Component
 
                 $he = unserialize($tmp_he->option_value);
 
-                foreach($content_mo->employees as $item){
-                    $vlr_salario_bruto = ($item->salario / 30) * $item-> dias_trabalhados;
+                foreach ($content_mo->employees as $item) {
+                    $vlr_salario_bruto = ($item->salario / 30) * $item->dias_trabalhados;
 
                     $item->vlr_salario_bruto = number_format($vlr_salario_bruto, 2, ',', '.');
 
@@ -490,7 +504,7 @@ class CategoryHE extends Component
 
                     $item->vlr_salario = number_format($item->salario, 2, ',', '.');
 
-                    $extras = array_filter($he, function($var) use($item) {
+                    $extras = array_filter($he, function ($var) use ($item) {
                         return $var['id'] == $item->id;
                     });
 
@@ -512,10 +526,10 @@ class CategoryHE extends Component
                         $vlr_he_total_add = $vlr_total_50 + $vlr_total_100 + $vlr_total_adicional_noturno;
 
                         $vlr_total_faltas =
-                        $this->to_float($extras[0]['total_vlr_faltas']) ?? 0;
+                            $this->to_float($extras[0]['total_vlr_faltas']) ?? 0;
 
                         $vlr_total_atrasos =
-                        $this->to_float($extras[0]['total_vlr_atrasos']) ?? 0;
+                            $this->to_float($extras[0]['total_vlr_atrasos']) ?? 0;
 
                         $vlr_he_total_sub = $vlr_total_faltas + $vlr_total_atrasos;
 
@@ -536,7 +550,7 @@ class CategoryHE extends Component
                     $item->vlr_desconto_refeicao = number_format($vlr_vr, 2, ',', '.');
 
                     $vlr_vt = $vlr_salario_bruto * (5.5 / 100);
-                    $item->vlr_desconto_vale_transporte = number_format( $vlr_vt, 2, ',', '.');
+                    $item->vlr_desconto_vale_transporte = number_format($vlr_vt, 2, ',', '.');
 
                     $item->vrl_vale_transporte = $item->vlr_vt == "0,01" ? $item->vlr_desconto_vale_transporte : number_format($item->vlr_vt, 2, ',', '.');
 
@@ -559,7 +573,7 @@ class CategoryHE extends Component
 
                     $vlr_assistencia_odontologica = ($item->odonto + $item->odonto_dependentes) * $content_mo->params->assistencia_odontologica;
 
-                    $item->vlr_assistencia_odontologica = number_format( $vlr_assistencia_odontologica, 2, ',', '.');
+                    $item->vlr_assistencia_odontologica = number_format($vlr_assistencia_odontologica, 2, ',', '.');
 
                     $item->vlr_contribuicao_sindical = number_format(($item->contribuicao_sindical * $content_mo->params->contribuicao_sindical), 2, ',', '.');
 
@@ -573,13 +587,13 @@ class CategoryHE extends Component
 
                     $vlr_total_salario = $vlr_salario_bruto + $dsr - $vlr_vt - $vlr_vr;
 
-                    $item->vlr_total_salario = number_format( $vlr_total_salario, 2, ',', '.');
+                    $item->vlr_total_salario = number_format($vlr_total_salario, 2, ',', '.');
 
                     $vlr_total_funcionario = $vlr_total_salario + $vlr_total_he + $vlr_cesta_basica + $vlr_total_assistencia_medica + $vlr_exames + $vlr_assistencia_odontologica;
 
-                    $item->tmp_vlr_total_funcionario = number_format( $vlr_total_funcionario, 2, ',', '.');
+                    $item->tmp_vlr_total_funcionario = number_format($vlr_total_funcionario, 2, ',', '.');
 
-                    $item->vlr_total_funcionario = number_format( $vlr_total_funcionario, 2, ',', '.');
+                    $item->vlr_total_funcionario = number_format($vlr_total_funcionario, 2, ',', '.');
                 }
 
                 $mo->option_value = serialize($content_mo);

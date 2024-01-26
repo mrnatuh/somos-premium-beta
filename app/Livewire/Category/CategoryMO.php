@@ -9,11 +9,14 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
 class CategoryMO extends Component
 {
+    public $edit = true;
+
     public int $lastOfMonth;
 
     public $json = '';
@@ -37,14 +40,26 @@ class CategoryMO extends Component
 
     public function mount()
     {
+        $is_page_realizadas = (int) session('preview')['realizadas'];
+
         $this->cc = session('preview')['cc'];
         $this->weekref = session('preview')['week_ref'];
 
-        $mo = Option::where([
-            'cc' => $this->cc,
-            'week_ref' => $this->weekref,
-            'option_name' => 'mo',
-        ])->first();
+        $mo_filename = "/previews/{$this->cc}_{$this->weekref}_mo.json";
+        $mo_data_exists = Storage::exists($mo_filename);
+
+        if ($mo_data_exists && !$is_page_realizadas) {
+            $mo_data = Storage::get($mo_filename);
+            $mo = json_decode($mo_data, true);
+
+            $this->edit = false;
+        } else {
+            $mo = Option::where([
+                'cc' => $this->cc,
+                'week_ref' => $this->weekref,
+                'option_name' => 'mo',
+            ])->first();
+        }
 
         if ($this->weekref) {
             preg_match('/(\d{2})(\d{2})(\d{2})/', $this->weekref, $matches, PREG_OFFSET_CAPTURE);
@@ -55,37 +70,54 @@ class CategoryMO extends Component
 
             $this->lastOfMonth = (int) Carbon::parse("{$year}-{$month}-01")->lastOfMonth()->format('d');
 
-            $tmp_he = Option::where(
-                [
-                    'cc' => $this->cc,
-                    'week_ref' => $this->weekref,
-                    'option_name' => 'he',
-                ]
-            )->first();
+            $he_filename = "/preview/{$this->cc}_{$this->weekref}_he.json";
+            $he_data_exists = Storage::exists($he_filename);
+
+            if ($he_data_exists && !$is_page_realizadas) {
+                $he_data = Storage::get($he_filename);
+                $tmp_he = json_decode($he_data, true);
+            } else {
+                $tmp_he = Option::where(
+                    [
+                        'cc' => $this->cc,
+                        'week_ref' => $this->weekref,
+                        'option_name' => 'he',
+                    ]
+                )->first();
+            }
 
             $this->arr_he = [];
             $he = [];
 
-            if ($tmp_he) {
+            if ($he_data_exists && !$is_page_realizadas) {
+                $he = $tmp_he['option_value'];
+            } else if ($tmp_he) {
                 $he = unserialize($tmp_he->option_value);
+            }
 
-                foreach ($he as $key => $value) {
-                    array_push($this->arr_he, [
-                        "id" => trim($value['id']),
-                        "total_vlr_50" => $value['total_vlr_50'],
-                        "total_vlr_100" => $value['total_vlr_100'],
-                        "total_vlr_adicional_noturno" => $value['total_vlr_adicional_noturno'],
-                        "total_vlr_atrasos" => $value['total_vlr_atrasos'],
-                        "total_vlr_faltas" => $value['total_vlr_faltas'],
-                    ]);
-                }
+            foreach ($he as $key => $value) {
+                array_push($this->arr_he, [
+                    "id" => trim($value['id']),
+                    "total_vlr_50" => $value['total_vlr_50'],
+                    "total_vlr_100" => $value['total_vlr_100'],
+                    "total_vlr_adicional_noturno" => $value['total_vlr_adicional_noturno'],
+                    "total_vlr_atrasos" => $value['total_vlr_atrasos'],
+                    "total_vlr_faltas" => $value['total_vlr_faltas'],
+                ]);
             }
         }
 
         $this->dias_seg_sab = $this->lastOfMonth;
         $this->dias_dom_fer = 0;
 
-        if ($mo) {
+        if ($mo_data_exists && !$is_page_realizadas) {
+            $content = $mo['option_value'];
+
+            $this->parameters = $content['params'];
+            $this->employees = $content['employees'];
+            $this->dias_seg_sab = $content['dias_seg_sab'];
+            $this->dias_dom_fer = $content['dias_dom_fer'];
+        } else if ($mo) {
             $content = unserialize($mo->option_value);
 
             $this->parameters = $content->params;

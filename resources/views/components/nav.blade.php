@@ -55,6 +55,7 @@
                     {{ __('Dashboard') }}
                 </span>
             </x-nav-link>
+
             <x-nav-link
                 :href="route('preview')"
                 :active="request()->routeIs('preview')"
@@ -75,11 +76,11 @@
             </x-nav-link>
 
             <x-nav-link
-                href="#"
+                :href="route('preview.done')"
+                :active="request()->routeIs('preview.done')"
                 class="flex gap-3 items-center"
                 wire:navigate
             >
-
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M9.66675 1.33325H4.00008C3.64646 1.33325 3.30732 1.47373 3.05727 1.72378C2.80722 1.97382 2.66675 2.31296 2.66675 2.66659V13.3333C2.66675 13.6869 2.80722 14.026 3.05727 14.2761C3.30732 14.5261 3.64646 14.6666 4.00008 14.6666H12.0001C12.3537 14.6666 12.6928 14.5261 12.9429 14.2761C13.1929 14.026 13.3334 13.6869 13.3334 13.3333V4.99992L9.66675 1.33325Z" stroke="#757D8A" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M9.33325 1.33325V5.33325H13.3333" stroke="#757D8A" stroke-linecap="round" stroke-linejoin="round"/>
@@ -88,14 +89,12 @@
                 <path d="M6.66658 6H5.33325" stroke="#757D8A" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
 
-
-
                 <span class="text-lg">
                     {{ __('Realizado') }}
                 </span>
             </x-nav-link>
 
-            <x-nav-link
+            {{-- <x-nav-link
                 href="#"
                 class="flex gap-3 items-center"
                 wire:navigate
@@ -111,7 +110,7 @@
                 <span class="text-lg">
                     {{ __('Apontamentos') }}
                 </span>
-            </x-nav-link>
+            </x-nav-link> --}}
         </div>
     </div>
 
@@ -128,6 +127,7 @@
         </x-nav-link>
         @endif
 
+        {{--
         <x-nav-link
                 href="#"
                 class="flex gap-3 font-normal p-1 items-center text-[16px] w-full"
@@ -141,6 +141,7 @@
 
                 {{ __('Suporte') }}
         </x-nav-link>
+        --}}
 
         <!-- Logout -->
         <form method="POST" action="{{ route('logout') }}" class="w-full">

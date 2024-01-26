@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Option;
 use App\Models\Preview;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class MoSaveController extends Controller
 {
@@ -12,8 +13,12 @@ class MoSaveController extends Controller
     {
         $tmp_content = json_decode($request->input('mo_json'));
 
+
         $cc = $tmp_content->cc;
         $weekref = $tmp_content->weekref;
+
+        $mo_exists = Storage::exists("/preview/{$cc}_{$weekref}_mo.json");
+        if ($mo_exists) return;
 
         // serializa o conteúdo
         $content = serialize($tmp_content);

@@ -8,6 +8,7 @@ use App\Models\Preview;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Illuminate\Support\Str;
@@ -21,6 +22,8 @@ class CategoryInvoicing extends Component
     public $lastOfMonth = 0;
 
     public $companies = [];
+
+    public $edit = true;
 
     public function updateQty($companyIndex, $rowIndex, $qtyIndex, $value)
     {
@@ -282,6 +285,8 @@ class CategoryInvoicing extends Component
 
     public function save()
     {
+        if (!$this->edit) return;
+
         $cc = session('preview')['cc'];
         $weekref = session('preview')['week_ref'];
 
@@ -326,20 +331,33 @@ class CategoryInvoicing extends Component
 
     public function mount()
     {
+        $is_page_realizadas = (int) session('preview')['realizadas'];
+
         $this->lastOfMonth = (int) Carbon::now()->lastOfMonth()->format('d');
 
         $cc = session('preview')['cc'] ?? false;
         $weekref = session('preview')['week_ref'];
 
         if ($cc) {
-            $faturamento = Option::where([
-                ['cc', '=', $cc],
-                ['week_ref', '=', $weekref],
-                ['option_name', '=', 'faturamento']
-            ])->first();
+            $filename = "/previews/{$cc}_{$weekref}_faturamento.json";
+            $data_exists = Storage::exists($filename);
 
-            if ($faturamento) {
-                $this->companies = unserialize($faturamento->option_value);
+            if ($data_exists && !$is_page_realizadas) {
+                $data = Storage::get($filename);
+                $faturamento = json_decode($data, true);
+                $this->companies = $faturamento['option_value'];
+
+                $this->edit = false;
+            } else {
+                $faturamento = Option::where([
+                    ['cc', '=', $cc],
+                    ['week_ref', '=', $weekref],
+                    ['option_name', '=', 'faturamento']
+                ])->first();
+
+                if ($faturamento) {
+                    $this->companies = unserialize($faturamento->option_value);
+                }
             }
         }
 

@@ -4,11 +4,14 @@ namespace App\Livewire\Category;
 
 use App\Models\Option;
 use App\Models\Preview;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 
 class CategoryInvestimento extends Component
 {
     public $deleteItem = [];
+
+    public $edit = true;
 
     public $investimento = [
         'labels' => [
@@ -109,6 +112,8 @@ class CategoryInvestimento extends Component
 
     public function save()
     {
+        if (!$this->edit) return;
+
         if (sizeof($this->investimento['rows']) == 0) {
             return;
         }
@@ -154,18 +159,29 @@ class CategoryInvestimento extends Component
 
     public function mount()
     {
+        $is_page_realizadas = (int) session('preview')['realizadas'];
+
         $weekref = session('preview')['week_ref'];
         $cc = session('preview')['cc'] ?? false;
 
         if ($cc) {
-            $investimento = Option::where([['cc', '=', $cc], ['week_ref', '=', $weekref], ['option_name', '=', 'rou']])->first();
+            $filename = "/previews/{$cc}_{$weekref}_rou.json";
+            $data_exists = Storage::exists($filename);
 
-            if ($investimento) {
-                $this->investimento = unserialize($investimento->option_value);
+            if ($data_exists && !$is_page_realizadas) {
+                $data = Storage::get($filename);
+                $investimento = json_decode($data, true);
+                $this->investimento = $investimento['option_value'];
+                $this->edit = false;
+            } else {
+                $investimento = Option::where([['cc', '=', $cc], ['week_ref', '=', $weekref], ['option_name', '=', 'rou']])->first();
+
+                if ($investimento) {
+                    $this->investimento = unserialize($investimento->option_value);
+                }
             }
         }
     }
-
 
     public function render()
     {

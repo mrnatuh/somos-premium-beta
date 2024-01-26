@@ -5,6 +5,7 @@ namespace App\Livewire\Category;
 use App\Models\Option;
 use App\Models\Preview;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -13,6 +14,8 @@ class CategoryEvent extends Component
     protected $listeners = ['refreshComponent' => '$refresh'];
 
     public $deleteItem = [];
+
+    public $edit = true;
 
     public $events = [
         'add' => true,
@@ -129,6 +132,8 @@ class CategoryEvent extends Component
 
     public function save()
     {
+        if (!$this->edit) return;
+
         $weekref = session('preview')['week_ref'];
         $cc = session('preview')['cc'];
 
@@ -175,14 +180,26 @@ class CategoryEvent extends Component
 
     public function mount()
     {
+        $is_page_realizadas = (int) session('preview')['realizadas'];
+
         $weekref = session('preview')['week_ref'];
         $cc = session('preview')['cc'] ?? false;
 
         if ($cc) {
-            $eventos = Option::where([['cc', '=', $cc], ['week_ref', '=', $weekref], ['option_name', '=', 'eventos']])->first();
+            $filename = "/previews/{$cc}_{$weekref}_eventos.json";
+            $data_exists = Storage::exists($filename);
 
-            if ($eventos) {
-                $this->events = unserialize($eventos->option_value);
+            if ($data_exists && !$is_page_realizadas) {
+                $data = Storage::get($filename);
+                $eventos = json_decode($data, true);
+                $this->events = $eventos['option_value'];
+                $this->edit = false;
+            } else {
+                $eventos = Option::where([['cc', '=', $cc], ['week_ref', '=', $weekref], ['option_name', '=', 'eventos']])->first();
+
+                if ($eventos) {
+                    $this->events = unserialize($eventos->option_value);
+                }
             }
         }
     }

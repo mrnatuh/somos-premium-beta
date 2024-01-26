@@ -4,6 +4,7 @@ namespace App\Livewire\Category;
 
 use App\Models\Option;
 use App\Models\Preview;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 
 class CategoryGD extends Component
@@ -39,12 +40,14 @@ class CategoryGD extends Component
         'new' => [
             ['value' => '', 'disabled' => true],
             ['value' => '', 'type' => 'text', 'name' => 'account'],
-            ['value' => '', 'type' =>'date', 'name' => 'date'],
+            ['value' => '', 'type' => 'date', 'name' => 'date'],
             ['value' => '', 'type' => 'text', 'name' => 'value'],
-            ['value' =>'', 'type' => 'text', 'name' => 'description']
+            ['value' => '', 'type' => 'text', 'name' => 'description']
         ]
 
     ];
+
+    public $edit = true;
 
     public function deleteRowItem($rowIndex)
     {
@@ -100,6 +103,8 @@ class CategoryGD extends Component
 
     public function save()
     {
+        if (!$this->edit) return;
+
         $weekref = session('preview')['week_ref'];
         $cc = session('preview')['cc'];
 
@@ -143,14 +148,26 @@ class CategoryGD extends Component
 
     public function mount()
     {
+        $is_page_realizadas = (int) session('preview')['realizadas'];
+
         $weekref = session('preview')['week_ref'];
         $cc = session('preview')['cc'] ?? false;
 
         if ($cc) {
-            $gd = Option::where([['cc', '=', $cc], ['week_ref', '=', $weekref], ['option_name', '=', 'gd']])->first();
+            $filename = "/previews/{$cc}_{$weekref}_gd.json";
+            $data_exists = Storage::exists($filename);
 
-            if ($gd) {
-                $this->gd = unserialize($gd->option_value);
+            if ($data_exists && !$is_page_realizadas) {
+                $data = Storage::get($filename);
+                $gd = json_decode($data, true);
+                $this->gd = $gd['option_value'];
+                $this->edit = false;
+            } else {
+                $gd = Option::where([['cc', '=', $cc], ['week_ref', '=', $weekref], ['option_name', '=', 'gd']])->first();
+
+                if ($gd) {
+                    $this->gd = unserialize($gd->option_value);
+                }
             }
         }
     }

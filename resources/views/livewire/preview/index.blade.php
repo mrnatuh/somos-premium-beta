@@ -46,6 +46,6 @@
             <livewire:months-scroll />
         </div>
 
-        <x-table.preview-table :previews="$previews" />
+        <x-table.preview-table :previews="$previews" :realizadas="$realizadas ?? 0" />
     </x-dashboard.container>
 </div>

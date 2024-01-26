@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Option;
 use App\Models\Preview;
 use App\Models\User;
 use App\Notifications\notificationUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
-class PreviewForceController extends Controller
+class PreviewSaveController extends Controller
 {
     public $logs;
     public $last_log;
@@ -64,7 +66,7 @@ class PreviewForceController extends Controller
 
         $tmp_notify_users = User::whereIn('id', $ids)->get();
 
-        foreach($tmp_notify_users as $notify_user) {
+        foreach ($tmp_notify_users as $notify_user) {
             $notify_user->notify(
                 new notificationUser(
                     $notify_user,
@@ -147,6 +149,28 @@ class PreviewForceController extends Controller
 
         if ($inputs['level'] == '4') {
             $preview->approved_at = now();
+
+            $filename = "{$preview->cc}_{$preview->week_ref}.json";
+
+            // gerar arquivos
+            $json = $preview->toArray();
+            $json['logs'] = $logs;
+
+            Storage::put($filename, json_encode($json));
+
+            $options = Option::where([
+                'cc' => session('preview')['cc'],
+                'week_ref' => session('preview')['week_ref'],
+            ])->get();
+
+            foreach ($options as $option) {
+                $filename = "previews/{$option->cc}_{$option->week_ref}_{$option->option_name}.json";
+
+                $content = $option->toArray();
+                $content['option_value'] = unserialize($content['option_value']);
+
+                Storage::put($filename, json_encode($content));
+            }
         }
 
         array_push($logs, [
@@ -164,7 +188,7 @@ class PreviewForceController extends Controller
 
         // notifications
         $log_users_ids = [];
-        foreach($logs as $log) {
+        foreach ($logs as $log) {
             if (!isset($log_users_ids[$log['user_id']]) && $log['user_id'] != $this->user['id']) {
                 array_push($log_users_ids, $log['user_id']);
             }
@@ -179,7 +203,6 @@ class PreviewForceController extends Controller
                     array_push($log_users_ids, $user_id);
                 }
             }
-
         }
 
         $log_users = User::whereIn('id', $log_users_ids)->get();
@@ -189,7 +212,7 @@ class PreviewForceController extends Controller
             $action = 'Ver prévia';
             $action_url = "/previa/{$preview->id}/redirect";
 
-            foreach($log_users as $log_user) {
+            foreach ($log_users as $log_user) {
                 $log_user->notify(new notificationUser(
                     $log_user,
                     $message,

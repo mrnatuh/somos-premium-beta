@@ -1,5 +1,6 @@
 @props([
-    'previews' => []
+    'previews' => [],
+    'realizadas' => 0,
 ])
 
 @php
@@ -56,6 +57,8 @@
                         @method('post')
                         <input type="hidden" name="weekref" value="{{ $preview->week_ref }}" />
                         <input type="hidden" name="cc" value="{{ $preview->cc }}" />
+
+                        <input type="hidden" name="realizadas" value="{{ $realizadas ? 1 : 0 }}" />
 
                         <button type="submit" class="hover:underline">
                             {{ $preview->week_ref }}

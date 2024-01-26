@@ -7,13 +7,15 @@ use App\Http\Controllers\DashboardControllerIndex;
 use App\Http\Controllers\MoSaveController;
 use App\Http\Controllers\Preview\PreviewDelete;
 use App\Http\Controllers\Preview\PreviewEdit;
-use App\Http\Controllers\PreviewForceController;
+use App\Http\Controllers\PreviewSaveController;
 use App\Http\Controllers\PreviewStatusController;
 use App\Livewire\Category\CategoryIndex;
+use App\Livewire\CategoryDone\CategoryDoneIndex;
 use App\Livewire\Dashboard\DashboardIndex;
 use App\Livewire\Parameters\ParametersIndex;
 use App\Livewire\Preview\PreviewCreate;
 use App\Livewire\Preview\PreviewIndex;
+use App\Livewire\Preview\PreviewDoneIndex;
 use App\Livewire\User\UserCreate;
 use App\Livewire\User\UserEdit;
 use App\Livewire\User\UserIndex;
@@ -42,15 +44,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', DashboardIndex::class)->name('dashboard');
 
     Route::get('/categoria', CategoryIndex::class)->name('category');
-
     Route::post('/categoria/mo', MoSaveController::class)->name('mo.store');
 
+    Route::get('/realizado', PreviewDoneIndex::class)->name('preview.done');
 
     Route::get('/previa', PreviewIndex::class)->name('preview');
     Route::get('/previa/create', PreviewCreate::class)->name('preview.create');
     Route::post('/previa/edit', PreviewEdit::class)->name('preview.edit');
 
-    Route::get('/orcamentos', function() {
+    Route::get('/orcamentos', function () {
         $tmp_users = [];
         $users = User::where('cc', '!=', '')->get();
 
@@ -61,8 +63,8 @@ Route::middleware('auth')->group(function () {
         $orcamentos = [];
 
         $tmp_orcamento = DB::connection('mysql_dump')
-        ->table('ORCAMENTO')
-        ->get();
+            ->table('ORCAMENTO')
+            ->get();
 
         foreach ($tmp_orcamento as $orc) {
             $cc = trim($orc->CV1_CTTINI);
@@ -91,16 +93,15 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/previa/status', PreviewStatusController::class)->name('preview.status');
 
+    Route::post('/previa/{preview}/publish', [PreviewSaveController::class, 'publish'])->name('preview.publish');
 
-    Route::post('/previa/{preview}/publish', [PreviewForceController::class, 'publish'])->name('preview.publish');
+    Route::get('/previa/{preview}/redirect', [PreviewSaveController::class, 'redirect'])->name('preview.redirect');
 
-    Route::get('/previa/{preview}/redirect', [PreviewForceController::class, 'redirect'])->name('preview.redirect');
+    Route::get('/previa/{preview}/clear', [PreviewSaveController::class, 'clear'])->name('preview.clear');
 
-    Route::get('/previa/{preview}/clear', [PreviewForceController::class, 'clear'])->name('preview.clear');
+    Route::post('/previa/{preview}/approve/{level}', [PreviewSaveController::class, 'approve'])->name('preview.approve');
 
-    Route::post('/previa/{preview}/approve/{level}', [PreviewForceController::class, 'approve'])->name('preview.approve');
-
-    Route::post('/previa/{preview}/reprove/{level}', [PreviewForceController::class, 'reprove'])->name('preview.reprove');
+    Route::post('/previa/{preview}/reprove/{level}', [PreviewSaveController::class, 'reprove'])->name('preview.reprove');
 });
 
 Route::middleware(['auth', 'is-admin'])->group(function () {
