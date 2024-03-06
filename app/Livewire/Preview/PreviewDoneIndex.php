@@ -12,94 +12,94 @@ use Livewire\Attributes\On;
 
 class PreviewDoneIndex extends Component
 {
-    public $previews = [];
+	public $previews = [];
 
-    public $month_ref = '';
+	public $month_ref = '';
 
-    public $orcamento = [];
+	public $orcamento = [];
 
-    #[On('update-month')]
-    public function setMonthRef($month, $year)
-    {
-        $selectedMonth = $month + 1;
-        $selectedMonth = $selectedMonth < 10 ? 0 . '' . $selectedMonth : $selectedMonth;
-        $this->month_ref = $selectedMonth . '_' . substr($year, -2);
+	#[On('update-month')]
+	public function setMonthRef($month, $year)
+	{
+		$selectedMonth = $month + 1;
+		$selectedMonth = $selectedMonth < 10 ? 0 . '' . $selectedMonth : $selectedMonth;
+		$this->month_ref = $selectedMonth . '_' . substr($year, -2);
 
-        //$this->render();
-    }
+		//$this->render();
+	}
 
-    public function mount()
-    {
-        $this->month_ref = date('m') . '_' . substr(date('Y'), -2);
-    }
+	public function mount()
+	{
+		$this->month_ref = date('m') . '_' . substr(date('Y'), -2);
+	}
 
-    public function render()
-    {
+	public function render()
+	{
 
-        $access = Auth::user()->access;
-        $cc = Auth::user()->cc ?? false;
+		$access = Auth::user()->access;
+		$cc = Auth::user()->cc ?? false;
 
-        $user_links = LinkUser::all();
+		$user_links = LinkUser::all();
 
-        $ccs = [];
-        $supervisors = [];
+		$ccs = [];
+		$supervisors = [];
 
-        // regra para diretores
-        if ($access === 'director') {
-            foreach ($user_links as $link) {
-                if ($link->user_id == Auth::user()->id) {
-                    array_push($supervisors, $link->parent_id);
-                }
-            }
+		// regra para diretores
+		if ($access === 'director') {
+			foreach ($user_links as $link) {
+				if ($link->user_id == Auth::user()->id) {
+					array_push($supervisors, $link->parent_id);
+				}
+			}
 
-            foreach ($user_links as $link) {
-                if (in_array($link->user_id, $supervisors)) {
-                    array_push($ccs, $link->parent_id);
-                }
-            }
+			foreach ($user_links as $link) {
+				if (in_array($link->user_id, $supervisors)) {
+					array_push($ccs, $link->parent_id);
+				}
+			}
 
-            $this->previews = Preview::where([
-                ['month_ref', '=', $this->month_ref],
-                ['status', '=', 'validado'],
-            ])->whereIn('cc', $ccs)->get();
+			$this->previews = Preview::where([
+				['month_ref', '=', $this->month_ref],
+				['status', '=', 'validado'],
+			])->whereIn('cc', $ccs)->get();
 
-            // regra para coordenadores
-        } else if ($access === 'coordinator') {
-            foreach ($user_links as $link) {
-                if ($link->user_id == Auth::user()->id) {
-                    array_push($ccs, $link->parent_id);
-                }
-            }
+			// regra para coordenadores
+		} else if ($access === 'coordinator') {
+			foreach ($user_links as $link) {
+				if ($link->user_id == Auth::user()->id) {
+					array_push($ccs, $link->parent_id);
+				}
+			}
 
-            $this->previews = Preview::where([
-                ['month_ref', '=', $this->month_ref],
-                ['status', '=', 'validado']
-            ])->whereIn('cc', $ccs)->get();
+			$this->previews = Preview::where([
+				['month_ref', '=', $this->month_ref],
+				['status', '=', 'validado']
+			])->whereIn('cc', $ccs)->get();
 
-            // regra para supervisores
-        } else if ($cc) {
-            $this->previews = Preview::where([
-                ['month_ref', '=', $this->month_ref],
-                ['status', '=', 'validado']
-            ])->get();
-        } else {
-            $this->previews = Preview::where('month_ref', $this->month_ref)->get();
-        }
+			// regra para supervisores
+		} else if ($cc) {
+			$this->previews = Preview::where([
+				['month_ref', '=', $this->month_ref],
+				['status', '=', 'validado']
+			])->get();
+		} else {
+			$this->previews = Preview::where('month_ref', $this->month_ref)->get();
+		}
 
-        $total = [
-            'faturamento' => 0,
-            'events' => 0,
-            'mp' => 0,
-            'mo' => 0,
-            'gd' => 0,
-            'he' => 0,
-            'investimento' => 0
-        ];
+		$total = [
+			'faturamento' => 0,
+			'events' => 0,
+			'mp' => 0,
+			'mo' => 0,
+			'gd' => 0,
+			'he' => 0,
+			'investimento' => 0
+		];
 
-        return view('livewire.preview.index', [
-            'previews' => $this->previews,
-            'total' => $total,
-            'realizadas' => true,
-        ]);
-    }
+		return view('livewire.preview.index', [
+			'previews' => $this->previews,
+			'total' => $total,
+			'realizadas' => 1,
+		]);
+	}
 }

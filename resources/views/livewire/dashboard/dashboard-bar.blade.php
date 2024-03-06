@@ -4,6 +4,8 @@
         :value="$total['faturamento']"
         :selected="$active == 'faturamento'"
         group="0001"
+				:cc="$cc"
+				:month_ref="$month_ref"
     />
 
     <x-dashboard.card
@@ -17,6 +19,8 @@
         :value="$total['mp']"
         :selected="$active == 'mp'"
         group="0003"
+				:cc="$cc"
+				:month_ref="$month_ref"
     />
 
     <x-dashboard.card
@@ -24,6 +28,8 @@
         :value="$total['mo']"
         :selected="$active == 'mo'"
         group="0004"
+				:cc="$cc"
+				:month_ref="$month_ref"
     />
 
     <x-dashboard.card
@@ -31,13 +37,16 @@
         :value="$total['gd']"
         :selected="$active == 'gd'"
         group="0005"
+				:cc="$cc"
+				:month_ref="$month_ref"
     />
 
     <x-dashboard.card
         label="Investimento"
         :value="$total['investimento']"
-        value-align="text-center"
         :selected="$active == 'investimento'"
         group="0006"
-    />
+				:cc="$cc"
+				:month_ref="$month_ref"
+			/>
 </div>

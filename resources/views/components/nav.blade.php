@@ -42,7 +42,6 @@
                 :href="route('dashboard')"
                 :active="request()->routeIs('dashboard')"
                 class="flex gap-3 items-center"
-                wire:navigate
             >
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M6.66667 2H2V8H6.66667V2Z" stroke="#757D8A" stroke-linecap="round" stroke-linejoin="round"/>
@@ -60,7 +59,6 @@
                 :href="route('preview')"
                 :active="request()->routeIs('preview')"
                 class="flex gap-3 items-center"
-                wire:navigate
             >
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12.6667 2H3.33333C2.59695 2 2 2.59695 2 3.33333V12.6667C2 13.403 2.59695 14 3.33333 14H12.6667C13.403 14 14 13.403 14 12.6667V3.33333C14 2.59695 13.403 2 12.6667 2Z" stroke="#757D8A" stroke-linecap="round" stroke-linejoin="round"/>
@@ -79,7 +77,6 @@
                 :href="route('preview.done')"
                 :active="request()->routeIs('preview.done')"
                 class="flex gap-3 items-center"
-                wire:navigate
             >
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M9.66675 1.33325H4.00008C3.64646 1.33325 3.30732 1.47373 3.05727 1.72378C2.80722 1.97382 2.66675 2.31296 2.66675 2.66659V13.3333C2.66675 13.6869 2.80722 14.026 3.05727 14.2761C3.30732 14.5261 3.64646 14.6666 4.00008 14.6666H12.0001C12.3537 14.6666 12.6928 14.5261 12.9429 14.2761C13.1929 14.026 13.3334 13.6869 13.3334 13.3333V4.99992L9.66675 1.33325Z" stroke="#757D8A" stroke-linecap="round" stroke-linejoin="round"/>

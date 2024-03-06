@@ -1,6 +1,5 @@
 @php
-$is_page_realizadas = (int) Session::get('preview')['realizadas'];
-
+$is_page_realizadas = $realizadas;
 
 $categories = [
     ["slug" => "faturamento", "label" => "Faturamento", "visible" => true],
@@ -10,8 +9,8 @@ $categories = [
     ["slug" => "he", "label" => "HE, Faltas e Atrasos", "visible" => true],
     ["slug" => "gd", "label" => "GD", "visible" => true],
     ["slug" => "investimento", "label" => "Investimento", "visible" => true],
-    ["slug" => "sobra-limpa", "label" => "Sobra Limpa", "visible" => $is_page_realizadas],
-    ["slug" => "resto-ingesto", "label" => "Resto Ingesto", "visible" => $is_page_realizadas],
+    ["slug" => "sobra-limpa", "label" => "Sobra Limpa", "visible" => $is_page_realizadas ? true : false],
+    ["slug" => "resto-ingesto", "label" => "Resto Ingesto", "visible" => $is_page_realizadas ? true : false],
 ];
 
 $active = $_GET['filter'] ?? "faturamento";
@@ -19,7 +18,6 @@ $active = $_GET['filter'] ?? "faturamento";
 $category = array_values(array_filter($categories, function($v, $k) use($active) {
     return $v['slug'] === $active;
 }, ARRAY_FILTER_USE_BOTH))[0];
-
 
 $action_publish = false;
 $action_wait = false;
@@ -81,14 +79,14 @@ if ($log_level == '4' && $log_status == 'validado') {
             <li>
                 <a
                     href="?filter={{ $category['slug'] }}"
-                    class="text-lg inline-block py-2 px-4 rounded-t {{ $category['slug'] === $active ? 'bg-blue-500  hover:bg-blue-500 text-gray-100' : 'hover:bg-gray-100 hover:text-gray-600 transition-all duration-300' }}"
+                    class="text-md inline-block p-2 px-4 rounded-t {{ $category['slug'] === $active ? 'bg-blue-500  hover:bg-blue-500 text-gray-100' : 'hover:bg-gray-100 hover:text-gray-600 transition-all duration-300' }}"
                 >{{ $category['label'] }}</a>
             </li>
             @endif
         @endforeach
     </ul>
 
-    <div class="flex flex-col w-full h-full relative {{ !$edit && !$is_page_realizadas ? "opacity-60 pointer-events-none cursor-not-allowed select-none" : "" }}">
+    <div class="flex flex-col w-full h-full relative">
         @if($active === 'faturamento')
             <livewire:category.category-invoicing />
         @endif
@@ -117,13 +115,17 @@ if ($log_level == '4' && $log_status == 'validado') {
         <livewire:category.category-investimento />
         @endif
 
-        @if($is_page_realizadas && $active === 'sobra-limpa')
+        @if($is_page_realizadas && $active == 'sobra-limpa')
         <livewire:category.category-left />
         @endif
 
-        @if($is_page_realizadas && $active === 'resto-ingesto')
+        @if($is_page_realizadas && $active == 'resto-ingesto')
         <livewire:category.category-rest />
         @endif
+
+        {{-- @if ($action_approved && !$is_page_realizadas)
+            <div class="absolute top-0 left-0 w-full h-full bg-white/50"></div>
+        @endif --}}
     </div>
 
     @if(!$is_page_realizadas)

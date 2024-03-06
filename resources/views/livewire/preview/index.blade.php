@@ -2,8 +2,11 @@
     <x-dashboard.container>
         <div class="flex border-b items-center justify-between pb-10 mb-10">
             <div>
-                <strong class="text-2xl">Prévias</strong>
-                <p class="text-gray-600">{{ sizeof($previews) }} {{ sizeof($previews) > 1 ? 'resultados encontrados' : 'resultado encontrado' }}</p>
+                <strong class="text-2xl">{{ $realizadas ? "Realizadas" : "Prévias" }}</strong>
+                <p class="text-gray-600">
+									{{ sizeof($previews) }} 
+									{{ sizeof($previews) > 1 || sizeof($previews) == 0 ? 'resultados encontrados' : 'resultado encontrado' }}
+								</p>
             </div>
 
             <div class="flex gap-4">
@@ -30,13 +33,14 @@
 
         <div class="flex justify-between gap-4 mt-10">
             <div class="flex">
+								@if (!$realizadas)
                 <a
                     wire:navigate
                     href="{{ route('preview.create') }}"
                     class="py-2.5 px-5 mr-2 mb-2 text-[16px] font-medium text-gray-900 focus:outline-none bg-white rounded-[10px] border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 cursor-pointer">
                         Adicionar
                 </a>
-
+								@endif
 
                 {{-- <button class="py-2.5 px-5 mr-2 mb-2 text-[16px] font-medium text-gray-900 focus:outline-none bg-white rounded-[10px] border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
                     Visualizar

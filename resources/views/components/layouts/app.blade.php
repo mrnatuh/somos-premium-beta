@@ -15,8 +15,7 @@
         @livewireStyles
         @livewireScripts
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @vite('resources/css/app.css')
     </head>
     <body id="app" class="font-sans antialiased h-screen bg-white relative">
         <div id="app" class="w-full h-screen">
@@ -28,5 +27,7 @@
                 </main>
             </div>
         </div>
+
+				@vite('resources/js/app.js')
     </body>
 </html>
