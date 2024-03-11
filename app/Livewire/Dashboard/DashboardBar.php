@@ -30,23 +30,23 @@ class DashboardBar extends Component
 		$preview = null;
 
 		// logged user cc
-		if ($this->cc && $this->inside) {
+		if ($this->cc) {
+			// 	$preview = Preview::where([
+			// 		['cc', '=', $this->cc],
+			// 		['week_ref', '=', $this->week_ref],
+			// 	])->orderBy('updated_at', 'desc')
+			// 		->first();
+			// } else if ($this->cc) {
+			// 	$preview = Preview::where([
+			// 		['cc', '=', $this->cc],
+			// 		['month_ref', '=', $this->month_ref],
+			// 		['status', '=', 'validado'],
+			// 	])->orderBy('updated_at', 'desc')
+			// 		->first();
+			// 	// any one
+			// } else {
 			$preview = Preview::where([
 				['cc', '=', $this->cc],
-				['week_ref', '=', $this->week_ref],
-			])->orderBy('updated_at', 'desc')
-				->first();
-		} else if ($this->cc) {
-			$preview = Preview::where([
-				['cc', '=', $this->cc],
-				['month_ref', '=', $this->month_ref],
-				['status', '=', 'validado'],
-			])->orderBy('updated_at', 'desc')
-				->first();
-			// any one
-		} else {
-			$preview = Preview::where([
-				['month_ref', '=', $this->month_ref],
 				['status', '=', 'validado'],
 			])->orderBy('updated_at', 'desc')
 				->first();
@@ -88,7 +88,6 @@ class DashboardBar extends Component
 		}
 	}
 
-	#[On('update-month')]
 	public function getTotalFromMonth($month, $year)
 	{
 		// when update month, change month_ref
@@ -121,6 +120,9 @@ class DashboardBar extends Component
 
 	public function render()
 	{
+		// renderiza o gasto previsto
+		$this->dispatch('render-preview-month');
+
 		return view('livewire.dashboard.dashboard-bar');
 	}
 }

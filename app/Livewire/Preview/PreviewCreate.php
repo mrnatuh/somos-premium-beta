@@ -133,8 +133,8 @@ class PreviewCreate extends Component
 			'week_ref' => $weekref,
 			'realizadas' => 0,
 		]);
-
-		return $this->redirect('/categoria');
+		
+		return $this->redirect('/categoria?filter=faturamento');
 	}
 
 	public function render()

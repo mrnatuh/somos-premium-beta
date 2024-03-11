@@ -13,14 +13,14 @@ class CategoryIndex extends Component
 
 	public function render()
 	{
-		$realizadas = session('preview')['realizadas'] ?? 0;
+		$realizadas = session('preview')['realizadas'] ? 1 : 0;
 
 		$preview = Preview::where([
 			'cc' => session('preview')['cc'],
 			'week_ref' => session('preview')['week_ref'],
 		])->first();
 
-		$logs = isset($preview->logs) ? unserialize($preview->logs) : [];
+		$logs = $preview->logs ? unserialize($preview->logs) : [];
 		$last_log = sizeof($logs) ? $logs[sizeof($logs) - 1] : [];
 
 		$filename = "previews/{$preview->cc}_{$preview->week_ref}.json";

@@ -180,8 +180,8 @@ class CategoryInvoicing extends Component
 		$total = 0;
 
 		foreach ($this->companies as $company) {
-			$prices = $company['prices'] ?? [];
-			$rows = $company['rows'] ?? [];
+			$prices = sizeof($company['prices']) ? $company['prices'] : [];
+			$rows = $company['rows'];
 			$colspan = sizeof($prices);
 			$rowspan = $company['rowspan'];
 
@@ -343,12 +343,12 @@ class CategoryInvoicing extends Component
 		]);
 	}
 
-	public function mount()
+	public function render()
 	{
-		$this->realizadas = (int) session('preview')['realizadas'];
-		$is_page_realizadas = (int) session('preview')['realizadas'];
-
 		$this->lastOfMonth = (int) Carbon::now()->lastOfMonth()->format('d');
+
+		$is_page_realizadas = session('preview')['realizadas'];
+		$this->realizadas = isset($is_page_realizadas) ? (int) $is_page_realizadas : 0;
 
 		$cc = session('preview')['cc'] ?? false;
 		$weekref = session('preview')['week_ref'];
@@ -365,9 +365,9 @@ class CategoryInvoicing extends Component
 			if ($data_exists && !$is_page_realizadas) {
 				$data = Storage::get($filename);
 				$faturamento = json_decode($data, true);
+
 				$this->companies = $faturamento['option_value'];
 				$this->lastOfMonth = $this->companies[0]['last_of_month'];
-
 				$this->edit = false;
 			} else {
 				$faturamento = Option::where([
@@ -375,114 +375,28 @@ class CategoryInvoicing extends Component
 					['week_ref', '=', $weekref],
 					['option_name', '=', 'faturamento']
 				])->first();
-
+					
 				if ($faturamento) {
 					$this->companies = unserialize($faturamento->option_value);
-				}
-
-				$this->lastOfMonth = $this->companies[0]['last_of_month'];
-
-				// pega as options que estão sendo usadas no faturamento
-				$tmp_companies = [];
-				$tmp_options = [];
-				foreach ($this->companies as $company) {
-					array_push($tmp_companies, $company['id']);
-					foreach ($company['prices_options'] as $option) {
-						$tmp_options[$option['id']] = 0;
-					}
-				}
-
-				$tmp_clients = DB::connection('mysql_dump')
-					->table('CLIENTES')
-					->whereIn('A1_CGC', $tmp_companies)
-					->get();
-
-				$tmp_companies = [];
-				$tmp_genials = [];
-				foreach ($tmp_clients as $client) {
-					$genial = trim($client->A1_CDGENIAL);
-					$cgc = trim($client->A1_CGC);
-					$tmp_companies[$cgc] = $genial;
-					$tmp_genials[$genial] = $cgc;
-				}
-
-				// acha os produtos, para encontrar os grupos
-				$tmp_options_keys = array_keys($tmp_options);
-				$tmp_res_products = DB::connection('mysql_dump')
-					->table('PRODUTOS')
-					->whereIn('B1_COD', $tmp_options_keys)
-					->get();
-
-				// acha o codigo, descricao e grupo
-				$tmp_gens = [];
-				$tmp_codes = [];
-				foreach ($tmp_res_products as $product) {
-					$cod = trim($product->B1_COD);
-					$gen = trim($product->B1_XCDGEN);
-					$tmp_gens[$cod] = $gen;
-					$tmp_codes[$gen] = $cod;
- 				}
-
-				$_gens = array_values($tmp_gens);
-				$_genials = array_values($tmp_companies);
-				$tmp_res_faturamento = DB::connection('mysql_dump')
-					->table('FATURAMENTO')
-					->whereIn('ZA3_CDPESS', $_genials)
-					->whereIn('ZA3_CDSERV', $_gens)
-					->get();
-
-				$tmp_data = [];
-				foreach ($tmp_res_faturamento as $fat) {
-					$genial = trim($fat->ZA3_CDPESS);
-
-					if (!isset($tmp_data[$genial])) {
-						$tmp_data[$genial] = [];
-					}
-
-					$serv = trim($fat->ZA3_CDSERV);
-					if (!isset($tmp_data[$genial][$serv])) {
-						$tmp_data[$genial][$serv] = [];
-					}
-
-					$dt = trim($fat->ZA3_DTCARP);
-					if (!isset($tmp_data[$genial][$serv][$dt])) {
-						$tmp_data[$genial][$serv][$dt] = 0;
-					}
-
-					$qty = (int) $fat->ZA3_QUANTF;
-					$tmp_data[$genial][$serv][$dt] += $qty;
-				}
-
-				// acerta os ids das companias
-				for($c = 0; $c < sizeof($this->companies); $c++) {
-					$id = $this->companies[$c]['id'];
-					$this->companies[$c]['gen'] = $tmp_companies[$id];
-
-					$prices = $this->companies[$c]['prices'] ?? [];
-					for($p = 0; $p < sizeof($prices); $p++) {
-						$serv = $prices[$p]['id'];
-						$this->companies[$c]['prices'][$p]['gen'] = $tmp_gens[$serv] ?? null;
-					}
-				}
-
-				// dd($tmp_genials, $tmp_codes, $tmp_data);
-				// dd($this->companies);
-				$this->realizadas_genial = $tmp_data;
-
-				if ($is_page_realizadas) {
-					$this->edit = false;
+					$this->lastOfMonth = $this->companies[0]['last_of_month'];
+					$this->edit = true;
 				}
 			}
 		}
 
-		$this->dispatch('update-bar-total');
-	}
+		$this->dispatch('update-bar-total', [
+			'cc' => $cc,
+			'weekref' => $weekref
+		]);
 
-	public function render()
-	{
 		return view('livewire.category.category-invoicing', [
-			'realizadas_genial' => $this->realizadas_genial ?? null,
-			'month_ref' => $this->month_ref ?? null,
+			'cc' => $cc,
+			'edit' => $this->edit,
+			'month_ref' => $this->month_ref,
+			'companies' => $this->companies,
+			'lastOfMonth' => $this->lastOfMonth,
+			'realizadas_genial' => $this->realizadas_genial,
+			'realizadas' => $this->realizadas,
 		]);
 	}
 }

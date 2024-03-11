@@ -1,5 +1,6 @@
 @php
-$is_page_realizadas = $realizadas;
+$is_page_realizadas = (int) $realizadas;
+$active = isset($_GET['filter']) ? trim($_GET['filter']) : "faturamento";
 
 $categories = [
     ["slug" => "faturamento", "label" => "Faturamento", "visible" => true],
@@ -13,7 +14,6 @@ $categories = [
     ["slug" => "resto-ingesto", "label" => "Resto Ingesto", "visible" => $is_page_realizadas ? true : false],
 ];
 
-$active = $_GET['filter'] ?? "faturamento";
 
 $category = array_values(array_filter($categories, function($v, $k) use($active) {
     return $v['slug'] === $active;
@@ -296,14 +296,14 @@ if ($log_level == '4' && $log_status == 'validado') {
             </div>
         </div>
 
-        @if (sizeof($logs))
+        @if ($logs)
         @php
             $log_status = [
                 'em-analise' => 'Em análise',
                 'recusado' => 'Recusado',
                 'validado' => 'Validado',
             ];
-            @endphp
+        @endphp
         <div id="logs_area" class="hidden fixed flex-col gap-2 bottom-20 right-10 w-full max-w-[320px]">
             @foreach($logs as $log)
                 <div class="bg-white flex flex-col w-full border shadow rounded-lg p-2.5">

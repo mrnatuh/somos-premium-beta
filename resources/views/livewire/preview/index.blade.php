@@ -4,9 +4,9 @@
             <div>
                 <strong class="text-2xl">{{ $realizadas ? "Realizadas" : "Prévias" }}</strong>
                 <p class="text-gray-600">
-									{{ sizeof($previews) }} 
-									{{ sizeof($previews) > 1 || sizeof($previews) == 0 ? 'resultados encontrados' : 'resultado encontrado' }}
-								</p>
+                    {{ sizeof($previews) }} 
+                    {{ sizeof($previews) > 1 || sizeof($previews) == 0 ? 'resultados encontrados' : 'resultado encontrado' }}
+                </p>
             </div>
 
             <div class="flex gap-4">
@@ -29,7 +29,7 @@
             </div>
         </div>
 
-        <livewire:dashboard.dashboard-bar :total="$total" />
+        <livewire:dashboard.dashboard-bar />
 
         <div class="flex justify-between gap-4 mt-10">
             <div class="flex">

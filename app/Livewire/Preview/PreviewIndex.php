@@ -46,8 +46,9 @@ class PreviewIndex extends Component
 
 	public function render()
 	{
-		$access = Auth::user()->access;
 		$cc = Auth::user()->cc ?? false;
+
+		$access = Auth::user()->access;
 
 		$user_links = LinkUser::all();
 
@@ -89,21 +90,8 @@ class PreviewIndex extends Component
 			$this->previews = Preview::where('month_ref', $this->month_ref)->get();
 		}
 
-		$total = [
-			'faturamento' => 0,
-			'events' => 0,
-			'mp' => 0,
-			'mo' => 0,
-			'gd' => 0,
-			'he' => 0,
-			'investimento' => 0
-		];
-
-		$this->dispatch('render-preview-month');
-
 		return view('livewire.preview.index', [
 			'previews' => $this->previews,
-			'total' => $total,
 			'realizadas' => 0,
 		]);
 	}
