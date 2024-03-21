@@ -56,22 +56,31 @@ class MonthsScroll extends Component
 
 	public function increment()
 	{
-		$dt = Carbon::parse(str_replace("_", "/", $this->month_ref));
-		$this->month_ref = $dt->addMonths(1)->format('m\_y');
+		$str_date = explode("_", $this->month_ref);
+		$str_date = $str_date[1] . "-" . $str_date[0] . "-01";
+		$dt = Carbon::parse($str_date);
+		$add = $dt->addMonths(1);
+		$this->month_ref = $add->format('m\_y');
 		$this->dispatch('month-scroll-updated', month_ref: $this->month_ref);
 	}
 
 	public function decrement()
 	{
-		$dt = Carbon::parse(str_replace("_", "/", $this->month_ref));
-		$this->month_ref = $dt->subMonths(1)->format('m\_y');
+		$str_date = explode("_", $this->month_ref);
+		$str_date = $str_date[1] . "-" . $str_date[0] . "-01";
+		$dt = Carbon::parse($str_date);
+		$sub = $dt->subMonths(1);
+		$this->month_ref = $sub->format('m\_y');
+		$this->year = $sub->format('Y');
 		$this->dispatch('month-scroll-updated', month_ref: $this->month_ref);
 	}
 
 	public function render()
 	{
 		if ($this->month_ref) {
-			$dt = Carbon::parse(str_replace("_", "/", $this->month_ref));
+			$str_date = explode("_", $this->month_ref);
+			$str_date = $str_date[1] . "-" . $str_date[0] . "-01";
+			$dt = Carbon::parse($str_date);
 			$year = $dt->format('Y');
 			$month = (int) $dt->format('m');
 			$this->year = $year;
