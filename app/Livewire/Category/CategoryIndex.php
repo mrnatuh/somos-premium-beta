@@ -13,7 +13,7 @@ class CategoryIndex extends Component
 
 	public function render()
 	{
-		$realizadas = session('preview')['realizadas'] ? 1 : 0;
+		$is_page_realizadas = (int) session('preview')['realizadas'];
 
 		$preview = Preview::where([
 			'cc' => session('preview')['cc'],
@@ -30,7 +30,7 @@ class CategoryIndex extends Component
 			$data = json_decode(Storage::get($filename), true);
 			$this->edit = false;
 		} else {
-			$this->edit = $realizadas ? false : true;
+			$this->edit = $is_page_realizadas ? false : true;
 			$data = $preview->toArray();
 		}
 
@@ -43,7 +43,7 @@ class CategoryIndex extends Component
 			'logs' => $logs,
 			'last_log' => $last_log,
 			'edit' => $this->edit,
-			'realizadas' => $realizadas,
+			'realizadas' => $is_page_realizadas,
 		]);
 	}
 }
