@@ -14,15 +14,16 @@ class CategoryIndex extends Component
 	public function render()
 	{
 		$sess = session('preview');
-		$is_page_realizadas = 0;
 
-		if ($sess && isset($sess['realizadas'])) {
-			$is_page_realizadas = $sess['realizadas'];
+		if (!$sess) {
+			return redirect()->to('/dashboard');
 		}
 
+		$is_page_realizadas = $sess['realizadas'];
+
 		$preview = Preview::where([
-			'cc' => session('preview')['cc'],
-			'week_ref' => session('preview')['week_ref'],
+			'cc' => $sess['cc'],
+			'week_ref' => $sess['week_ref'],
 		])->first();
 
 		$logs = $preview->logs ? unserialize($preview->logs) : [];
