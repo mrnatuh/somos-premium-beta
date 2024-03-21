@@ -3,15 +3,12 @@
 namespace App\Livewire;
 
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 
 class MonthsScroll extends Component
 {
-	protected $listeners = ['update-month' => '$refresh'];
-
-	public $months = [
+	public $list_of_months = [
 		[
 			'label' => 'Janeiro'
 		],
@@ -50,71 +47,47 @@ class MonthsScroll extends Component
 		]
 	];
 
-	public $month = [];
-	public $year = 2023;
-
 	#[Url]
 	public $month_ref = '';
 
-	public $selectedMonth = -1;
+	public $month = '';
+
+	public $year = 2023;
 
 	public function increment()
 	{
-		$this->selectedMonth = $this->selectedMonth < 11 ? $this->selectedMonth + 1 : 0;
-
-		if ($this->selectedMonth === 0) {
-			$this->year += 1;
-		}
-
-		$this->month = $this->months[$this->selectedMonth];
-
-		$this->updateMonthRefQueryString();
-
-		$this->dispatch('update-month', month: $this->selectedMonth, year: $this->year);
+		$dt = Carbon::parse(str_replace("_", "/", $this->month_ref));
+		$this->month_ref = $dt->addMonths(1)->format('m\_y');
+		$this->dispatch('month-scroll-updated', month_ref: $this->month_ref);
 	}
 
 	public function decrement()
 	{
-		$this->selectedMonth = $this->selectedMonth > 0 ? $this->selectedMonth - 1 : 11;
-
-		if ($this->selectedMonth === 11) {
-			$this->year -= 1;
-		}
-
-		$this->month = $this->months[$this->selectedMonth];
-
-		$this->updateMonthRefQueryString();
-
-		$this->dispatch('update-month', month: $this->selectedMonth, year: $this->year);
-	}
-
-	public function updateMonthRefQueryString()
-	{
-		$month = $this->selectedMonth + 1;
-		$month = $month < 10 ? '0' . $month : $month;
-		$year = str_replace('20', '', $this->year);
-
-		$this->month_ref = "{$month}_{$year}";
-	}
-
-	public function mount()
-	{
-		if (!$this->month_ref) {
-			$this->year = (int) date('Y');
-			$this->selectedMonth = (int) date('m') - 1;
-		} else {
-			$split = explode("_", $this->month_ref);
-			if (isset($split[0]) && isset($split[1])) {
-				$this->year = (int) '20' . $split[1];
-				$this->selectedMonth = (int) $split[0] - 1;
-			}
-		}
-
-		$this->month = $this->months[$this->selectedMonth];
+		$dt = Carbon::parse(str_replace("_", "/", $this->month_ref));
+		$this->month_ref = $dt->subMonths(1)->format('m\_y');
+		$this->dispatch('month-scroll-updated', month_ref: $this->month_ref);
 	}
 
 	public function render()
 	{
-		return view('livewire.months-scroll');
+		if ($this->month_ref) {
+			$dt = Carbon::parse(str_replace("_", "/", $this->month_ref));
+			$year = $dt->format('Y');
+			$month = (int) $dt->format('m');
+			$this->year = $year;
+			$this->month_ref = $dt->format('m\_y');
+			$this->month = $this->list_of_months[$month - 1];
+		} else {
+			$year = date('Y');
+			$month = (int) date('m');
+			$this->year = $year;
+			$this->month_ref = date('m') . '_' . substr(date('Y'), -2);
+			$this->month = $this->list_of_months[$month - 1];
+		}
+
+		return view('livewire.months-scroll', [
+			'month' => $this->month,
+			'year' => $this->year,
+		]);
 	}
 }

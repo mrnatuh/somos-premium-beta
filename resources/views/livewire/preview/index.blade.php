@@ -9,7 +9,7 @@
                 </p>
             </div>
 
-            <div class="flex gap-4">
+            {{-- <div class="flex gap-4">
                 <div class="flex w-full relative max-w-[470px]">
                     <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
                         <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -22,7 +22,7 @@
                 </div>
 
                 <button type="submit" class="text-white bg-[#5B6AD0] hover:opacity-90 focus:ring-4 focus:outline-none focus:ring-blue-100 font-medium rounded-[10px] text-[16px] px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition-all">Buscar</button>
-            </div>
+            </div> --}}
 
             <div class="flex">
                 <livewire:notifications />

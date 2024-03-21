@@ -177,8 +177,7 @@ class CategoryEvent extends Component
         return true;
     }
 
-
-    public function mount()
+    public function render()
     {
         $is_page_realizadas = (int) session('preview')['realizadas'];
 
@@ -200,12 +199,13 @@ class CategoryEvent extends Component
                 if ($eventos) {
                     $this->events = unserialize($eventos->option_value);
                 }
+
+                if ($is_page_realizadas) {
+                    $this->edit = false;
+                }
             }
         }
-    }
 
-    public function render()
-    {
         return view('livewire.category.category-event');
     }
 }

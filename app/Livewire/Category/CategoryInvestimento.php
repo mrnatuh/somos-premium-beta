@@ -157,7 +157,7 @@ class CategoryInvestimento extends Component
         ]);
     }
 
-    public function mount()
+    public function render()
     {
         $is_page_realizadas = (int) session('preview')['realizadas'];
 
@@ -179,12 +179,13 @@ class CategoryInvestimento extends Component
                 if ($investimento) {
                     $this->investimento = unserialize($investimento->option_value);
                 }
+
+                if ($is_page_realizadas) {
+                    $this->edit = false;
+                }
             }
         }
-    }
 
-    public function render()
-    {
         return view('livewire.category.category-investimento');
     }
 }

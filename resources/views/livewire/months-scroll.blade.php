@@ -6,7 +6,7 @@
     </button>
 
     <div>
-        {{ $month['label'] }}, {{ $year }}
+        {{ $month['label'] }}, {{ $year}}
     </div>
 
     <button class="flex items-center py-2.5 px-5 hover:text-blue-700 hover:bg-gray-100 transition-colors h-full" wire:click="increment" wire:loading.attr="disabled">

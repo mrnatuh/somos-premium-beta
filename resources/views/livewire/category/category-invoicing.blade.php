@@ -1,7 +1,9 @@
 <div class="flex flex-col justify-between w-full">
+    @if ($edit)
     <div class="mt-10">
         <livewire:search-client />
     </div>
+    @endif
 
     <div class="flex mt-10 overflow-x-scroll">
         <div class="flex flex-col">
@@ -15,11 +17,10 @@
                     
                     $_genial = null;
 
-                    if ($realizadas) {
+                    if ($realizadas && $realizadas_genial) {
                         $_genial = $realizadas_genial[$company['gen']];
                     }
                 @endphp
-
 
                 <div class="border-r flex flex-shrink flex-grow text-sm font-normal text-[#b1b1b1] w-[{{ ((int) $company['colspan'] * 125) . 'px' }}] overflow-hidden relative p-4 m-0">
                     <span class="flex w-full  justify-center text-[16px] text-[#404D61]  leading-normal text-center overflow-hidden">
@@ -170,7 +171,7 @@
                                     @php
                                         $_selected_genial_price = null;
     
-                                        if ($realizadas) {
+                                        if ($realizadas && $_genial) {
                                             $_selected_genial_price = $price['gen'];
                                         }
                                     @endphp
@@ -205,7 +206,7 @@
                                     $_key_genial = null;
                                     $_key_genial_value = '';
     
-                                    if ($realizadas) {
+                                    if ($realizadas && $_genial) {
                                         $_genial_columns = $_genial[$_selected_genial_price];
                                         
                                         $_day_genial = $rowIndex + 1;
@@ -223,7 +224,7 @@
                                         <span class="flex items-center justify-center w-full h-[47px] text-gray-400">
                                             {{ $row['value'] }}
     
-                                            @if ($row['name'] != 'OUTRO')
+                                            @if ($realizadas && $row['name'] != 'OUTRO')
                                             <span class="text-blue-400">
                                                 /{{ $_key_genial_value ? $_key_genial_value : '0' }}
                                             </span> 

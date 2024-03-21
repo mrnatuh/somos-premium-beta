@@ -172,6 +172,10 @@ class CategoryMP extends Component
                 if ($mp) {
                     $this->mp = unserialize($mp->option_value);
                 }
+
+                if ($is_page_realizadas) {
+                    $this->edit = false;
+                }
             }
         }
     }

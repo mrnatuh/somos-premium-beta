@@ -2,103 +2,51 @@
 
 namespace App\Livewire\Preview;
 
-use App\Models\LinkUser;
+use App\Helpers\UserRole;
 use App\Models\Preview;
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Livewire\Component;
+use Illuminate\Http\Request;
 use Livewire\Attributes\On;
+use Livewire\Component;
 
 class PreviewDoneIndex extends Component
 {
 	public $previews = [];
-
 	public $month_ref = '';
 
-	public $orcamento = [];
-
-	#[On('update-month')]
-	public function setMonthRef($month, $year)
+	#[On('month-scroll-updated')]
+	public function monthUpdated(string $month_ref = '')
 	{
-		$selectedMonth = $month + 1;
-		$selectedMonth = $selectedMonth < 10 ? 0 . '' . $selectedMonth : $selectedMonth;
-		$this->month_ref = $selectedMonth . '_' . substr($year, -2);
+		$this->month_ref = $month_ref;
+	} 
 
-		//$this->render();
-	}
-
-	public function mount()
+	public function render(Request $request)
 	{
-		$this->month_ref = date('m') . '_' . substr(date('Y'), -2);
-	}
+		session()->forget('preview');
+		
+		if (!$this->month_ref) {
+			$req_month_ref = $request->input('month_ref');
 
-	public function render()
-	{
-
-		$access = Auth::user()->access;
-		$cc = Auth::user()->cc ?? false;
-
-		$user_links = LinkUser::all();
-
-		$ccs = [];
-		$supervisors = [];
-
-		// regra para diretores
-		if ($access === 'director') {
-			foreach ($user_links as $link) {
-				if ($link->user_id == Auth::user()->id) {
-					array_push($supervisors, $link->parent_id);
+			if (!empty(trim($req_month_ref))) {
+				$split = explode("_", $req_month_ref);
+				if (isset($split[0]) && isset($split[1])) {
+					$this->month_ref = "{$split[0]}_{$split[1]}";
 				}
+			} else {
+				$this->month_ref = date('m') . '_' . substr(date('Y'), -2);
 			}
-
-			foreach ($user_links as $link) {
-				if (in_array($link->user_id, $supervisors)) {
-					array_push($ccs, $link->parent_id);
-				}
-			}
-
-			$this->previews = Preview::where([
-				['month_ref', '=', $this->month_ref],
-				['status', '=', 'validado'],
-			])->whereIn('cc', $ccs)->get();
-
-			// regra para coordenadores
-		} else if ($access === 'coordinator') {
-			foreach ($user_links as $link) {
-				if ($link->user_id == Auth::user()->id) {
-					array_push($ccs, $link->parent_id);
-				}
-			}
-
-			$this->previews = Preview::where([
-				['month_ref', '=', $this->month_ref],
-				['status', '=', 'validado']
-			])->whereIn('cc', $ccs)->get();
-
-			// regra para supervisores
-		} else if ($cc) {
-			$this->previews = Preview::where([
-				['month_ref', '=', $this->month_ref],
-				['status', '=', 'validado']
-			])->get();
-		} else {
-			$this->previews = Preview::where('month_ref', $this->month_ref)->get();
 		}
 
-		$total = [
-			'faturamento' => 0,
-			'events' => 0,
-			'mp' => 0,
-			'mo' => 0,
-			'gd' => 0,
-			'he' => 0,
-			'investimento' => 0
-		];
+		$ccs = (new UserRole())->getCc();
+
+		$this->previews = Preview::whereIn('cc', $ccs)
+			->where('month_ref', '=', $this->month_ref)
+			->where('status', 'validado')
+			->get();
+
+		$this->dispatch('render-preview-month');	
 
 		return view('livewire.preview.index', [
 			'previews' => $this->previews,
-			'total' => $total,
 			'realizadas' => 1,
 		]);
 	}

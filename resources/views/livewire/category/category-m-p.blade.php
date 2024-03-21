@@ -24,6 +24,7 @@
                         $columnIndex = $loop->index;
                     @endphp
                     <td>
+                        @if ($edit)
                         <input
                             type="{{ $row['type'] ?? 'text' }}"
                             value="{{ $row['value'] }}"
@@ -33,31 +34,38 @@
                             wire:change.lazy="updateRow({{ $rowIndex }}, {{ $columnIndex }}, $event.target.value)"
                             @endif
                         />
+                        @else
+                        <div class="text-gray-500 w-full text-center">
+                            {{ $row['value'] }}
+                        </div>    
+                        @endif
                     </td>
                     @endforeach
                     <td class="text-center p-3 w-[125px]">
-                        @if(isset($this->deleteItem[$rowIndex]) && $this->deleteItem[$rowIndex])
-                            <button
-                                type="button"
-                                wire:click.lazy="confirmDeleteItem({{ $rowIndex }})"
-                                class="text-green-500 p-1"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current"><path d="m10 15.586-3.293-3.293-1.414 1.414L10 18.414l9.707-9.707-1.414-1.414z"></path></svg>
-                            </button>
+                        @if ($edit)
+                            @if(isset($this->deleteItem[$rowIndex]) && $this->deleteItem[$rowIndex])
+                                <button
+                                    type="button"
+                                    wire:click.lazy="confirmDeleteItem({{ $rowIndex }})"
+                                    class="text-green-500 p-1"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current"><path d="m10 15.586-3.293-3.293-1.414 1.414L10 18.414l9.707-9.707-1.414-1.414z"></path></svg>
+                                </button>
 
+                                <button
+                                    type="button"
+                                    wire:click.lazy="cancelDeleteItem({{ $rowIndex }})"
+                                    class="text-red-500 p-1"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current"><path d="M9.172 16.242 12 13.414l2.828 2.828 1.414-1.414L13.414 12l2.828-2.828-1.414-1.414L12 10.586 9.172 7.758 7.758 9.172 10.586 12l-2.828 2.828z"></path><path d="M12 22c5.514 0 10-4.486 10-10S17.514 2 12 2 2 6.486 2 12s4.486 10 10 10zm0-18c4.411 0 8 3.589 8 8s-3.589 8-8 8-8-3.589-8-8 3.589-8 8-8z"></path></svg>
+                            @else
                             <button
                                 type="button"
-                                wire:click.lazy="cancelDeleteItem({{ $rowIndex }})"
-                                class="text-red-500 p-1"
+                                wire:click.lazy="deleteRowItem({{ $rowIndex }})"
                             >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current"><path d="M9.172 16.242 12 13.414l2.828 2.828 1.414-1.414L13.414 12l2.828-2.828-1.414-1.414L12 10.586 9.172 7.758 7.758 9.172 10.586 12l-2.828 2.828z"></path><path d="M12 22c5.514 0 10-4.486 10-10S17.514 2 12 2 2 6.486 2 12s4.486 10 10 10zm0-18c4.411 0 8 3.589 8 8s-3.589 8-8 8-8-3.589-8-8 3.589-8 8-8z"></path></svg>
-                        @else
-                        <button
-                            type="button"
-                            wire:click.lazy="deleteRowItem({{ $rowIndex }})"
-                        >
-                            <img src="/img/delete.svg" />
-                        </button>
+                                <img src="/img/delete.svg" />
+                            </button>
+                            @endif
                         @endif
                     </td>
                 </tr>
@@ -65,6 +73,7 @@
             </tbody>
         </table>
 
+        @if ($edit)
         <div>
             <button class="py-2.5 px-5 mr-2 mb-2 text-[16px] font-medium text-gray-900 focus:outline-none bg-white rounded-[10px] border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 relative" wire:click="increment">
                 Adicionar item
@@ -72,6 +81,7 @@
                 <x-status.loading />
             </button>
         </div>
+        @endif
     </div>
 		
 		@if($edit)

@@ -6,44 +6,44 @@ use Livewire\Component;
 
 class DashboardIndex extends Component
 {
-    public $preview = [];
+    // public $preview = [];
 
     public function render()
     {
-        $this->preview['labels'] = [
-            [
-                'label' => 'Prévia',
-                'slug' => 'previa',
-                'arrow' => 'down-silver',
-                'align' => 'justify-center',
-            ],
-            [
-                'label' => 'Faturamento',
-                'slug' => 'faturamento',
-                'arrow' => 'down-silver',
-                'align' => 'justify-center'
-            ],
-            [
-                'label' => 'MP',
-                'slug' => 'mp',
-                'arrow' => 'down-silver'
-            ],
-            [
-                'label' => 'MO',
-                'slug' => 'mo',
-                'arrow' => 'down-silver'
-            ],
-            [
-                'label' => 'GD',
-                'slug' => 'gd',
-                'arrow' => 'down-silver'
-            ],
-            [
-                'label' => 'ROU',
-                'slug' => 'rou',
-                'arrow' => 'down-silver'
-            ]
-        ];
+        // $this->preview['labels'] = [
+        //     [
+        //         'label' => 'Prévia',
+        //         'slug' => 'previa',
+        //         'arrow' => 'down-silver',
+        //         'align' => 'justify-center',
+        //     ],
+        //     [
+        //         'label' => 'Faturamento',
+        //         'slug' => 'faturamento',
+        //         'arrow' => 'down-silver',
+        //         'align' => 'justify-center'
+        //     ],
+        //     [
+        //         'label' => 'MP',
+        //         'slug' => 'mp',
+        //         'arrow' => 'down-silver'
+        //     ],
+        //     [
+        //         'label' => 'MO',
+        //         'slug' => 'mo',
+        //         'arrow' => 'down-silver'
+        //     ],
+        //     [
+        //         'label' => 'GD',
+        //         'slug' => 'gd',
+        //         'arrow' => 'down-silver'
+        //     ],
+        //     [
+        //         'label' => 'ROU',
+        //         'slug' => 'rou',
+        //         'arrow' => 'down-silver'
+        //     ]
+        // ];
 
         // $this->preview['rows'] = [
         //     [
@@ -56,7 +56,7 @@ class DashboardIndex extends Component
         //     ]
         // ];
 
-        $this->preview['rows'] = [];
+        // $this->preview['rows'] = [];
 
         return view('livewire.dashboard.index');
     }

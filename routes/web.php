@@ -1,5 +1,6 @@
 <?php
 
+use App\Helpers\UserRole;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ProfileController;
@@ -60,14 +61,9 @@ Route::middleware('auth')->group(function () {
 			abort(response()->json('Unauthorized', 401));
 		}
 
-		if (auth()->user()->isSupervisor()) {
-			$req_cc = explode(";", auth()->user()->cc);
-		} else {
-			$req_cc = $request->input('cc');
-			$req_cc = explode(";", $req_cc);
-		}
+		$ccs = (new UserRole())->getCc();
 
-		if (sizeof($req_cc) == 0) {
+		if (sizeof($ccs) == 0) {
 			return response()->json([
 				"error" => true,
 			], 400);
@@ -77,7 +73,7 @@ Route::middleware('auth')->group(function () {
 
 		$tmp_res_orcamento = DB::connection('mysql_dump')
 			->table('ORCAMENTO')
-			->whereIn('CV1_CTTINI', $req_cc)
+			->whereIn('CV1_CTTINI', $ccs)
 			->get();
 
 		foreach ($tmp_res_orcamento as $orc) {
@@ -108,40 +104,6 @@ Route::middleware('auth')->group(function () {
 		}
 
 		return response()->json($tmp_data_orcamento, 200);
-	});
-
-	Route::get('/v1/faturamento', function (Request $request) {
-		if (!auth()->user()) {
-			abort(response()->json('Unauthorized', 401));
-		}
-
-		$req_cgc = $request->input('cgc');
-		$req_month_ref = $request->input('month_ref');
-		$req_cc = auth()->user()->cc;
-
-		$tmp_res_client = DB::connection('mysql_dump')
-			->table('CLIENTES')
-			->where('A1_CGC', $req_cgc)
-			->first();
-
-		if (!$tmp_res_client) {
-			return response()->json([
-				"error" => true,
-				"message" => "Not Found."
-			], 404);
-		}
-
-		$tmp_data_faturamento = [];
-
-		$tmp_res_faturamento = DB::connection('mysql_dump')
-			->table('FATURAMENTO')
-			->where("ZA3_CDPESS", $tmp_res_client->A1_CDGENIAL)
-			->get();
-
-		dd($tmp_res_faturamento);
-		// foreach ($tmp_res_faturamentos as $fat) {
-		// 	dd($fat);
-		// }
 	});
 
 	Route::get('/v1/reset', function (Request $request) {

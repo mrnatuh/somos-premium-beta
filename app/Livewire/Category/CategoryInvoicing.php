@@ -379,15 +379,15 @@ class CategoryInvoicing extends Component
 				if ($faturamento) {
 					$this->companies = unserialize($faturamento->option_value);
 					$this->lastOfMonth = $this->companies[0]['last_of_month'];
-					$this->edit = true;
+
+					if (!$this->realizadas) {
+						$this->edit = true;
+					} else {
+						$this->edit = false;
+					}
 				}
 			}
 		}
-
-		$this->dispatch('update-bar-total', [
-			'cc' => $cc,
-			'weekref' => $weekref
-		]);
 
 		return view('livewire.category.category-invoicing', [
 			'cc' => $cc,
@@ -395,7 +395,7 @@ class CategoryInvoicing extends Component
 			'month_ref' => $this->month_ref,
 			'companies' => $this->companies,
 			'lastOfMonth' => $this->lastOfMonth,
-			'realizadas_genial' => $this->realizadas_genial,
+			'realizadas_genial' => null,
 			'realizadas' => $this->realizadas,
 		]);
 	}

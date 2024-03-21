@@ -2,8 +2,10 @@
 
 namespace App\Livewire\Dashboard;
 
+use App\Helpers\UserRole;
 use App\Models\Preview;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\Attributes\On;
 
@@ -15,6 +17,7 @@ class DashboardBar extends Component
 	public $month_ref = null;
 	public $week_ref = null;
 	public $inside = false;
+	public $preview = null;
 
 	public $total = [
 		'faturamento' => 0,
@@ -27,38 +30,35 @@ class DashboardBar extends Component
 
 	public function getTotals()
 	{
-		$preview = null;
+		$ccs = (new UserRole())->getCc();
 
-		// logged user cc
-		if ($this->cc) {
-			// 	$preview = Preview::where([
-			// 		['cc', '=', $this->cc],
-			// 		['week_ref', '=', $this->week_ref],
-			// 	])->orderBy('updated_at', 'desc')
-			// 		->first();
-			// } else if ($this->cc) {
-			// 	$preview = Preview::where([
-			// 		['cc', '=', $this->cc],
-			// 		['month_ref', '=', $this->month_ref],
-			// 		['status', '=', 'validado'],
-			// 	])->orderBy('updated_at', 'desc')
-			// 		->first();
-			// 	// any one
-			// } else {
-			$preview = Preview::where([
-				['cc', '=', $this->cc],
-				['status', '=', 'validado'],
-			])->orderBy('updated_at', 'desc')
+		$sess = session('preview');
+	
+		// logged user ccs
+		$preview = null;
+		if ($sess) {
+			$preview = Preview::where('cc', $sess['cc'])
+				->where('week_ref', $sess['week_ref'])
+				->first();
+		} else {
+			$preview = Preview::where('status', 'validado')
+				->whereIn('cc', $ccs)
+				->orderBy('updated_at', 'desc')
 				->first();
 		}
-
+			
 		if ($preview) {
+			$this->cc = $preview->cc;
+			$this->month_ref = $preview->month_ref;
+			
 			$this->total['faturamento'] = $preview->invoicing;
 			$this->total['events'] = $preview->events;
 			$this->total['mp'] = $preview->mp;
 			$this->total['mo'] = $preview->mo;
 			$this->total['gd'] = $preview->gd;
 			$this->total['investimento'] = $preview->rou;
+
+			$this->preview = $preview;
 		} else {
 			$this->total['faturamento'] = 0;
 			$this->total['events'] = 0;
@@ -101,11 +101,9 @@ class DashboardBar extends Component
 
 	public function mount(Request $request)
 	{
-		// get cc from user or false (manager, admin, etc)
-		$this->cc = auth()->user()->cc ?? false;
-
 		// get current month
 		$req_month_ref = $request->input('month_ref');
+
 		if (!empty(trim($req_month_ref))) {
 			$split = explode("_", $req_month_ref);
 			if (isset($split[0]) && isset($split[1])) {
@@ -121,8 +119,10 @@ class DashboardBar extends Component
 	public function render()
 	{
 		// renderiza o gasto previsto
-		$this->dispatch('render-preview-month');
+		// $this->dispatch('render-preview-month');
 
-		return view('livewire.dashboard.dashboard-bar');
+		return view('livewire.dashboard.dashboard-bar', [
+			'preview' => $this->preview,
+		]);
 	}
 }

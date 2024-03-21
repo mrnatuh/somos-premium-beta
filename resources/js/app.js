@@ -26,6 +26,7 @@ if (location.href.indexOf('=mo') > -1) {
 
 function load_orcamento() {
 	if (
+		location.href.indexOf('/dashboard') > -1 || 
 		location.href.indexOf('/previa') > -1 ||
 		location.href.indexOf('/categoria') > -1 ||
 		location.href.indexOf('/realizado') > -1
@@ -34,19 +35,27 @@ function load_orcamento() {
 
 		var is_preview = location.href.indexOf('/previa') > -1;
 		var is_category = location.href.indexOf('/categoria') > -1;
-		var is_category = location.href.indexOf('/realizado') > -1;
+		var is_donepreview = location.href.indexOf('/realizado') > -1;
+		var is_dashboard = location.href.indexOf('/dashboard') > -1;
 
 		axios.get('/v1/orcamento').then(function (response) {
 			var json = response.data;
 			var groups_table = document.querySelectorAll('[data-table]');
 			var bar_total = document.querySelectorAll('[data-bar-total]');
-			var bar_arrow = document.querySelectorAll('[data-bar-arrow]')
+			var bar_arrow = document.querySelectorAll('[data-bar-arrow]');
 
 			groups_table.forEach(group => {
+				console.log(group);
+
 				try {
 					var data = JSON.parse(group.getAttribute('data-table'));
+
 					var filtered = json?.[data.cc]?.[data.month_ref]?.[data.group] ?? null;
+					
+					console.log(data, filtered);
+
 					var arrow = "";
+
 					if (filtered) {
 						if (data.group == '0001') {
 							if (data.total > filtered.total) {
@@ -70,8 +79,10 @@ function load_orcamento() {
 						}
 					}
 
-					if (is_preview && arrow) {
+					if ((is_preview || is_donepreview) && arrow) {
 						group.innerHTML = '<img src="/img/' + arrow + '.svg" />';
+					} else {
+						group.innerHTML = '';
 					}
 				} catch (e) {
 					console.log(e);
@@ -89,7 +100,7 @@ function load_orcamento() {
 
 						group.innerHTML = "(" + value + ")";
 					} else {
-						group.innerHTML = '';
+						group.innerHTML = '(R$ 0,00)';
 					}
 				} catch (e) {
 					console.log(e);
@@ -100,6 +111,9 @@ function load_orcamento() {
 				try {
 					var data = JSON.parse(group.getAttribute('data-bar-arrow'));
 					var filtered = json?.[data.cc]?.[data.month_ref]?.[data.group] ?? null;
+					
+					console.log(filtered);
+
 					var arrow = "";
 					if (filtered) {
 						if (data.group == '0001') {
@@ -364,3 +378,7 @@ Livewire.on('render-preview-month', () => {
 Livewire.on('render-bar', () => {
 	load_orcamento();
 })
+
+if (location.href.indexOf('/dashboard') > -1) {
+	load_orcamento();	
+}

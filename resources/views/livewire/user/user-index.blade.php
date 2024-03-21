@@ -6,7 +6,7 @@
                 <p class="text-gray-600">{{ $total }} {{ $total > 1 ? 'resultados encontrados' : 'resultado encontrado' }}</p>
             </div>
 
-            <div class="flex w-full relative max-w-[470px] gap-4">
+            {{-- <div class="flex w-full relative max-w-[470px] gap-4">
                 <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
                     <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M11.5291 19C15.9473 19 19.5291 15.4183 19.5291 11C19.5291 6.58172 15.9473 3 11.5291 3C7.11077 3 3.52905 6.58172 3.52905 11C3.52905 15.4183 7.11077 19 11.5291 19Z" stroke="#757D8A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -21,7 +21,7 @@
 
                     <x-status.loading />
                 </button>
-            </div>
+            </div> --}}
 
             <div class="flex">
                 <x-notification.icon />

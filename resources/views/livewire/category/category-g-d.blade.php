@@ -24,6 +24,7 @@
                         $columnIndex = $loop->index;
                     @endphp
                     <td>
+                        @if ($edit)
                         <input
                             type="{{ $row['type'] ?? 'text' }}"
                             value="{{ $row['value'] }}"
@@ -31,9 +32,15 @@
                             {{ isset($row['disabled']) ? 'disabled' : '' }}
                             wire:change.lazy="updateRow({{ $rowIndex }}, {{ $columnIndex }}, $event.target.value)"
                         />
+                        @else
+                        <div class="text-gray-400 text-center">
+                            {{ $row['value'] }}
+                        </div>
+                        @endif
                     </td>
                     @endforeach
-                              <td class="text-center p-3 w-[125px]">
+                    <td class="text-center p-3 w-[125px]">
+                    @if ($edit)
                         @if(isset($this->deleteItem[$rowIndex]) && $this->deleteItem[$rowIndex])
                             <button
                                 type="button"
@@ -57,12 +64,14 @@
                             <img src="/img/delete.svg" />
                         </button>
                         @endif
+                    @endif
                     </td>
                 </tr>
                 @endforeach
             </tbody>
         </table>
 
+        @if ($edit)
         <div>
             <button class="py-2.5 px-5 mr-2 mb-2 text-[16px] font-medium text-gray-900 focus:outline-none bg-white rounded-[10px] border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 relative" wire:click="increment">
                 Adicionar item
@@ -70,13 +79,14 @@
                 <x-status.loading />
             </button>
         </div>
+        @endif
     </div>
 
-		@if($edit)
-		<div class="fixed top-5 left-1/2 -translate-x-1/2 bg-gray-900 text-gray-50 p-2 rounded-xl z-50 transition-all duration-300 text-md shadow" wire:loading>
-			Salvando dados...
-		</div>
-		@endif
+    @if($edit)
+    <div class="fixed top-5 left-1/2 -translate-x-1/2 bg-gray-900 text-gray-50 p-2 rounded-xl z-50 transition-all duration-300 text-md shadow" wire:loading>
+        Salvando dados...
+    </div>
+    @endif
 
     <div class="h-20"></div>
 </div>

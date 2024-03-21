@@ -1,6 +1,8 @@
 <div class="flex flex-col mt-10">
+    @if ($edit)
     <livewire:search-client />
-
+    @endif
+    
     <div class="flex flex-col flex-shrink flex-grow mt-10 overflow-x-auto">
         @if (sizeof($events['rows']))
         <table class="w-full">
@@ -27,7 +29,7 @@
                         $columnIndex = $loop->index;
                     @endphp
                     <td class="p-3 w-[125px]">
-                        @if (isset($row['type']) && ($row['type'] == 'number' || $row['type'] == 'date' || $row['type'] == 'text'))
+                        @if ($edit && (isset($row['type']) && ($row['type'] == 'number' || $row['type'] == 'date' || $row['type'] == 'text')))
                         <input
                             type="{{ $row['type'] ?? 'text' }}"
                             value="{{ $row['value'] }}"
@@ -38,7 +40,7 @@
                             @endif
                         />
                         @else
-                        <div class="cursor-default flex w-full p-2">
+                        <div class="cursor-default flex items-center justify-center w-full p-2 text-gray-500">
                             {{ $row['value'] }}
                         </div>
                         @endif

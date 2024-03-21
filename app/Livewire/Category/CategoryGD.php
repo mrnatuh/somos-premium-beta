@@ -146,7 +146,7 @@ class CategoryGD extends Component
         ]);
     }
 
-    public function mount()
+    public function render()
     {
         $is_page_realizadas = (int) session('preview')['realizadas'];
 
@@ -168,13 +168,13 @@ class CategoryGD extends Component
                 if ($gd) {
                     $this->gd = unserialize($gd->option_value);
                 }
+
+                if ($is_page_realizadas) {
+                    $this->edit = false;
+                }
             }
         }
-    }
 
-
-    public function render()
-    {
         return view('livewire.category.category-g-d');
     }
 }
