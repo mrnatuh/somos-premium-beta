@@ -17,7 +17,7 @@
 
         @vite('resources/css/app.css')
     </head>
-    <body id="app" class="font-sans antialiased h-screen bg-white relative">
+    <body class="font-sans antialiased h-screen bg-white relative">
         <div id="app" class="w-full h-screen">
             <div class="flex w-full h-full">
                 <x-nav />

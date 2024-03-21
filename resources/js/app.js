@@ -12,7 +12,6 @@ const axios = Axios.create({
 	timeout: 60000,
 	withCredentials: true,
 	xsrfCookieName: 'XSRF-TOKEN',
-	// xsrfHeaderName: 'X-SRF-TOKEN',
 });
 
 // hack para funcionar na navegação ajax
