@@ -17,13 +17,15 @@ class PreviewEdit extends Controller
 		}
 
 		if ($cc) {
+			$realizadas = (int) $request->input('realizadas');
+			
 			session()->put('preview', [
 				'cc' => $cc,
 				'week_ref' => $request->input('weekref'),
-				'realizadas' => (int) $request->input('realizadas'),
+				'realizadas' => $realizadas,
 			]);
 
-			return redirect('/categoria?filter=faturamento');
+			return redirect()->to("/categoria?filter=faturamento");
 		}
 	}
 }

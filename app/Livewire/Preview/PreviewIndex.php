@@ -21,8 +21,6 @@ class PreviewIndex extends Component
 
 	public function render(Request $request)
 	{
-		session()->forget('preview');
-
 		if (!$this->month_ref) {
 			$req_month_ref = $request->input('month_ref');
 

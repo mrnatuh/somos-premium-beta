@@ -83,7 +83,7 @@ class CategoryInvoicing extends Component
 
 			$this->save();
 
-			$this->redirect('/categoria?filter=faturamento', navigate: true);
+			$this->redirect('/categoria?filter=faturamento');
 		}
 	}
 

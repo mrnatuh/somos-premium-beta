@@ -13,6 +13,7 @@ class DashboardBar extends Component
 {
 
 	public $active = '';
+	public $uri = '';
 	public $cc = null;
 	public $month_ref = null;
 	public $week_ref = null;
@@ -30,15 +31,16 @@ class DashboardBar extends Component
 
 	public function getTotals()
 	{
-		$sess = session('preview');
 		$ccs = (new UserRole())->getCc();
-	
+		
 		// logged user ccs
 		$preview = null;
-		if ($sess) {
+		if ($this->uri === "categoria") {
+			$sess = session('preview');
 			$preview = Preview::where('cc', $sess['cc'])
 				->where('week_ref', $sess['week_ref'])
 				->first();
+		
 		} else {
 			$preview = Preview::where('status', 'validado')
 				->whereIn('cc', $ccs)
@@ -100,6 +102,8 @@ class DashboardBar extends Component
 
 	public function mount(Request $request)
 	{
+		$this->uri = $request->path();
+
 		// get current month
 		$req_month_ref = $request->input('month_ref');
 
