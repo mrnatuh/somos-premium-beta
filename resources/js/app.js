@@ -378,6 +378,9 @@ Livewire.on('render-bar', () => {
 	load_orcamento();
 })
 
-if (location.href.indexOf('/dashboard') > -1) {
+if (
+	location.href.indexOf('/dashboard') > -1 || 
+	location.href.indexOf('/categoria') > -1
+) {
 	load_orcamento();	
 }
