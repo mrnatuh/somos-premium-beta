@@ -14,11 +14,7 @@ class CategoryIndex extends Component
 	public function render()
 	{
 		$sess = session('preview');
-
-		if (!$sess) {
-			return redirect()->to('/dashboard');
-		}
-
+		
 		$is_page_realizadas = $sess['realizadas'];
 
 		$preview = Preview::where([

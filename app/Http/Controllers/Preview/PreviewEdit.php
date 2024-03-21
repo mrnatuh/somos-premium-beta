@@ -23,7 +23,7 @@ class PreviewEdit extends Controller
 				'realizadas' => (int) $request->input('realizadas'),
 			]);
 
-			return redirect()->to('/categoria?filter=faturamento');
+			return redirect('/categoria?filter=faturamento');
 		}
 	}
 }

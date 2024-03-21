@@ -30,9 +30,8 @@ class DashboardBar extends Component
 
 	public function getTotals()
 	{
-		$ccs = (new UserRole())->getCc();
-
 		$sess = session('preview');
+		$ccs = (new UserRole())->getCc();
 	
 		// logged user ccs
 		$preview = null;

@@ -25,7 +25,7 @@
             @enderror
         </div>
 
-        <div class="mb-10">
+        <div class="mb-10 overflow-x-auto">
             @php
                 $tdWidth = 100;
                 $width = sizeof($parameters['labels']) * $tdWidth;
