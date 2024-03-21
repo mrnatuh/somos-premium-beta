@@ -10,7 +10,7 @@ class PreviewEdit extends Controller
 {
 	public function __invoke(Request $request)
 	{
-		$cc = Auth::user()->cc ?? false;
+		$cc = Auth::user()->cc ? Auth::user()->cc : false;
 
 		if (!$cc) {
 			$cc = $request->input('cc');

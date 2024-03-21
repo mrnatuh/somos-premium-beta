@@ -63,6 +63,8 @@ if ($log_level == '4' && $log_status == 'validado') {
     $action_approve_reprove = false;
     $action_approved = true;
 }
+
+print_r(session('preview'));
 @endphp
 
 <div class="flex flex-col w-full h-full p-8">

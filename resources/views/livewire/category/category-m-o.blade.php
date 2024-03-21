@@ -17,13 +17,13 @@
                 class="flex w-[80px] justify-center text-sm bg-white rounded-lg border py-2.5 text-gray-700 hover:bg-gray-50 transition-all duration-300">Prévias</a> --}}
         </div>
     @else
-    <category-mo></category-mo>
+        <category-mo></category-mo>
 
-    <div class="bg-white/50 w-full flex items-center justify-end gap-4 position fixed px-10 py-5 bottom-0 right-0">
-        <textarea id="mo_json" name="mo_json" class="hidden">{{ json_encode($mo) }}</textarea>
-    </div>
+        <div class="bg-white/50 w-full flex items-center justify-end gap-4 position fixed px-10 py-5 bottom-0 right-0">
+            <textarea id="mo_json" name="mo_json" class="hidden">{{ json_encode($mo) }}</textarea>
+        </div>
 
-    <div class="h-20"></div>
+        <div class="h-20"></div>
     @endif
 
 		@if($edit)
