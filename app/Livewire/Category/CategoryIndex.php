@@ -13,7 +13,12 @@ class CategoryIndex extends Component
 
 	public function render()
 	{
-		$is_page_realizadas = session('preview')['realizadas'] ? 1 : 0;
+		$sess = session('preview');
+		$is_page_realizadas = 0;
+
+		if ($sess && isset($sess['realizadas'])) {
+			$is_page_realizadas = $sess['realizadas'];
+		}
 
 		$preview = Preview::where([
 			'cc' => session('preview')['cc'],
