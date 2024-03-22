@@ -14,12 +14,6 @@
                 @foreach($companies as $company)
                 @php
                     $id = $company['id'];
-                    
-                    $_genial = null;
-
-                    if ($realizadas && $realizadas_genial) {
-                        $_genial = $realizadas_genial[$company['gen']];
-                    }
                 @endphp
 
                 <div class="border-r flex flex-shrink flex-grow text-sm font-normal text-[#b1b1b1] w-[{{ ((int) $company['colspan'] * 125) . 'px' }}] overflow-hidden relative p-4 m-0">
@@ -167,15 +161,7 @@
     
                             <tr class="bg-gray-100">
                                 @if(sizeof($company['prices']))
-                                    @foreach($company['prices'] as $price)
-                                    @php
-                                        $_selected_genial_price = null;
-    
-                                        if ($realizadas && $_genial) {
-                                            $_selected_genial_price = $price['gen'];
-                                        }
-                                    @endphp
-    
+                                    @foreach($company['prices'] as $price)   
                                     <th class="p-3 w-[125px] h-[50px] border text-gray-400">
                                         {{ number_format($price['value'], 2, ',', '.') }}
                                     </th>
@@ -201,21 +187,6 @@
                                 @foreach($rows as $row)
                                 @php
                                     $qtyIndex = $loop->index;
-    
-                                    $_genial_columns = null;
-                                    $_key_genial = null;
-                                    $_key_genial_value = '';
-    
-                                    if ($realizadas && $_genial) {
-                                        $_genial_columns = $_genial[$_selected_genial_price];
-                                        
-                                        $_day_genial = $rowIndex + 1;
-                                        $_key_genial = $month_ref . '-' . ($_day_genial > 9 ? $_day_genial : '0' . $_day_genial);
-    
-                                        if (isset($_genial_columns[$_key_genial])) {
-                                            $_key_genial_value = $_genial_columns[$_key_genial];
-                                        }
-                                    } 
                                 @endphp
     
                                 <td class="w-[125px] h-[50px] border overflow-hidden">
@@ -225,9 +196,11 @@
                                             {{ $row['value'] }}
     
                                             @if ($realizadas && $row['name'] != 'OUTRO')
-                                            <span class="text-blue-400">
-                                                /{{ $_key_genial_value ? $_key_genial_value : '0' }}
-                                            </span> 
+                                                @if (isset($row['compare']))
+                                                    <span class="text-blue-400 ml-1">
+                                                    de {{ $row['compare']['QTD'] }}
+                                                    </span> 
+                                                @endif
                                             @endif
                                         </span>
                                         @else

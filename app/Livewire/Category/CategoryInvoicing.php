@@ -380,6 +380,92 @@ class CategoryInvoicing extends Component
 					$this->companies = unserialize($faturamento->option_value);
 					$this->lastOfMonth = $this->companies[0]['last_of_month'];
 
+					// acha os ids das refeições possiveis para o cliente
+					$_prices_ids = [];
+					$_prices_ids_serv = [];
+					$_cgcs = [];
+					$_cgcs_a1_genial = [];
+
+					foreach($this->companies as $c) {
+						$_cgcs[$c['id']] = [];
+
+						foreach($c['prices_options'] as $p) {
+							$_prices_ids[$p['id']] = [];
+							$_prices_ids_serv[$p['id']] = '';
+						}
+					}
+
+					$tmp_clients =  DB::connection('mysql_dump')
+						->table('CLIENTES')
+						->whereIn('A1_CGC', array_keys($_cgcs))
+						->get();
+
+					foreach($tmp_clients as $c) {
+						$_cgcs[trim($c->A1_CGC)] = [
+							"A1_TABELA" => trim($c->A1_TABELA),
+							"A1_CDGENIAL" => trim($c->A1_CDGENIAL),
+						];
+
+						$_cgcs_a1_genial[trim($c->A1_CDGENIAL)] = '';
+					}
+
+					// acha todos IDS de produto
+					$tmp_produtos =  DB::connection('mysql_dump')
+						->table('PRODUTOS')
+						->whereIn('B1_COD', array_keys($_prices_ids_serv))
+						->get();
+
+					foreach($tmp_produtos as $p) {
+						$cod = trim($p->B1_COD);
+						$_prices_ids_serv[$cod] = trim($p->B1_XCDGEN);
+					}
+
+					// acha todos faturamentos para os produtos
+					$tmp_faturamento =  DB::connection('mysql_dump')
+						->table('FATURAMENTO')
+						->whereIn('ZA3_CDPESS', array_keys($_cgcs_a1_genial))
+						->whereIn('ZA3_CDSERV', array_values($_prices_ids_serv))
+						->get();
+		
+
+					$_serv_ids_price = array_flip($_prices_ids_serv);
+
+					$_dts_faturamento = [];
+					foreach($tmp_faturamento as $fat) {
+						$_dt_fat = trim($fat->ZA3_DTCARP);
+						$_serv = trim($fat->ZA3_CDSERV);
+						$_price = $_serv_ids_price[$_serv];
+
+						if (!isset($_dts_faturamento[$_price])) {
+							$_dts_faturamento[$_price] = [];
+						}
+
+						if (!isset($_dts_faturamento[$_price][$_dt_fat])) {
+							$_dts_faturamento[$_price][$_dt_fat] = [];
+						}
+
+						$_dts_faturamento[$_price][$_dt_fat] = [
+							"DT" => $_dt_fat,
+							"PRICE" => $_serv_ids_price[$_serv],
+							"SERV" => $_serv,
+							"QTD" => (int) trim($fat->ZA3_QUANTF),
+						];
+					}
+
+					foreach($this->companies as $k_c => $c) {
+						foreach($c['rows'] as $k_c_r => $r) {
+							$_d_r = $k_c_r + 1;
+							$_dt_r = Carbon::parse("{$_year}-{$_month}-" . ($_d_r < 10 ? '0'. $_d_r : $_d_r))->format("Y-m-d");
+							
+							foreach($r as $k_c_r_s => $r_s) {
+								if (isset($r_s['id'])) {
+									$_f = $_dts_faturamento[$r_s['id']][$_dt_r] ?? null;
+									$this->companies[$k_c]['rows'][$k_c_r][$k_c_r_s]['compare'] = $_f;
+								}
+							}
+						}
+					}
+
 					if (!$this->realizadas) {
 						$this->edit = true;
 					} else {
@@ -395,7 +481,6 @@ class CategoryInvoicing extends Component
 			'month_ref' => $this->month_ref,
 			'companies' => $this->companies,
 			'lastOfMonth' => $this->lastOfMonth,
-			'realizadas_genial' => null,
 			'realizadas' => $this->realizadas,
 		]);
 	}
