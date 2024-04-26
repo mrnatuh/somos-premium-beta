@@ -91,6 +91,8 @@ class CategoryInvestimento extends Component
         $newItem[2]['value'] = date('Y-m-d');
 
         array_push($this->investimento['rows'], $newItem);
+
+        $this->save();
     }
 
     public function getTotal()
