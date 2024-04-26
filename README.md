@@ -7,6 +7,35 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+## Para rodar o projeto
+
+A) Rodar o projeto local (base de dados na Railway):
+
+Javascript e Layout:
+
+1) Para desenvolver (na pasta do projeto):
+	npm i
+	npm run dev
+
+2) ou para rodar igual prod:
+	npm run build
+
+
+Projeto Laravel (backend):
+
+1) Em outro prompt de comando (na pasta do projeto):
+	php artisan server
+
+
+B) Para rodar laravel com outra database (se fizer isso com env da railway ou em outro env vai zerar tudo):
+
+1) Editar o .env as configuraçõs do DB.
+
+2) Na pasta do Projeto:
+	php artisan migrate:fresh --seed (vai subir um banco novo)
+	
+	e voltar para passo A.
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
