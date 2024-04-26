@@ -148,10 +148,10 @@ class UserEdit extends Component
         foreach ($tmp_ids as $id) {
             if ($id->user_id == $this->user->id) {
                 array_push($parent_ids, $id->parent_id);
-            }
 
-            if (!isset($this->not_links[$id->parent_id])) {
-                array_push($this->not_links, $id->parent_id);
+                if (!isset($this->not_links[$id->parent_id])) {
+                    array_push($this->not_links, $id->parent_id);
+                }
             }
         }
 
