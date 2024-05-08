@@ -127,6 +127,7 @@
                                     $qtyIndex = $loop->index;
                                 @endphp
                                 <td class="border-b w-[125px] leading-normal">
+                                    @if ($edit)
                                     <input
                                         type="text"
                                         value="{{ $row['value'] }}"
@@ -135,6 +136,11 @@
                                         x-mask="99:99:99"
                                         placeholder="99:99:99"
                                     />
+                                    @else
+                                    <div class="cursor-default flex items-center justify-center w-full p-3 text-gray-500">
+                                        {{ $row['value'] }}
+                                    </div>
+                                    @endif
                                 </td>
                                 @endforeach
                             </tr>

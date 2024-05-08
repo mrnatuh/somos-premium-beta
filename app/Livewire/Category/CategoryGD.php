@@ -48,6 +48,7 @@ class CategoryGD extends Component
     ];
 
     public $edit = true;
+    public $wait = 0;
 
     public function deleteRowItem($rowIndex)
     {
@@ -173,6 +174,10 @@ class CategoryGD extends Component
                     $this->edit = false;
                 }
             }
+        }
+
+        if ($this->wait) {
+            $this->edit = false;
         }
 
         return view('livewire.category.category-g-d');

@@ -370,13 +370,15 @@ document.addEventListener('livewire:initialized', function () {
 	init();
 });
 
-Livewire.on('render-preview-month', () => {
-	load_orcamento();
-});
+if (window.Livewire) {
+	Livewire.on('render-preview-month', () => {
+		load_orcamento();
+	});
 
-Livewire.on('render-bar', () => {
-	load_orcamento();
-})
+	Livewire.on('render-bar', () => {
+		load_orcamento();
+	});
+}
 
 if (
 	location.href.indexOf('/dashboard') > -1 || 

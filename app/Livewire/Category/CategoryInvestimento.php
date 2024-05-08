@@ -12,6 +12,7 @@ class CategoryInvestimento extends Component
     public $deleteItem = [];
 
     public $edit = true;
+    public $wait = 0;
 
     public $investimento = [
         'labels' => [
@@ -186,6 +187,10 @@ class CategoryInvestimento extends Component
                     $this->edit = false;
                 }
             }
+        }
+
+        if ($this->wait) {
+            $this->edit = false;
         }
 
         return view('livewire.category.category-investimento');

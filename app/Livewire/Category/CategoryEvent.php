@@ -16,6 +16,7 @@ class CategoryEvent extends Component
     public $deleteItem = [];
 
     public $edit = true;
+    public $wait = 0;
 
     public $events = [
         'add' => true,
@@ -204,6 +205,12 @@ class CategoryEvent extends Component
                     $this->edit = false;
                 }
             }
+
+        }
+
+        
+        if ($this->wait) {
+            $this->edit = false;
         }
 
         return view('livewire.category.category-event');

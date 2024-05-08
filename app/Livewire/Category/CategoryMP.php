@@ -10,6 +10,7 @@ use Livewire\Component;
 class CategoryMP extends Component
 {
     public $edit = true;
+    public $wait = 0;
 
     public $deleteItem = [];
 
@@ -182,6 +183,10 @@ class CategoryMP extends Component
 
     public function render()
     {
+        if ($this->wait) {
+            $this->edit = false;
+        }
+
         return view('livewire.category.category-m-p');
     }
 }

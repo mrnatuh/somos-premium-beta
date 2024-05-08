@@ -12,6 +12,7 @@ use Livewire\Component;
 class CategoryHE extends Component
 {
     public $edit = false;
+    public $wait = 0;
 
     public int $lastOfMonth;
 
@@ -610,6 +611,11 @@ class CategoryHE extends Component
 
     public function render()
     {
+
+        if ($this->wait) {
+            $this->edit = false;
+        }
+        
         return view('livewire.category.category-h-e');
     }
 }

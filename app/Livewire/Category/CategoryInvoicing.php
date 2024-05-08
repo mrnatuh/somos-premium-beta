@@ -23,6 +23,7 @@ class CategoryInvoicing extends Component
 	public $realizadas = "0";
 	public $month_ref = null;
 	public $realizadas_genial = null;
+	public $wait = 0;
 
 	public function updateQty($companyIndex, $rowIndex, $qtyIndex, $value)
 	{
@@ -473,6 +474,10 @@ class CategoryInvoicing extends Component
 					}
 				}
 			}
+		}
+
+		if ($this->wait) {
+			$this->edit = false;
 		}
 
 		return view('livewire.category.category-invoicing', [

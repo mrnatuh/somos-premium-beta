@@ -209,6 +209,10 @@ class CategoryRest extends Component
 
     public function render()
     {
+        if ($this->wait) {
+            $this->edit = false;
+        }
+        
         return view('livewire.category.category-rest');
     }
 }

@@ -16,6 +16,7 @@ use Livewire\Component;
 class CategoryMO extends Component
 {
     public $edit = true;
+    public $wait = 0;
 
     public int $lastOfMonth;
 
@@ -187,6 +188,10 @@ class CategoryMO extends Component
 
     public function render()
     {
+        if ($this->wait) {
+            $this->edit = false;
+        }
+
         return view('livewire.category.category-m-o', [
             'mo' => [
                 'cc' => $this->cc,
@@ -196,6 +201,7 @@ class CategoryMO extends Component
                 'parameters' => $this->parameters,
                 'employees' => $this->employees,
                 'he' => $this->arr_he,
+                'edit' => $this->edit,
             ]
         ]);
     }

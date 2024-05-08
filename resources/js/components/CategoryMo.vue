@@ -189,21 +189,39 @@ export default {
     }
 }
 
+window.toggleLoading = function(show = true)
+{
+    var el = document.querySelector("#live-loading");
+
+    if (show) {
+        el.classList.remove("hidden");
+        el.classList.add("fixed");
+    } else {
+        el.classList.remove("fixed");
+        el.classList.add("hidden");
+    }
+}
+
 window.autoSave = function()
 {
     var data = document.querySelector('#mo_json').value;
     var json = JSON.parse(data);
 
+    toggleLoading();
+
     axios.post('/categoria/mo', {
         mo_json: data,
     }).then(function(response) {
-
         console.log(response.data);
 
         window.Livewire.dispatch('update-bar-total', {
             cc: json.cc,
             weekref: json.weekref,
         });
+
+        window.setTimeout(function(){
+            toggleLoading(false);
+        }, 1000);
     }).catch(function(error) {
         console.log(error);
     });
@@ -300,7 +318,7 @@ window.autoSave = function()
                 <tbody>
                     <tr>
                         <td class="text-center w-[100px]">
-                            <input class="flex items-center justify-center text-center w-[100px] text-[16px] text-[#404D61] border-0" type="number" min="1" max="31" v-model="dias_seg_sab" @change="handleTotalDias" />
+                            <input class="flex items-center justify-center text-center w-[100px] text-[16px] text-[#404D61] border-0" type="number" min="1" max="31" v-model="dias_seg_sab" @change="handleTotalDias" :disabled="!edit" />
                         </td>
                         <td class="text-center w-[100px]">
                             <input
@@ -310,6 +328,7 @@ window.autoSave = function()
                                 max="31"
                                 v-model="dias_dom_fer"
                                 @change="handleTotalDias"
+                                :disabled="!edit"
                             />
                         </td>
                         <td class="text-center w-[100px] text-[16px] text-[#404D61]">
@@ -521,17 +540,18 @@ window.autoSave = function()
                                 max="31"
                                 v-model="employees[index].dias_trabalhados"
                                 @change="handleDiasTrabalhados(item, true)"
+                                :disabled="!edit"
                             />
                         </td>
                         <td class="text-[14px] text-[#404D61] text-center">
-                            <select class="border-0" v-model="item.option_cesta_basica" @change="handleDiasTrabalhados(item, true)">
+                            <select class="border-0" v-model="item.option_cesta_basica" @change="handleDiasTrabalhados(item, true)" :disabled="!edit">
                                 <option value="0" :selected="!item.option_cesta_basica">Não</option>
                                 <option value="1" :selected="item.option_cesta_basica">Sim</option>
                             </select>
 
                         </td>
                         <td class="text-[14px] text-[#404D61] text-center">
-                            <select class="border-0" v-model="item.option_assistencia_medica" @change="handleDiasTrabalhados(item, true)">
+                            <select class="border-0" v-model="item.option_assistencia_medica" @change="handleDiasTrabalhados(item, true)" :disabled="!edit">
                                 <option value="0" :selected="!item.option_assistencia_medica">Não</option>
                                 <option value="1" :selected="item.option_assistencia_medica">Sim</option>
                             </select>
@@ -540,19 +560,19 @@ window.autoSave = function()
                             {{ item.qtde_dependentes }}
                         </td>
                         <td class="text-[14px] text-[#404D61] text-center">
-                            <select class="border-0" v-model="item.option_assistencia_odontologica" @change="handleDiasTrabalhados(item, true)">
+                            <select class="border-0" v-model="item.option_assistencia_odontologica" @change="handleDiasTrabalhados(item, true)" :disabled="!edit">
                                 <option value="0" :selected="!item.option_assistencia_odontologica">Não</option>
                                 <option value="1" :selected="item.option_assistencia_odontologica">Sim</option>
                             </select>
                         </td>
                         <td class="text-[14px] text-[#404D61] text-center">
-                            <select class="border-0" v-model="item.option_contribuicao_sindical" @change="handleDiasTrabalhados(item, true)">
+                            <select class="border-0" v-model="item.option_contribuicao_sindical" @change="handleDiasTrabalhados(item, true)" :disabled="!edit">
                                 <option value="0" :selected="!item.option_contribuicao_sindical">Não</option>
                                 <option value="1" :selected="item.option_contribuicao_sindical">Sim</option>
                             </select>
                         </td>
                         <td class="text-[14px] text-[#404D61] text-center">
-                            <select class="border-0" v-model="item.option_vale_transporte" @change="handleDiasTrabalhados(item, true)">
+                            <select class="border-0" v-model="item.option_vale_transporte" @change="handleDiasTrabalhados(item, true)" :disabled="!edit">
                                 <option value="0" :selected="!item.option_vale_transporte">Não</option>
                                 <option value="1" :selected="item.option_vale_transporte">Sim</option>
                             </select>
@@ -612,6 +632,5 @@ window.autoSave = function()
                 </tbody>
             </table>
         </div>
-
     </div>
 </template>

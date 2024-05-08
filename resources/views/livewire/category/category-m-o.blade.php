@@ -26,11 +26,9 @@
         <div class="h-20"></div>
     @endif
 
-		@if($edit)
-		<div class="fixed top-5 left-1/2 -translate-x-1/2 bg-gray-900 text-gray-50 p-2 rounded-xl z-50 transition-all duration-300 text-md shadow" wire:loading>
-			Salvando dados...
-		</div>
-		@endif
+    <div id="live-loading" class="hidden top-5 left-1/2 -translate-x-1/2 bg-gray-900 text-gray-50 p-2 rounded-xl z-50 transition-all duration-300 text-md shadow">
+        Salvando dados...
+    </div>
 
     <div class="h-20"></div>
 </div>

@@ -88,39 +88,39 @@ if ($log_level == '4' && $log_status == 'validado') {
 
     <div class="flex flex-col w-full h-full relative">
         @if($active === 'faturamento')
-            <livewire:category.category-invoicing />
+            <livewire:category.category-invoicing :wait="$action_wait" />
         @endif
 
         @if($active === 'eventos')
-        <livewire:category.category-event />
+        <livewire:category.category-event :wait="$action_wait" />
         @endif
 
         @if($active === 'mp')
-        <livewire:category.category-m-p />
+        <livewire:category.category-m-p :wait="$action_wait" />
         @endif
 
         @if($active === 'mo')
-        <livewire:category.category-m-o />
+        <livewire:category.category-m-o :wait="$action_wait" />
         @endif
 
         @if($active === 'he')
-        <livewire:category.category-h-e />
+        <livewire:category.category-h-e :wait="$action_wait" />
         @endif
 
         @if($active === 'gd')
-        <livewire:category.category-g-d />
+        <livewire:category.category-g-d :wait="$action_wait" />
         @endif
 
         @if($active === 'investimento')
-        <livewire:category.category-investimento />
+        <livewire:category.category-investimento :wait="$action_wait" />
         @endif
 
         @if($is_page_realizadas && $active == 'sobra-limpa')
-        <livewire:category.category-left />
+        <livewire:category.category-left :wait="$action_wait" />
         @endif
 
         @if($is_page_realizadas && $active == 'resto-ingesto')
-        <livewire:category.category-rest />
+        <livewire:category.category-rest :wait="$action_wait" />
         @endif
 
         {{-- @if ($action_approved && !$is_page_realizadas)
