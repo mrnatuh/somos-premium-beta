@@ -28,6 +28,7 @@ export default {
         this.weekref = mo.weekref;
         this.dias_seg_sab = mo.dias_seg_sab;
         this.dias_dom_fer = mo.dias_dom_fer;
+        this.edit = mo.edit;
 
         // console.log(this.params);
         this.employees.forEach(function(item) {

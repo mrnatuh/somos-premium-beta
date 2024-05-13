@@ -612,8 +612,14 @@ class CategoryHE extends Component
     public function render()
     {
 
-        if ($this->wait) {
+        $is_page_realizadas = (int) session('preview')['realizadas'];
+
+        if ($is_page_realizadas) {
             $this->edit = false;
+        } else if ($this->wait) {
+            $this->edit = false;
+        } else {
+            $this->edit = true;
         }
         
         return view('livewire.category.category-h-e');
