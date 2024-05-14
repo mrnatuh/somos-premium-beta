@@ -11,6 +11,7 @@ use Livewire\Attributes\On;
 class CategoryLeft extends Component
 {
     public $edit = true;
+    public $wait = 0;
 
     public $results = [];
 

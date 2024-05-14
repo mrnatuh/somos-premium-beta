@@ -6,7 +6,7 @@
                     <table class="table w-[100px] border-r">
                         <thead>
                             <tr>
-                                <th class="h-[158px]">
+                                <th class="h-[157px]">
                                     <div class=" flex flex-shrink-0 flex-grow-0 text-sm font-normal text-[#b1b1b1] p-3 w-[100px]">
                                         Dia
                                     </div>
@@ -15,11 +15,9 @@
                         </thead>
                         <tbody>
                             @for($day = 1; $day <= $lastOfMonth; $day++)
-                            <tr class="{{ $day % 2 == 0 ? 'bg-gray-100' : '' }}">
-                                <td class="border-b w-[100px] leading-normal">
-                                    <span class="px-3 text-sm">
-                                        {{ $day < 10  ? (int) '0' . $day : $day }}
-                                    </span>
+                            <tr class="{{ $day % 2 == 0 ? 'bg-gray-100' : '' }} h-[54px]">
+                                <td class="border-0 h-[54px] w-[100px]">
+                                    <div class="px-3 ">{{ $day < 10  ? (int) '0' . $day : $day }}</div>
                                 </td>
                             </tr>
                             @endfor
@@ -35,7 +33,7 @@
 
                 <div class="w-[{{ ((int) $employe['colspan'] * 125) . 'px' }}] flex flex-grow-0 flex-shrink-0">
                     <table class="w-full border-r">
-                        <thead>
+                        <thead class="h-[157px]">
                             <tr>
                                 <th colspan="{{ $employe['colspan'] }}">
                                     <span class="flex w-full  justify-center text-[16px] text-[#404D61]  leading-normal text-center overflow-hidden">
@@ -121,12 +119,12 @@
                             @php
                                 $rowIndex = $loop->index;
                             @endphp
-                            <tr class="{{ (int) $loop->index % 2 == 0 ? '' : 'bg-gray-100' }}">
+                            <tr class="{{ (int) $loop->index % 2 == 0 ? '' : 'bg-gray-100' }} h-[54px]">
                                 @foreach($rows as $row)
                                 @php
                                     $qtyIndex = $loop->index;
                                 @endphp
-                                <td class="border-b w-[125px] leading-normal">
+                                <td class="border-0 w-[125px] leading-normal">
                                     @if ($edit)
                                     <input
                                         type="text"
