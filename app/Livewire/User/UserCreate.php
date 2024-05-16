@@ -60,7 +60,7 @@ class UserCreate extends Component
             'cc' => $this->cc,
         ]);
 
-        return redirect()->to('/profiles');
+        return redirect('/profiles')->with('success', 'Criado com sucesso!');
     }
 
     public function render()

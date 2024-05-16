@@ -50,6 +50,10 @@
 
                 <x-primary-button type="button" class="flex w-[20%]" wire:click="generatePassword">Gerar senha</x-primary-button>
             </div>
+
+            @error('password')
+                <span class="text-red-500 text-xs mt-2">{{ $message }}</span>
+            @enderror
         </div>
 
         <div class="mt-6">
@@ -57,6 +61,7 @@
 
             <div>
                 <select id="access" wire:model="access" class="bg-gray-50 border border-gray-300 flex text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 flex-shrink flex-grow w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <option value="" selected></option>
                     <option value="admin">Admin</option>
                     <option value="manager">Gestor</option>
                     <option value="coordinator">Coordenador</option>
@@ -65,7 +70,7 @@
                 </select>
             </div>
 
-            @error('regra')
+            @error('access')
                 <span class="text-red-500 text-xs mt-2">{{ $message }}</span>
             @enderror
         </div>
