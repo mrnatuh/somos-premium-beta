@@ -1,8 +1,8 @@
 <div>
     <div class="flex mt-10">
-        <div class="flex flex-col">
+        <div class="block w-full">
             <div class="flex flex-nowrap">
-                <div class="flex flex-shrink-0 flex-grow-0">
+                <div class="flex">
                     <table class="table w-[100px] border-r">
                         <thead>
                             <tr>
@@ -17,7 +17,7 @@
                             @for($day = 1; $day <= $lastOfMonth; $day++)
                             <tr class="{{ $day % 2 == 0 ? 'bg-gray-100' : '' }} h-[54px]">
                                 <td class="border-0 h-[54px] w-[100px]">
-                                    <div class="px-3 ">{{ $day < 10  ? (int) '0' . $day : $day }}</div>
+                                    <div class="px-3 leading-none">{{ $day < 10  ? (int) '0' . $day : $day }}</div>
                                 </td>
                             </tr>
                             @endfor
@@ -25,7 +25,7 @@
                     </table>
                 </div>
 
-                <div class="flex overflow-x-auto w-[60vw]">
+                <div class="flex overflow-x-scroll w-[60vw]">
                 @foreach($employees as $employe)
                 @php
                     $employeIndex = $loop->index;
@@ -152,11 +152,11 @@
         </div>
     </div>
 
-		@if($edit)
-		<div class="fixed top-5 left-1/2 -translate-x-1/2 bg-gray-900 text-gray-50 p-2 rounded-xl z-50 transition-all duration-300 text-md shadow" wire:loading>
-			Salvando dados...
-		</div>
-		@endif
+    @if($edit)
+    <div class="fixed top-5 left-1/2 -translate-x-1/2 bg-gray-900 text-gray-50 p-2 rounded-xl z-50 transition-all duration-300 text-md shadow" wire:loading>
+        Salvando dados...
+    </div>
+    @endif
 
-    <div class="h-20"></div>
+    <div class="block w-full h-[300px]"></div>
 </div>
