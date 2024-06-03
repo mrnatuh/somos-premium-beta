@@ -129,7 +129,7 @@
                                     <input
                                         type="text"
                                         value="{{ $row['value'] }}"
-                                        wire:change.lazy="updateQty({{ $employeIndex }}, {{ $rowIndex }}, {{ $qtyIndex }}, $event.target.value)"
+                                        wire:change="updateQty({{ $employeIndex }}, {{ $rowIndex }}, {{ $qtyIndex }}, $event.target.value)"
                                         class="flex text-center justify-center border-0 bg-transparent p-3 w-full disabled:text-gray-400 text-sm placeholder:text-gray-300 leading-normal"
                                         x-mask="99:99:99"
                                         placeholder="99:99:99"

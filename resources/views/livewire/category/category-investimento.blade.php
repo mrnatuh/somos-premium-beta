@@ -31,7 +31,7 @@
                             class="flex text-center justify-center border-0 bg-transparent py-2 w-full"
                             {{ isset($row['disabled']) ? 'disabled' : '' }}
                             @if(isset($row['name']))
-                            wire:change.lazy="updateRow({{ $rowIndex }}, {{ $columnIndex }}, $event.target.value)"
+                            wire:change="updateRow({{ $rowIndex }}, {{ $columnIndex }}, $event.target.value)"
                             @endif
                         />
                         @else
@@ -46,7 +46,7 @@
                         @if(isset($this->deleteItem[$rowIndex]) && $this->deleteItem[$rowIndex])
                             <button
                                 type="button"
-                                wire:click.lazy="confirmDeleteItem({{ $rowIndex }})"
+                                wire:click="confirmDeleteItem({{ $rowIndex }})"
                                 class="text-green-500 p-1"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current"><path d="m10 15.586-3.293-3.293-1.414 1.414L10 18.414l9.707-9.707-1.414-1.414z"></path></svg>
@@ -54,14 +54,14 @@
 
                             <button
                                 type="button"
-                                wire:click.lazy="cancelDeleteItem({{ $rowIndex }})"
+                                wire:click="cancelDeleteItem({{ $rowIndex }})"
                                 class="text-red-500 p-1"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current"><path d="M9.172 16.242 12 13.414l2.828 2.828 1.414-1.414L13.414 12l2.828-2.828-1.414-1.414L12 10.586 9.172 7.758 7.758 9.172 10.586 12l-2.828 2.828z"></path><path d="M12 22c5.514 0 10-4.486 10-10S17.514 2 12 2 2 6.486 2 12s4.486 10 10 10zm0-18c4.411 0 8 3.589 8 8s-3.589 8-8 8-8-3.589-8-8 3.589-8 8-8z"></path></svg>
                         @else
                         <button
                             type="button"
-                            wire:click.lazy="deleteRowItem({{ $rowIndex }})"
+                            wire:click="deleteRowItem({{ $rowIndex }})"
                         >
                             <img src="/img/delete.svg" />
                         </button>

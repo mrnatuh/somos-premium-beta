@@ -27,7 +27,7 @@
                             @if(isset($deleteItem[$id]) && $deleteItem[$id])
                                     <button
                                             type="button"
-                                            wire:click.lazy="confirmDeleteItem('{{ $id }}')"
+                                            wire:click="confirmDeleteItem('{{ $id }}')"
                                             class="text-green-500 p-1 bg-white opacity-75 hover:opacity-100 hover:z-40 transition-all py-1 px-2.5"
                                     >
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current"><path d="m10 15.586-3.293-3.293-1.414 1.414L10 18.414l9.707-9.707-1.414-1.414z"></path></svg>
@@ -35,14 +35,14 @@
 
                                     <button
                                             type="button"
-                                            wire:click.lazy="cancelDeleteItem('{{ $id }}')"
+                                            wire:click="cancelDeleteItem('{{ $id }}')"
                                             class="text-red-500 p-1 bg-white opacity-75 hover:opacity-100 hover:z-40 transition-all py-1 px-2.5"
                                     >
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current"><path d="M9.172 16.242 12 13.414l2.828 2.828 1.414-1.414L13.414 12l2.828-2.828-1.414-1.414L12 10.586 9.172 7.758 7.758 9.172 10.586 12l-2.828 2.828z"></path><path d="M12 22c5.514 0 10-4.486 10-10S17.514 2 12 2 2 6.486 2 12s4.486 10 10 10zm0-18c4.411 0 8 3.589 8 8s-3.589 8-8 8-8-3.589-8-8 3.589-8 8-8z"></path></svg>
                             @else
                             <button
                                     type="button"
-                                    wire:click.lazy="deleteRowItem('{{ $company['id'] }}')"
+                                    wire:click="deleteRowItem('{{ $company['id'] }}')"
                                     class="bg-white opacity-75 hover:opacity-100 hover:z-40 transition-all p-1"
                             >
                                 <img src="/img/delete.svg" />
@@ -115,7 +115,7 @@
                                                 @if(isset($deleteCompanyColumn[$companyIndex][$labelIndex]) && $deleteCompanyColumn[$companyIndex][$labelIndex])
                                                     <button
                                                         type="button"
-                                                        wire:click.lazy="confirmDeleteColumnItem('{{ $companyIndex }}', '{{ $labelIndex }}')"
+                                                        wire:click="confirmDeleteColumnItem('{{ $companyIndex }}', '{{ $labelIndex }}')"
                                                         class="text-green-500 p-1 bg-white opacity-75 hover:opacity-100 hover:z-40 transition-all py-1 px-2.5"
                                                     >
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current"><path d="m10 15.586-3.293-3.293-1.414 1.414L10 18.414l9.707-9.707-1.414-1.414z"></path></svg>
@@ -123,14 +123,14 @@
     
                                                     <button
                                                         type="button"
-                                                        wire:click.lazy="cancelDeleteColumnItem('{{ $companyIndex }}', '{{ $labelIndex }}')"
+                                                        wire:click="cancelDeleteColumnItem('{{ $companyIndex }}', '{{ $labelIndex }}')"
                                                         class="text-red-500 p-1 bg-white opacity-75 hover:opacity-100 hover:z-40 transition-all py-1 px-2.5"
                                                     >
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current"><path d="M9.172 16.242 12 13.414l2.828 2.828 1.414-1.414L13.414 12l2.828-2.828-1.414-1.414L12 10.586 9.172 7.758 7.758 9.172 10.586 12l-2.828 2.828z"></path><path d="M12 22c5.514 0 10-4.486 10-10S17.514 2 12 2 2 6.486 2 12s4.486 10 10 10zm0-18c4.411 0 8 3.589 8 8s-3.589 8-8 8-8-3.589-8-8 3.589-8 8-8z"></path></svg>
                                                 @else
                                                     <button
                                                         type="button"
-                                                        wire:click.lazy="deleteColumnItem('{{ $companyIndex }}', '{{ $labelIndex }}')"
+                                                        wire:click="deleteColumnItem('{{ $companyIndex }}', '{{ $labelIndex }}')"
                                                         class="bg-white opacity-75 hover:opacity-100 hover:z-40 transition-all p-1"
                                                     >
                                                         <img src="/img/delete.svg" />
@@ -146,7 +146,7 @@
                                 <th class="w-[125px] h-[50px] border">
                                     <select
                                         class="flex flex-shrink flex-grow w-full text-sm font-normal text-[#b1b1b1] justify-center h-full border-0"
-                                        wire:change.lazy="addColumnPrice({{ $companyIndex }}, $event.target.value)"
+                                        wire:change="addColumnPrice({{ $companyIndex }}, $event.target.value)"
                                                                             {{ $realizadas ? 'disabled' : '' }}
                                     >
                                         <option value="" selected="true">Selecione</option>
@@ -207,7 +207,7 @@
                                         <input
                                             type="text"
                                             value="{{ $row['value'] }}"
-                                            wire:change.lazy="updateQty({{ $companyIndex }}, {{ $rowIndex }}, {{ $qtyIndex }}, $event.target.value)"
+                                            wire:change="updateQty({{ $companyIndex }}, {{ $rowIndex }}, {{ $qtyIndex }}, $event.target.value)"
                                             class="block text-center border-0 m-0 bg-transparent p-0 w-full h-[47px]"
                                         />
                                         @endif

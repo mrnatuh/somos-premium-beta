@@ -348,7 +348,7 @@ class CategoryInvoicing extends Component
 	{
 		$this->lastOfMonth = (int) Carbon::now()->lastOfMonth()->format('d');
 
-		$is_page_realizadas = session('preview')['realizadas'];
+		$is_page_realizadas = session('preview')['realizadas'] ?? 0;
 		$this->realizadas = isset($is_page_realizadas) ? (int) $is_page_realizadas : 0;
 
 		$cc = session('preview')['cc'] ?? false;
