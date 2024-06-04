@@ -5,24 +5,26 @@
     </div>
     @endif
 
-    <div class="flex mt-10 overflow-x-scroll">
+    <div class="flex mt-10 max-w-full overflow-x-scroll">
         <div class="flex flex-col">
-            <div class="flex flex-shrink flex-grow">
-                <div class="border-r block text-sm font-normal text-[#b1b1b1] p-3 w-[100px]">
+            <div class="flex w-full max-w-full">
+                <span class="flex border-r text-sm font-normal text-[#b1b1b1] w-full max-w-[100px]">
                     Cliente
-                </div>
+                </span>
                 @foreach($companies as $company)
                 @php
                     $id = $company['id'];
+                    $colspan = (int) $company['colspan'];
+                    $width = $colspan * 125;
                 @endphp
 
-                <div class="border-r flex flex-shrink flex-grow text-sm font-normal text-[#b1b1b1] w-[{{ ((int) $company['colspan'] * 125) . 'px' }}] overflow-hidden relative p-4 m-0">
-                    <span class="flex w-full  justify-center text-[16px] text-[#404D61]  leading-normal text-center overflow-hidden">
+                <div class="border-r flex text-sm font-normal text-[#b1b1b1] w-[{{ $width }}px] min-w-[{{ $width }}px] p-2 max-w-[{{ $width }}px] overflow-hidden relative">
+                    <div class="flex w-full text-[16px] text-[#404D61] leading-normal text-ellipsis overflow-hidden flex-nowrap h-[50px]">
                         {{ $company['title'] }}
-                    </span>
+                    </div>
 
                     @if ($edit)
-                    <div class="absolute top-0 left-0">
+                    <div class="absolute top-0 right-0">
                         <div class="flex gap-1">
                             @if(isset($deleteItem[$id]) && $deleteItem[$id])
                                     <button
@@ -56,11 +58,11 @@
             </div>
 
             <div class="flex flex-nowrap">
-                <div class="flex flex-shrink flex-grow">
-                    <table class="block w-[100px] border-r">
+                <div class="flex w-full max-w-[100px]">
+                    <table class="w-full max-w-[100px] border-r">
                         <thead>
                             <tr>
-                                <th class="p-3 w-[100px] border border-r-0 h-[50px]">
+                                <th class="p-3 w-full max-w-[100px] border border-r-0 h-[50px]">
                                     <span class="flex text-sm font-normal text-[#b1b1b1]">
                                         Dia
                                     </span>
@@ -95,7 +97,7 @@
                         $companyIndex = $loop->index;
                     @endphp
                     <table 
-                        class="w-[{{ ((int) $company['colspan'] * 125) . 'px' }}]"
+                        class="float-left w-[{{ ((int) $company['colspan'] * 125) . 'px' }}]"
                     >
                         <thead>
                             <tr>
@@ -110,7 +112,7 @@
                                         </span>
     
                                         @if($edit)
-                                        <div class="absolute top-1/2 left-0 -translate-y-1/2">
+                                        <div class="absolute top-1/2 right-0 -translate-y-1/2">
                                             <div class="flex gap-1">
                                                 @if(isset($deleteCompanyColumn[$companyIndex][$labelIndex]) && $deleteCompanyColumn[$companyIndex][$labelIndex])
                                                     <button
@@ -146,8 +148,8 @@
                                 <th class="w-[125px] h-[50px] border">
                                     <select
                                         class="flex flex-shrink flex-grow w-full text-sm font-normal text-[#b1b1b1] justify-center h-full border-0"
-                                        wire:change="addColumnPrice({{ $companyIndex }}, $event.target.value)"
-                                                                            {{ $realizadas ? 'disabled' : '' }}
+                                        wire:change="addColumnPrice({{ $companyIndex }}, $event.target.value)"                                    
+                                        {{ $realizadas ? 'disabled' : '' }}
                                     >
                                         <option value="" selected="true">Selecione</option>
                                         @foreach($company['prices_options'] as $option)
