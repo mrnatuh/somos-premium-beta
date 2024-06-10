@@ -6,6 +6,7 @@ use App\Helpers\UserRole;
 use App\Models\Preview;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\Attributes\On;
 
@@ -34,9 +35,9 @@ class DashboardBar extends Component
 		$ccs = (new UserRole())->getCc();
 		
 		// logged user ccs
+		$sess = session('preview');
 		$preview = null;
 		if ($this->uri === "categoria") {
-			$sess = session('preview');
 			$preview = Preview::where('cc', $sess['cc'])
 				->where('week_ref', $sess['week_ref'])
 				->first();
@@ -47,12 +48,21 @@ class DashboardBar extends Component
 				->orderBy('updated_at', 'desc')
 				->first();
 		}
+
+		$total_invoicing_realizadas = 0;
+		if (isset($sess) && $sess['realizadas']) {
+			$realizadas_faturamento_total_filename = "/realizadas/faturamento_total_{$sess['cc']}_{$sess['week_ref']}.txt";
+			if (Storage::exists($realizadas_faturamento_total_filename)) {
+				$realizadas_faturamento_total = unserialize(Storage::get($realizadas_faturamento_total_filename));
+				$total_invoicing_realizadas = $realizadas_faturamento_total['total_realizadas'];
+			}
+		}
 			
 		if ($preview) {
 			$this->cc = $preview->cc;
 			$this->month_ref = $preview->month_ref;
 			
-			$this->total['faturamento'] = $preview->invoicing;
+			$this->total['faturamento'] = $total_invoicing_realizadas ? $total_invoicing_realizadas : $preview->invoicing;
 			$this->total['events'] = $preview->events;
 			$this->total['mp'] = $preview->mp;
 			$this->total['mo'] = $preview->mo;

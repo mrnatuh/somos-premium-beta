@@ -11,7 +11,7 @@
     ];
 @endphp
 
-<div class="w-full flex flex-shrink-0 flex-grow-0 overflow-x-auto">
+<div class="w-full flex max-w-full overflow-x-auto">
     <table class="w-full caption-bottom text-sm">
         <thead class="[&amp;_tr]:border-b">
             <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">

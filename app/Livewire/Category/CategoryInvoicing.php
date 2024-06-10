@@ -6,6 +6,7 @@ use App\Models\Invoicing;
 use App\Models\Option;
 use App\Models\Preview;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -465,6 +466,50 @@ class CategoryInvoicing extends Component
 								}
 							}
 						}
+					}
+
+					// calculada realizadas
+					try {
+						$total_executadas = 0; 
+						$total_previsao = 0;
+						$tmp_cols = [];
+						foreach($this->companies as $company) {
+							$tmp_prices = array_values($company['prices_vlr']);
+							foreach($tmp_prices as $p) {
+								$prices[$p['id']] = $p;
+							}
+		
+							foreach($company['rows'] as $row) {
+								foreach($row as $column) {
+									if (isset($column['compare'])) {
+										if (isset($prices[$column['compare']['PRICE']])) {
+											$price = $prices[$column['compare']['PRICE']]['value'] ?? 0;
+											$qtd = $column['compare']['QTD'] ?? 0;
+											$total_executadas += $price * $qtd;
+										}
+									} else {
+										if (isset($column['id'])) {
+											if (isset($prices[$column['id']])) {
+												$price = $prices[$column['id']]['value'];
+												$qtd = $column['value'];
+												$total_previsao += $price * $qtd;
+											}
+										}
+									}
+								}
+							}
+						}
+						
+						$total_realizadas = $total_executadas + $total_previsao;
+						
+						$realizadas_faturamento_total_filename = "/realizadas/faturamento_total_{$cc}_{$weekref}.txt";
+						Storage::put($realizadas_faturamento_total_filename, serialize([
+							'total_executadas' => $total_executadas,
+							'total_previsao' => $total_previsao,
+							'total_realizadas' => $total_realizadas,
+						]));
+					} catch (Exception $e) {
+						// print $e;
 					}
 
 					if (!$this->realizadas) {
