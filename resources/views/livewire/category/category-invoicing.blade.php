@@ -5,10 +5,10 @@
     </div>
     @endif
 
-    <div class="flex mt-10 max-w-full overflow-x-scroll">
-        <div class="flex flex-col">
-            <div class="flex w-full max-w-full">
-                <span class="flex border-r text-sm font-normal text-[#b1b1b1] w-full max-w-[100px]">
+    <div class="flex mt-10 max-w-full flex-nowrap overflow-x-scroll">
+        <div class="flex flex-col flex-nowrap">
+            <div class="flex w-full max-w-full flex-nowrap">
+                <span class="flex p-3 border-r text-sm font-normal text-[#b1b1b1] w-full max-w-[100px]">
                     Cliente
                 </span>
                 @foreach($companies as $company)
@@ -91,7 +91,7 @@
                     </table>
                 </div>
 
-                <div class="block w-full overflow-x-auto">
+                <div class="flex flex-nowrap w-full overflow-x-auto">
                     @foreach($companies as $company)
                     @php
                         $companyIndex = $loop->index;

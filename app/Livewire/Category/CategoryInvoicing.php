@@ -472,7 +472,6 @@ class CategoryInvoicing extends Component
 					try {
 						$total_executadas = 0; 
 						$total_previsao = 0;
-						$tmp_cols = [];
 						foreach($this->companies as $company) {
 							$tmp_prices = array_values($company['prices_vlr']);
 							foreach($tmp_prices as $p) {

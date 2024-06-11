@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="flex flex-col justify-between bg-gray-100 border-r border-gray-100 dark:border-gray-700 w-full min-w-[250px] max-w-[320px] relative h-full z-40">
+<nav x-data="{ open: false }" class="flex flex-col justify-between bg-gray-100 border-r border-gray-100 dark:border-gray-700 w-full min-w-[200px] max-w-[240px] relative h-full z-40">
     <div class="py-8">
         <div class="flex gap-4 p-3 items-center justify-between">
             <div class="flex gap-4">
