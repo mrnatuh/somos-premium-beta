@@ -52,7 +52,6 @@ class CategoryMO extends Component
         if ($mo_data_exists && !$is_page_realizadas) {
             $mo_data = Storage::get($mo_filename);
             $mo = json_decode($mo_data, true);
-
             $this->edit = false;
         } else {
             $mo = Option::where([
@@ -71,7 +70,7 @@ class CategoryMO extends Component
 
             $this->lastOfMonth = (int) Carbon::parse("{$year}-{$month}-01")->lastOfMonth()->format('d');
 
-            $he_filename = "/preview/{$this->cc}_{$this->weekref}_he.json";
+            $he_filename = "/previews/{$this->cc}_{$this->weekref}_he.json";
             $he_data_exists = Storage::exists($he_filename);
 
             if ($he_data_exists && !$is_page_realizadas) {

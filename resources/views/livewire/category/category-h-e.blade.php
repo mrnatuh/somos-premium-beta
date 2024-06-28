@@ -25,7 +25,7 @@
                     </table>
                 </div>
 
-                <div class="flex overflow-x-scroll w-[60vw]">
+                <div class="flex overflow-auto min-w-[70vw]">
                 @foreach($employees as $employe)
                 @php
                     $employeIndex = $loop->index;

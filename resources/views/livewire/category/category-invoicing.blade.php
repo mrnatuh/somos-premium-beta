@@ -207,7 +207,10 @@
                                         </span>
                                         @else
                                         <input
-                                            type="text"
+                                            type="number"
+                                            min="0"
+                                            max="1000000"
+                                            required
                                             value="{{ $row['value'] }}"
                                             wire:change="updateQty({{ $companyIndex }}, {{ $rowIndex }}, {{ $qtyIndex }}, $event.target.value)"
                                             class="block text-center border-0 m-0 bg-transparent p-0 w-full h-[47px]"

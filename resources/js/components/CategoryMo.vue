@@ -31,7 +31,7 @@ export default {
         this.edit = mo.edit;
 
         // console.log(this.params);
-        this.employees.forEach(function(item) {
+        this.employees.forEach(function (item) {
             self.handleDiasTrabalhados(item);
         });
 
@@ -85,7 +85,7 @@ export default {
 
             const extras = this.he.filter(it => it.id == item.id);
 
-            let vlr_total_50 =  0;
+            let vlr_total_50 = 0;
             let vlr_total_100 = 0;
             let vlr_total_faltas = 0;
             let vlr_total_atrasos = 0;
@@ -94,14 +94,22 @@ export default {
             let vlr_total_he = 0;
 
             if (extras.length) {
-                vlr_total_50 = parseFloat(extras[0].total_vlr_50) ?? 0;
-                vlr_total_100 = parseFloat(extras[0].total_vlr_100)  ?? 0;
-                vlr_total_adicional_noturno = parseFloat(extras[0].total_vlr_adicional_noturno)  ?? 0;
+                let vlr_total_50_tmp = parseInt(extras[0].total_vlr_50.replace(",", "").replace(".", "").replace("R$", ""));
+                vlr_total_50 = vlr_total_50_tmp / 100;
+
+                let vlr_total_100_tmp = parseInt(extras[0].total_vlr_100.replace(",", "").replace(".", "").replace("R$", ""));
+                vlr_total_100 = vlr_total_100_tmp / 100;
+
+                let vlt_total_adicional_noturno_tmp = parseInt(extras[0].total_vlr_adicional_noturno.replace(",", "").replace(".", "").replace("R$", ""));
+                vlr_total_adicional_noturno = vlt_total_adicional_noturno_tmp / 100;
 
                 const vlr_he_total_add = vlr_total_50 + vlr_total_100 + vlr_total_adicional_noturno;
 
-                vlr_total_faltas = parseFloat(extras[0].total_vlr_faltas)  ?? 0;
-                vlr_total_atrasos = parseFloat(extras[0].total_vlr_atrasos)  ?? 0;
+                let total_vlr_faltas_tmp = parseInt(extras[0].total_vlr_faltas.replace(",", "").replace(".", "").replace("R$", ""));
+                vlr_total_faltas = total_vlr_faltas_tmp / 100;
+
+                let total_vlr_atrasos_tmp = parseInt(extras[0].total_vlr_atrasos.replace(",", "").replace(".", "").replace("R$", ""));
+                vlr_total_atrasos = total_vlr_atrasos_tmp / 100;
 
                 const vlr_he_total_sub = vlr_total_faltas + vlr_total_atrasos;
 
@@ -119,7 +127,7 @@ export default {
             const vlr_vr = vlr_salario_bruto * (1 / 100);
             item.vlr_desconto_refeicao = this.formatCurrency(vlr_vr);
 
-            const vlr_vt = vlr_salario_bruto * (5.5 / 100);
+            const vlr_vt = vlr_salario_bruto * (6 / 100);
             item.vlr_desconto_vale_transporte = this.formatCurrency(vlr_vt);
 
             const vrl_vale_transporte = item.vlr_vt == "0,01" ? item.vlr_desconto_vale_transporte : this.formatCurrency(item.vlr_vt);
@@ -190,8 +198,7 @@ export default {
     }
 }
 
-window.toggleLoading = function(show = true)
-{
+window.toggleLoading = function (show = true) {
     var el = document.querySelector("#live-loading");
 
     if (show) {
@@ -203,8 +210,7 @@ window.toggleLoading = function(show = true)
     }
 }
 
-window.autoSave = function()
-{
+window.autoSave = function () {
     var data = document.querySelector('#mo_json').value;
     var json = JSON.parse(data);
 
@@ -212,7 +218,7 @@ window.autoSave = function()
 
     axios.post('/categoria/mo', {
         mo_json: data,
-    }).then(function(response) {
+    }).then(function (response) {
         console.log(response.data);
 
         window.Livewire.dispatch('update-bar-total', {
@@ -220,10 +226,10 @@ window.autoSave = function()
             weekref: json.weekref,
         });
 
-        window.setTimeout(function(){
+        window.setTimeout(function () {
             toggleLoading(false);
         }, 1000);
-    }).catch(function(error) {
+    }).catch(function (error) {
         console.log(error);
     });
 }
@@ -319,21 +325,19 @@ window.autoSave = function()
                 <tbody>
                     <tr>
                         <td class="text-center w-[100px]">
-                            <input class="flex items-center justify-center text-center w-[100px] text-[16px] text-[#404D61] border-0" type="number" min="1" max="31" v-model="dias_seg_sab" @change="handleTotalDias" :disabled="!edit" />
+                            <input
+                                class="flex items-center justify-center text-center w-[100px] text-[16px] text-[#404D61] border-0"
+                                type="number" min="1" max="31" v-model="dias_seg_sab" @change="handleTotalDias"
+                                :disabled="!edit" />
                         </td>
                         <td class="text-center w-[100px]">
                             <input
                                 class="flex items-center justify-center text-center w-[100px] text-[16px] text-[#404D61] border-0"
-                                type="number"
-                                min="1"
-                                max="31"
-                                v-model="dias_dom_fer"
-                                @change="handleTotalDias"
-                                :disabled="!edit"
-                            />
+                                type="number" min="1" max="31" v-model="dias_dom_fer" @change="handleTotalDias"
+                                :disabled="!edit" />
                         </td>
                         <td class="text-center w-[100px] text-[16px] text-[#404D61]">
-                            {{params.cesta_basica}}
+                            {{ params.cesta_basica }}
                         </td>
                         <td class="text-center w-[100px] text-[16px] text-[#404D61]">
                             {{ params.assistencia_medica_titular }}
@@ -536,23 +540,20 @@ window.autoSave = function()
                         <td class="text-[14px] text-[#404D61]">
                             <input
                                 class="flex items-center justify-center text-center w-[100px] text-[14px] text-[#404D61] border-0"
-                                type="number"
-                                min="1"
-                                max="31"
-                                v-model="employees[index].dias_trabalhados"
-                                @change="handleDiasTrabalhados(item, true)"
-                                :disabled="!edit"
-                            />
+                                type="number" min="1" max="31" v-model="employees[index].dias_trabalhados"
+                                @change="handleDiasTrabalhados(item, true)" :disabled="!edit" />
                         </td>
                         <td class="text-[14px] text-[#404D61] text-center">
-                            <select class="border-0" v-model="item.option_cesta_basica" @change="handleDiasTrabalhados(item, true)" :disabled="!edit">
+                            <select class="border-0" v-model="item.option_cesta_basica"
+                                @change="handleDiasTrabalhados(item, true)" :disabled="!edit">
                                 <option value="0" :selected="!item.option_cesta_basica">Não</option>
                                 <option value="1" :selected="item.option_cesta_basica">Sim</option>
                             </select>
 
                         </td>
                         <td class="text-[14px] text-[#404D61] text-center">
-                            <select class="border-0" v-model="item.option_assistencia_medica" @change="handleDiasTrabalhados(item, true)" :disabled="!edit">
+                            <select class="border-0" v-model="item.option_assistencia_medica"
+                                @change="handleDiasTrabalhados(item, true)" :disabled="!edit">
                                 <option value="0" :selected="!item.option_assistencia_medica">Não</option>
                                 <option value="1" :selected="item.option_assistencia_medica">Sim</option>
                             </select>
@@ -561,19 +562,22 @@ window.autoSave = function()
                             {{ item.qtde_dependentes }}
                         </td>
                         <td class="text-[14px] text-[#404D61] text-center">
-                            <select class="border-0" v-model="item.option_assistencia_odontologica" @change="handleDiasTrabalhados(item, true)" :disabled="!edit">
+                            <select class="border-0" v-model="item.option_assistencia_odontologica"
+                                @change="handleDiasTrabalhados(item, true)" :disabled="!edit">
                                 <option value="0" :selected="!item.option_assistencia_odontologica">Não</option>
                                 <option value="1" :selected="item.option_assistencia_odontologica">Sim</option>
                             </select>
                         </td>
                         <td class="text-[14px] text-[#404D61] text-center">
-                            <select class="border-0" v-model="item.option_contribuicao_sindical" @change="handleDiasTrabalhados(item, true)" :disabled="!edit">
+                            <select class="border-0" v-model="item.option_contribuicao_sindical"
+                                @change="handleDiasTrabalhados(item, true)" :disabled="!edit">
                                 <option value="0" :selected="!item.option_contribuicao_sindical">Não</option>
                                 <option value="1" :selected="item.option_contribuicao_sindical">Sim</option>
                             </select>
                         </td>
                         <td class="text-[14px] text-[#404D61] text-center">
-                            <select class="border-0" v-model="item.option_vale_transporte" @change="handleDiasTrabalhados(item, true)" :disabled="!edit">
+                            <select class="border-0" v-model="item.option_vale_transporte"
+                                @change="handleDiasTrabalhados(item, true)" :disabled="!edit">
                                 <option value="0" :selected="!item.option_vale_transporte">Não</option>
                                 <option value="1" :selected="item.option_vale_transporte">Sim</option>
                             </select>
