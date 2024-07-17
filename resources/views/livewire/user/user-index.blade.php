@@ -14,7 +14,7 @@
                     </svg>
                 </div>
 
-                <input type="search" id="preview-search" class="flex w-[470px] p-4 pl-14 text-lg text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-4 focus:ring-blue-100 dark:bg-gray-700 dark:border-gray-600 placeholder-gray-300 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Buscar usuários..." required wire:model.lazy="search" />
+                <input type="search" id="preview-search" class="flex w-[470px] p-4 pl-14 text-lg text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-4 focus:ring-blue-100 dark:bg-gray-700 dark:border-gray-600 placeholder-gray-300 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Buscar usuários..." required wire:model="search" />
 
                 <button type="submit" class="text-white bg-[#5B6AD0] hover:opacity-90 focus:ring-4 focus:outline-none focus:ring-blue-100 font-medium rounded-[10px] text-[16px] px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition-all relative">
                     Buscar

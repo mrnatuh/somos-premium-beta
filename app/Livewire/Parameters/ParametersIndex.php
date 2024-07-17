@@ -196,7 +196,7 @@ class ParametersIndex extends Component
         $this->results = Parameter::all();
 
         if ($this->selectedParameter) {
-            foreach($this->results as $item) {
+            foreach ($this->results as $item) {
                 if ($item['id'] == $this->selectedParameter) {
                     $this->selectedParamData = $item;
 
