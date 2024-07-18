@@ -71,6 +71,8 @@ export default {
         getTotal() {
             let self = this;
 
+            this.handleTotalDias();
+
             this.total = 0;
 
             this.employees.forEach(function (item) {

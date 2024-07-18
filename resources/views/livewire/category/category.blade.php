@@ -1,5 +1,5 @@
 @php
-$is_page_realizadas = (int) $realizadas;
+$is_page_realizadas = (int) $realizadas ? 1 : 0;
 $active = isset($_GET['filter']) ? trim($_GET['filter']) : "faturamento";
 
 $categories = [
@@ -14,7 +14,6 @@ $categories = [
     ["slug" => "resto-ingesto", "label" => "Resto Ingesto", "visible" => $is_page_realizadas ? true : false],
 ];
 
-
 $category = array_values(array_filter($categories, function($v, $k) use($active) {
     return $v['slug'] === $active;
 }, ARRAY_FILTER_USE_BOTH))[0];
@@ -27,6 +26,10 @@ $action_approved = false;
 $log_status = isset($last_log['status']) ? $last_log['status'] : 'em-analise';
 $log_level = isset($last_log['level']) ? $last_log['level'] : 1;
 
+/*
+ * Se eu for um Centro de Custo/Supervisor
+ * Se ainda não foi publicado e não for recusado posso mandar para aprovação.
+ */
 if (auth()->user()->isSupervisor()) {
     if (!$published_at || $log_status == 'recusado') {
         $action_publish = true;
@@ -52,7 +55,9 @@ if (auth()->user()->isDirector() && $published_at) {
 }
 
 if (auth()->user()->isManager() || auth()->user()->isAdmin()) {
-    if ($published_at) {
+    if (!$published_at || $log_status == 'recusado') {
+        $action_publish = true;
+    } else if ($published_at) {
         $action_approve_reprove = true;
     }
 }
@@ -129,10 +134,8 @@ if ($log_level == '4' && $log_status == 'validado') {
     </div>
 
     @if(!$is_page_realizadas)
-        <!-- Approve Area -->
-        <div class="bg-white/50 w-full flex items-center justify-end gap-4 position fixed px-10 py-5 bottom-0 right-0 z-30"
-            id="approve_area">
-
+          <!-- Approve Area -->
+        <div class="bg-blue w-screen flex items-center justify-end gap-4 fixed px-10 py-5 bottom-0 right-0 z-50" id="approve_area">
             @if ($action_wait)
             <span class="bg-black/90 px-6 py-2 text-white rounded-xl text-lg font-bold disabled:opacity-50 cursor-wait relative">
                 Em análise, aguarde
