@@ -13,6 +13,7 @@ export default {
             cc: null,
             weekref: null,
             total: 0,
+            edit: true,
         }
     },
 
@@ -31,11 +32,7 @@ export default {
         this.edit = mo.edit;
 
         // console.log(this.params);
-        this.employees.forEach(function (item) {
-            self.handleDiasTrabalhados(item);
-        });
-
-        this.getTotal();
+        this.handleTotalDias();
     },
 
     methods: {
@@ -55,29 +52,22 @@ export default {
         },
 
         handleTotalDias() {
-            let self = this;
-
-            this.employees.forEach(function (item) {
-                self.handleDiasTrabalhados(item);
+            this.employees.forEach((item) => {
+                this.handleDiasTrabalhados(item);
             });
 
             this.getTotal();
-
-            this.save();
-
-            window.autoSave();
         },
 
         getTotal() {
-            let self = this;
-
-            this.handleTotalDias();
-
             this.total = 0;
 
-            this.employees.forEach(function (item) {
-                self.total += item?.tmp_vlr_total_funcionario ?? 0;
+            this.employees.forEach((item) => {
+                this.total += item?.tmp_vlr_total_funcionario ?? 0;
             });
+
+            this.save();
+            window.autoSave();
         },
 
         handleDiasTrabalhados(item, update = false) {
@@ -173,15 +163,7 @@ export default {
 
             item.vlr_total_funcionario = this.formatCurrency(vlr_total_funcionario);
 
-            this.getTotal();
-
-            this.save();
-
-            if (update) {
-                console.log('update', update);
-
-                window.autoSave();
-            }
+            if (update) this.getTotal();
         },
 
         save() {
@@ -221,7 +203,7 @@ window.autoSave = function () {
     axios.post('/categoria/mo', {
         mo_json: data,
     }).then(function (response) {
-        console.log(response.data);
+        console.log('[response]', response.data);
 
         window.Livewire.dispatch('update-bar-total', {
             cc: json.cc,
