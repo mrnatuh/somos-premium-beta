@@ -377,7 +377,7 @@ class CategoryInvoicing extends Component
 					['week_ref', '=', $weekref],
 					['option_name', '=', 'faturamento']
 				])->first();
-					
+
 				if ($faturamento) {
 					$this->companies = unserialize($faturamento->option_value);
 					$this->lastOfMonth = $this->companies[0]['last_of_month'];
@@ -388,10 +388,10 @@ class CategoryInvoicing extends Component
 					$_cgcs = [];
 					$_cgcs_a1_genial = [];
 
-					foreach($this->companies as $c) {
+					foreach ($this->companies as $c) {
 						$_cgcs[$c['id']] = [];
 
-						foreach($c['prices_options'] as $p) {
+						foreach ($c['prices_options'] as $p) {
 							$_prices_ids[$p['id']] = [];
 							$_prices_ids_serv[$p['id']] = '';
 						}
@@ -402,7 +402,7 @@ class CategoryInvoicing extends Component
 						->whereIn('A1_CGC', array_keys($_cgcs))
 						->get();
 
-					foreach($tmp_clients as $c) {
+					foreach ($tmp_clients as $c) {
 						$_cgcs[trim($c->A1_CGC)] = [
 							"A1_TABELA" => trim($c->A1_TABELA),
 							"A1_CDGENIAL" => trim($c->A1_CDGENIAL),
@@ -417,7 +417,7 @@ class CategoryInvoicing extends Component
 						->whereIn('B1_COD', array_keys($_prices_ids_serv))
 						->get();
 
-					foreach($tmp_produtos as $p) {
+					foreach ($tmp_produtos as $p) {
 						$cod = trim($p->B1_COD);
 						$_prices_ids_serv[$cod] = trim($p->B1_XCDGEN);
 					}
@@ -428,12 +428,12 @@ class CategoryInvoicing extends Component
 						->whereIn('ZA3_CDPESS', array_keys($_cgcs_a1_genial))
 						->whereIn('ZA3_CDSERV', array_values($_prices_ids_serv))
 						->get();
-		
+
 
 					$_serv_ids_price = array_flip($_prices_ids_serv);
 
 					$_dts_faturamento = [];
-					foreach($tmp_faturamento as $fat) {
+					foreach ($tmp_faturamento as $fat) {
 						$_dt_fat = trim($fat->ZA3_DTCARP);
 						$_serv = trim($fat->ZA3_CDSERV);
 						$_price = $_serv_ids_price[$_serv];
@@ -454,12 +454,12 @@ class CategoryInvoicing extends Component
 						];
 					}
 
-					foreach($this->companies as $k_c => $c) {
-						foreach($c['rows'] as $k_c_r => $r) {
+					foreach ($this->companies as $k_c => $c) {
+						foreach ($c['rows'] as $k_c_r => $r) {
 							$_d_r = $k_c_r + 1;
-							$_dt_r = Carbon::parse("{$_year}-{$_month}-" . ($_d_r < 10 ? '0'. $_d_r : $_d_r))->format("Y-m-d");
-							
-							foreach($r as $k_c_r_s => $r_s) {
+							$_dt_r = Carbon::parse("{$_year}-{$_month}-" . ($_d_r < 10 ? '0' . $_d_r : $_d_r))->format("Y-m-d");
+
+							foreach ($r as $k_c_r_s => $r_s) {
 								if (isset($r_s['id'])) {
 									$_f = $_dts_faturamento[$r_s['id']][$_dt_r] ?? null;
 									$this->companies[$k_c]['rows'][$k_c_r][$k_c_r_s]['compare'] = $_f;
@@ -470,16 +470,16 @@ class CategoryInvoicing extends Component
 
 					// calculada realizadas
 					try {
-						$total_executadas = 0; 
+						$total_executadas = 0;
 						$total_previsao = 0;
-						foreach($this->companies as $company) {
+						foreach ($this->companies as $company) {
 							$tmp_prices = array_values($company['prices_vlr']);
-							foreach($tmp_prices as $p) {
+							foreach ($tmp_prices as $p) {
 								$prices[$p['id']] = $p;
 							}
-		
-							foreach($company['rows'] as $row) {
-								foreach($row as $column) {
+
+							foreach ($company['rows'] as $row) {
+								foreach ($row as $column) {
 									if (isset($column['compare'])) {
 										if (isset($prices[$column['compare']['PRICE']])) {
 											$price = $prices[$column['compare']['PRICE']]['value'] ?? 0;
@@ -498,9 +498,9 @@ class CategoryInvoicing extends Component
 								}
 							}
 						}
-						
+
 						$total_realizadas = $total_executadas + $total_previsao;
-						
+
 						$realizadas_faturamento_total_filename = "/realizadas/faturamento_total_{$cc}_{$weekref}.txt";
 						Storage::put($realizadas_faturamento_total_filename, serialize([
 							'total_executadas' => $total_executadas,

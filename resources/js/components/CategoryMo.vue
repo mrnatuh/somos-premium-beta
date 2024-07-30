@@ -149,15 +149,22 @@ export default {
             const vlr_contribuicao_sindical = (item.contribuicao_sindical * this.params.contribuicao_sindical) * parseInt(item.option_contribuicao_sindical);
             item.vlr_contribuicao_sindical = this.formatCurrency(vlr_contribuicao_sindical);
 
-            item.vlr_inss = this.formatCurrency((this.params.inss / 100) * (dsr + vlr_salario_bruto));
-            item.vlr_fgts = this.formatCurrency((this.params.fgts / 100) * (dsr + vlr_salario_bruto));
-            item.vlr_provisao_ferias = this.formatCurrency((this.params.provisao_ferias / 100) * (dsr + vlr_salario_bruto));
-            item.vlr_decimo_terceiro = this.formatCurrency((this.params.provisao_decimo_terceiro / 100) * (dsr + vlr_salario_bruto));
+            const vlr_inss = (this.params.inss / 100) * (dsr + vlr_salario_bruto);
+            item.vlr_inss = this.formatCurrency(vlr_inss);
 
-            const vlr_total_salario = vlr_salario_bruto + dsr - vlr_vt - vlr_vr;
+            const vlr_fgts = (this.params.fgts / 100) * (dsr + vlr_salario_bruto);
+            item.vlr_fgts = this.formatCurrency(vlr_fgts);
+            
+            const vlr_provisao_ferias = (this.params.provisao_ferias / 100) * (dsr + vlr_salario_bruto);
+            item.vlr_provisao_ferias = this.formatCurrency(vlr_provisao_ferias);
+            
+            const vlr_decimo_terceiro = (this.params.provisao_decimo_terceiro / 100) * (dsr + vlr_salario_bruto);
+            item.vlr_decimo_terceiro = this.formatCurrency(vlr_decimo_terceiro);
+
+            const vlr_total_salario = vlr_salario_bruto + dsr + vlr_vt + vlr_vr;
             item.vlr_total_salario = this.formatCurrency(vlr_total_salario);
 
-            const vlr_total_funcionario = vlr_total_salario + vlr_total_he + vlr_cesta_basica + vlr_total_assistencia_medica + vlr_exames + vlr_assistencia_odontologica;
+            const vlr_total_funcionario = vlr_total_salario + vlr_total_he + vlr_cesta_basica + vlr_total_assistencia_medica + vlr_exames + vlr_assistencia_odontologica + vlr_contribuicao_sindical + vlr_inss + vlr_fgts + vlr_provisao_ferias + vlr_decimo_terceiro;
 
             item.tmp_vlr_total_funcionario = vlr_total_funcionario;
 
@@ -418,12 +425,6 @@ window.autoSave = function () {
                         </th>
                         <th class="w-[100px]">
                             <div class="flex flex-col text-[14px] text-[#B1B1B1] font-normal w-[100px]">
-                                <span>Total</span>
-                                <span>Funcionário</span>
-                            </div>
-                        </th>
-                        <th class="w-[100px]">
-                            <div class="flex flex-col text-[14px] text-[#B1B1B1] font-normal w-[100px]">
                                 <span>DSR</span>
                             </div>
                         </th>
@@ -511,6 +512,12 @@ window.autoSave = function () {
                                 <span>13</span>
                             </div>
                         </th>
+                        <th class="w-[100px]">
+                            <div class="flex flex-col text-[14px] text-[#B1B1B1] font-normal w-[100px]">
+                                <span>Total</span>
+                                <span>Funcionário</span>
+                            </div>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -570,9 +577,6 @@ window.autoSave = function () {
                             {{ item.vlr_salario_bruto }}
                         </td>
                         <td class="text-[14px] text-[#404D61] text-center">
-                            {{ item.vlr_total_funcionario }}
-                        </td>
-                        <td class="text-[14px] text-[#404D61] text-center">
                             {{ item.vlr_dsr }}
                         </td>
                         <td class="text-[14px] text-[#404D61] text-center">
@@ -616,6 +620,9 @@ window.autoSave = function () {
                         </td>
                         <td class="text-[14px] text-[#404D61] text-center">
                             {{ item.vlr_decimo_terceiro }}
+                        </td>
+                        <td class="text-[14px] text-[#404D61] text-center">
+                            {{ item.vlr_total_funcionario }}
                         </td>
                     </tr>
                 </tbody>

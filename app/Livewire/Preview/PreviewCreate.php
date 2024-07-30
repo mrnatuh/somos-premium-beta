@@ -28,7 +28,7 @@ class PreviewCreate extends Component
 	];
 
 	public $months = [
-		'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Junho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+		'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
 	];
 
 	public $weeks = 0;
@@ -133,7 +133,7 @@ class PreviewCreate extends Component
 			'week_ref' => $weekref,
 			'realizadas' => 0,
 		]);
-		
+
 		return $this->redirect('/categoria?filter=faturamento');
 	}
 
