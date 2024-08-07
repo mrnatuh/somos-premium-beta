@@ -6,6 +6,7 @@ use App\Models\Invoicing;
 use App\Models\Option;
 use App\Models\Preview;
 use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -380,7 +381,14 @@ class CategoryInvoicing extends Component
 
 				if ($faturamento) {
 					$this->companies = unserialize($faturamento->option_value);
-					$this->lastOfMonth = $this->companies[0]['last_of_month'];
+					if (isset($this->companies[0])) {
+						$this->lastOfMonth = $this->companies[0]['last_of_month'];
+					} else {
+						$_month = substr($weekref, 0, 2);
+						$_year = substr($weekref, 4, 2);
+						$_date_of_preview = Carbon::parse($_year . "-" . $_month . "-01");
+						$this->lastOfMonth = (int) $_date_of_preview->lastOfMonth()->format('d');
+					}
 
 					// acha os ids das refeições possiveis para o cliente
 					$_prices_ids = [];
