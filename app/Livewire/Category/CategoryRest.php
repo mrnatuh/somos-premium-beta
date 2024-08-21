@@ -213,7 +213,7 @@ class CategoryRest extends Component
         if ($this->wait) {
             $this->edit = false;
         }
-        
+
         return view('livewire.category.category-rest');
     }
 }

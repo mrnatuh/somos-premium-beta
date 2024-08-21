@@ -1,11 +1,11 @@
 @props([
-    'label' =>  '',
-    'value' => 0.00,
-    'valueAlign' => '',
-    'arrow' => '',
-    'selected' => false,
-    'type' => 'money',
-    'group' => '',
+	'label' =>  '',
+	'value' => 0.00,
+	'valueAlign' => '',
+	'arrow' => '',
+	'selected' => false,
+	'type' => 'money',
+	'group' => '',
 	'cc' => '',
 	'month_ref' => '',
 ])

@@ -78,7 +78,6 @@ class CategoryMP extends Component
     public function updateRow($rowIndex, $columnIndex, $value)
     {
         $this->mp['rows'][$rowIndex][$columnIndex]['value'] = $value;
-
         $this->save();
     }
 
@@ -110,11 +109,14 @@ class CategoryMP extends Component
     {
         if (!$this->edit) return;
 
-        $weekref = session('preview')['week_ref'];
         $cc = session('preview')['cc'];
+        $weekref = session('preview')['week_ref'];
 
         // acha o preview
-        $preview = Preview::where('week_ref', $weekref)->first();
+        $preview = Preview::where([
+            ['cc', '=', $cc],
+            ['week_ref', '=', $weekref]
+        ])->first();
 
         // calcula o total
         $total = $this->getTotal();
@@ -146,7 +148,6 @@ class CategoryMP extends Component
             'cc' => $cc,
             'weekref' => $weekref
         ]);
-
         // return $this->redirect('/categoria?filter=mp', navigate: true);
     }
 

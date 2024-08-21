@@ -135,11 +135,14 @@ class CategoryEvent extends Component
     {
         if (!$this->edit) return;
 
-        $weekref = session('preview')['week_ref'];
         $cc = session('preview')['cc'];
+        $weekref = session('preview')['week_ref'];
 
         // acha o preview
-        $preview = Preview::where([['cc', '=', $cc], ['week_ref', '=', $weekref]])->first();
+        $preview = Preview::where([
+            ['cc', '=', $cc],
+            ['week_ref', '=', $weekref]
+        ])->first();
 
         // calcula o total
         $total = $this->getTotal();
@@ -205,10 +208,9 @@ class CategoryEvent extends Component
                     $this->edit = false;
                 }
             }
-
         }
 
-        
+
         if ($this->wait) {
             $this->edit = false;
         }
