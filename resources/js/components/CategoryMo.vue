@@ -122,8 +122,7 @@ export default {
             const vlr_vt = vlr_salario_bruto * (6 / 100);
             item.vlr_desconto_vale_transporte = this.formatCurrency(vlr_vt);
 
-            const vrl_vale_transporte = item.vlr_vt == "0,01" ? item.vlr_desconto_vale_transporte : this.formatCurrency(item.vlr_vt);
-
+            const vrl_vale_transporte = item.vlr_vt == "0,01" || item.vlr_vt == 0 ? item.vlr_desconto_vale_transporte : this.formatCurrency(item.vlr_vt);
             item.vrl_vale_transporte = vrl_vale_transporte;
 
             const vlr_cesta_basica = this.params.cesta_basica * parseInt(item.option_cesta_basica);
@@ -139,7 +138,7 @@ export default {
 
             item.vlr_assistencia_medica_dependentes = this.formatCurrency(vlr_assistencia_medica_dependentes);
 
-            const vlr_exames = 0 * this.params.exames;
+            const vlr_exames = 1 * this.params.exames;
             item.vlr_exames = this.formatCurrency(vlr_exames);
 
             const vlr_assistencia_odontologica = (item.odonto + item.odonto_dependentes) * this.params.assistencia_odontologica;
@@ -154,10 +153,10 @@ export default {
 
             const vlr_fgts = (this.params.fgts / 100) * (dsr + vlr_salario_bruto);
             item.vlr_fgts = this.formatCurrency(vlr_fgts);
-            
+
             const vlr_provisao_ferias = (this.params.provisao_ferias / 100) * (dsr + vlr_salario_bruto);
             item.vlr_provisao_ferias = this.formatCurrency(vlr_provisao_ferias);
-            
+
             const vlr_decimo_terceiro = (this.params.provisao_decimo_terceiro / 100) * (dsr + vlr_salario_bruto);
             item.vlr_decimo_terceiro = this.formatCurrency(vlr_decimo_terceiro);
 
@@ -169,6 +168,8 @@ export default {
             item.tmp_vlr_total_funcionario = vlr_total_funcionario;
 
             item.vlr_total_funcionario = this.formatCurrency(vlr_total_funcionario);
+
+            console.log(item);
 
             if (update) this.getTotal();
         },
@@ -607,7 +608,7 @@ window.autoSave = function () {
                             {{ item.vlr_contribuicao_sindical }}
                         </td>
                         <td class="text-[14px] text-[#404D61] text-center">
-                            {{ item.vlr_vt }}
+                            {{ item.vrl_vale_transporte }}
                         </td>
                         <td class="text-[14px] text-[#404D61] text-center">
                             {{ item.vlr_inss }}
