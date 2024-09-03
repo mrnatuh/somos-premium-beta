@@ -85,6 +85,8 @@ export default {
             let dsr = 0;
             let vlr_total_he = 0;
 
+            item.vlr_total_he = this.formatCurrency(0);
+
             if (extras.length) {
                 let vlr_total_50_tmp = parseInt(extras[0].total_vlr_50.replace(",", "").replace(".", "").replace("R$", ""));
                 vlr_total_50 = vlr_total_50_tmp / 100;
@@ -110,6 +112,8 @@ export default {
                 dsr += (vlr_total_adicional_noturno / this.dias_seg_sab) * this.dias_dom_fer;
 
                 vlr_total_he = vlr_he_total_add - vlr_he_total_sub;
+
+                item.vlr_total_he = this.formatCurrency(vlr_total_he);
             }
 
             item.vlr_dsr = this.formatCurrency(dsr);
@@ -426,6 +430,12 @@ window.autoSave = function () {
                         </th>
                         <th class="w-[100px]">
                             <div class="flex flex-col text-[14px] text-[#B1B1B1] font-normal w-[100px]">
+                                <span>Horas</span>
+                                <span>Extras</span>
+                            </div>
+                        </th>
+                        <th class="w-[100px]">
+                            <div class="flex flex-col text-[14px] text-[#B1B1B1] font-normal w-[100px]">
                                 <span>DSR</span>
                             </div>
                         </th>
@@ -576,6 +586,9 @@ window.autoSave = function () {
                         </td>
                         <td class="text-[14px] text-[#404D61] text-center">
                             {{ item.vlr_salario_bruto }}
+                        </td>
+                        <td class="text-[14px] text-[#404D61] text-center">
+                            {{ item.vlr_total_he }}
                         </td>
                         <td class="text-[14px] text-[#404D61] text-center">
                             {{ item.vlr_dsr }}

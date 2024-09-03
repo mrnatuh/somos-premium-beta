@@ -14,8 +14,8 @@ class CategoryIndex extends Component
 	public function render()
 	{
 		$sess = session('preview');
-		
-		$is_page_realizadas = $sess['realizadas'];
+
+		$is_page_realizadas = isset($sess['realizadas']) && $sess['realizadas'];
 
 		$preview = Preview::where([
 			'cc' => $sess['cc'],
