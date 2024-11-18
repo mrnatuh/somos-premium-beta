@@ -1,19 +1,35 @@
 [phases.setup]
-nixPkgs = ['php83', 'nodejs', 'composer']
+nixPkgs = [
+  "php81",
+  "php81Extensions.pdo",
+  "php81Extensions.pdo_mysql",
+  "php81Extensions.mbstring",
+  "php81Extensions.xml",
+  "php81Extensions.curl",
+  "php81Extensions.zip",
+  "nodejs-18_x",
+  "composer"
+]
 
 [phases.install]
 cmds = [
-  'composer install --no-dev',
-  'npm install'
+  "composer install --no-dev --optimize-autoloader",
+  "npm ci"
 ]
 
 [phases.build]
 cmds = [
-  'npm run build',
-  'php artisan config:cache',
-  'php artisan route:cache',
-  'php artisan view:cache'
+  "npm run build",
+  "cp .env.example .env",
+  "php artisan key:generate",
+  "php artisan config:cache",
+  "php artisan route:cache",
+  "php artisan view:cache"
 ]
 
 [start]
-cmd = 'php artisan serve --host=0.0.0.0 --port=${PORT}'
+cmd = "php artisan serve --host=0.0.0.0 --port=${PORT}"
+
+[env]
+PORT = "8000"
+PATH = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
