@@ -17,7 +17,6 @@ cmds = [
 
 [phases.build]
 cmds = [
-  "cp .env.example .env",
   "COMPOSER_ALLOW_SUPERUSER=1 composer require lucascudo/laravel-pt-br-localization --no-scripts",
 ]
 
