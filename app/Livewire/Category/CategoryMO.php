@@ -158,11 +158,11 @@ class CategoryMO extends Component
 
                 foreach ($tmp_employees as $item) {
                     array_push($this->employees, [
-                        "id" => trim($item->RA_ID),
+                        "id" => trim($item->RA_CIC),
                         'status' => 1,
                         'nome' => trim($item->RA_NOME),
                         'salario' => $item->RA_SALARIO,
-                        'plano_saude' => $item->RA_PLSAUDE,
+                        'plano_saude' => $item->RA_PLASAUD,
                         'qtde_dependentes' => (int) $item->RB_QTDEPEN ?? 0,
                         'vlr_plano' => (int) $item->RD_VLRPLAN ?? 0,
                         'vlr_dependentes' => (int) $item->RD_VLRDEPEND ?? 0,
