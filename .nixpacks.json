@@ -1,0 +1,39 @@
+{
+  "providers": [
+    "php"
+  ],
+  "buildImage": "ubuntu:20.04",
+  "variables": {
+    "NIXPACKS_PHP_VERSION": "8.1",
+    "PORT": "8000"
+  },
+  "phases": {
+    "install": {
+      "dependsOn": [
+        "setup"
+      ],
+      "cmds": [
+        "composer install --no-dev --optimize-autoloader"
+      ]
+    },
+    "setup": {
+      "nixPkgs": [
+        "php81",
+        "php81Extensions.common",
+        "php81Extensions.curl",
+        "php81Extensions.mbstring",
+        "php81Extensions.xml",
+        "composer"
+      ]
+    },
+    "build": {
+      "dependsOn": [
+        "install"
+      ],
+      "cmds": [
+        "php artisan config:cache",
+        "php artisan route:cache"
+      ]
+    }
+  }
+}
