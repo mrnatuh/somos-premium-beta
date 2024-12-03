@@ -67,7 +67,7 @@
               @endphp
 
               <form method="GET" action="/previa" class="flex gap-2 items-center justify-center">
-                <input type="text" name="q" placeholder="Procurar prévia..." class="flex py-2.5 px-5 mr-2 mb-2 text-[16px] font-medium text-gray-900 focus:outline-none bg-white rounded-[10px] border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 placeholder:text-gray-400" maxlength="100" value="{{ $q }}" />
+                <input type="text" name="q" placeholder="Procurar prévia..." class="flex py-2.5 px-5 mr-2 mb-2 text-[16px] font-medium text-gray-900 focus:outline-none bg-white rounded-[10px] border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 placeholder:text-gray-400" maxlength="100" minlength="3" value="{{ $q }}" />
 
                 <select class="flex py-2.5 px-5 mr-2 mb-2 text-[16px] font-medium text-gray-900 focus:outline-none bg-white rounded-[10px] border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200" name="m">
                   <option value=''>- Mês -</option>
