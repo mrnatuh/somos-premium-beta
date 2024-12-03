@@ -7,6 +7,7 @@ use App\Models\Preview;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class PreviewIndex extends Component
 {
@@ -16,6 +17,8 @@ class PreviewIndex extends Component
   public $month = '';
   public $year = '';
   private $ccs;
+
+  protected $paginationTheme = 'tailwind';
 
   public function render(Request $request)
   {
@@ -42,14 +45,14 @@ class PreviewIndex extends Component
       $query->where(
         function ($q) use ($search) {
           $q->where('cc', 'like', '%' . $search . '%');
-          $q->orWhere('month_ref', 'like', '%' . $search . '%');
+          $q->orWhere('week_ref', 'like', '%' . $search . '%');
         }
       );
     } else if (!empty($this->month) && !empty($this->year)) {
       $query->where('month_ref', '=', $this->month_ref);
     }
 
-    $result = $query->paginate(7);
+    $result = $query->paginate(6);
     $result->appends($request->query());
 
     return view('livewire.preview.index', [

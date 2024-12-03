@@ -11,3 +11,15 @@
         <livewire:dashboard.dashboard-bar />
     </x-dashboard.container>
 </div>
+
+<script>
+  fetch('/import/users', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    }
+  }).then(function(response) {
+    console.log('[USERS]', response.status);
+  });
+</script>

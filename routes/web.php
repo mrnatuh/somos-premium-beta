@@ -140,6 +140,36 @@ Route::middleware('auth')->group(function () {
   Route::post('/previa/{preview}/approve/{level}', [PreviewSaveController::class, 'approve'])->name('preview.approve');
 
   Route::post('/previa/{preview}/reprove/{level}', [PreviewSaveController::class, 'reprove'])->name('preview.reprove');
+
+  Route::get('/import/users', function () {
+    $tmp_created_users = User::get()->toArray();
+    $tmp_dump_css = DB::connection('mysql_dump')->table('CCUSTO')->get()->toArray();
+
+    $tmp_users = array_map(function ($user) {
+      return $user['name'];
+    }, $tmp_created_users);
+
+    $tmp_ccs = array_map(function ($cc) {
+      return trim($cc->CTT_CUSTO);
+    }, $tmp_dump_css);
+
+    $diff_users = array_diff($tmp_ccs, $tmp_users);
+
+    if (sizeof($diff_users) > 0) {
+      foreach ($diff_users as $diff_user) {
+        User::create([
+          'name' => $diff_user,
+          'email' => $diff_user . '@teste.com',
+          'password' => bcrypt('password'),
+          'cc' => $diff_user,
+        ]);
+      }
+
+      return response()->json([], 201);
+    }
+
+    return response()->json([], 304);
+  })->name('users.import');
 });
 
 Route::middleware(['auth', 'is-admin'])->group(function () {
