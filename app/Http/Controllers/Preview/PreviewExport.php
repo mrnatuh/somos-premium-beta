@@ -202,6 +202,11 @@ class PreviewExport extends Controller
       }
     }
 
+    if (empty($data)) {
+      echo 'Sem dados para exportar!';
+      return;
+    }
+
     return Excel::download(new SimpleExport($data), 'previa_' . $preview->cc . '_' . $preview->week_ref . '.xlsx');
   }
 }
