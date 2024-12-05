@@ -203,7 +203,8 @@ class PreviewExport extends Controller
     }
 
     if (empty($data)) {
-      echo 'Sem dados para exportar!';
+      echo 'Sem dados para exportar! ';
+      echo '<button onClick="close()">Fechar janela</button>';
       return;
     }
 
