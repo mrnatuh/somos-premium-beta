@@ -101,6 +101,8 @@
 
         <span class="block h-10"></span>
 
+        @if (!$realizadas)
         {{ $previews->withQueryString()->links() }}
+        @endif
     </x-dashboard.container>
 </div>
