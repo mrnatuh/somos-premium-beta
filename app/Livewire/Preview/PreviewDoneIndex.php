@@ -5,47 +5,61 @@ namespace App\Livewire\Preview;
 use App\Helpers\UserRole;
 use App\Models\Preview;
 use Illuminate\Http\Request;
-use Livewire\Attributes\On;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class PreviewDoneIndex extends Component
 {
-	public $previews = [];
-	public $month_ref = '';
+  public $previews = [];
+  public $month_ref = '';
+  public $cc = '';
+  public $q = '';
+  public $month = '';
+  public $year = '';
+  private $ccs;
 
-	#[On('month-scroll-updated')]
-	public function monthUpdated(string $month_ref = '')
-	{
-		$this->month_ref = $month_ref;
-	} 
+  protected $paginationTheme = 'tailwind';
 
-	public function render(Request $request)
-	{		
-		if (!$this->month_ref) {
-			$req_month_ref = $request->input('month_ref');
+  public function render(Request $request)
+  {
+    $input = $request->validate([
+      'q' => 'nullable|string|min:3|max:60',
+      'm' => 'nullable|numeric|min:1|max:12',
+      'y' => 'nullable|numeric|min:1900|max:2100',
+    ]);
 
-			if (!empty(trim($req_month_ref))) {
-				$split = explode("_", $req_month_ref);
-				if (isset($split[0]) && isset($split[1])) {
-					$this->month_ref = "{$split[0]}_{$split[1]}";
-				}
-			} else {
-				$this->month_ref = date('m') . '_' . substr(date('Y'), -2);
-			}
-		}
+    $this->q = isset($input['q']) ? $input['q'] : '';
+    $this->month = isset($input['m']) ? $input['m'] : (!isset($input['q']) ? date('m') : '');
+    $this->year = isset($input['y']) ? $input['y'] : (!isset($input['q']) ? date('Y') : '');
+    $this->month_ref = $this->month . '_' . substr($this->year, -2);
 
-		$ccs = (new UserRole())->getCc();
+    $query = Preview::query();
 
-		$this->previews = Preview::whereIn('cc', $ccs)
-			->where('month_ref', '=', $this->month_ref)
-			->where('status', 'validado')
-			->get();
+    if (!Auth::user()->isAdmin() || !Auth::user()->isManager()) {
+      $this->ccs = (new UserRole())->getCc();
+      $query->whereIn('cc', $this->ccs);
+    }
 
-		$this->dispatch('render-preview-month');	
+    if ($this->q) {
+      $search = $this->q;
+      $query->where(
+        function ($q) use ($search) {
+          $q->where('cc', 'like', '%' . $search . '%');
+          $q->orWhere('week_ref', 'like', '%' . $search . '%');
+        }
+      );
+    } else if (!empty($this->month) && !empty($this->year)) {
+      $query->where('month_ref', '=', $this->month_ref);
+    }
 
-		return view('livewire.preview.index', [
-			'previews' => $this->previews,
-			'realizadas' => 1,
-		]);
-	}
+    $result = $query->paginate(6);
+    $result->appends($request->query());
+
+    return view('livewire.preview.index', [
+      'q' => $this->q,
+      'previews' => $result,
+      'realizadas' => 1,
+    ]);
+  }
 }
